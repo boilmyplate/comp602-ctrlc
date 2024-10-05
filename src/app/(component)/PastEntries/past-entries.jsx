@@ -14,6 +14,8 @@ import {
 } from "firebase/firestore";
 // Import React and hooks for state management and side effects.
 import React, { useState, useEffect } from "react";
+import Link from 'next/link';
+
 
 const PastEntries = () => {
   const [entries, setEntries] = useState([]); // State to hold the list of journal entries.
@@ -127,11 +129,11 @@ const PastEntries = () => {
             )
           )}
         </div>
-        <a href="/journal">
+        <Link href="/journalWelcome">
           {" "}
           {/* Link back to the Journal page */}
           <button className={styles.button}>Back to Journal</button>
-        </a>
+        </Link>
       </div>
     </div>
   );
