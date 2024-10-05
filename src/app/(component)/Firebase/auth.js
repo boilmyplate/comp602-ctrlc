@@ -19,10 +19,11 @@ export const doCreateUserWithEmailAndPassword = async (
 	try {
 		// Create the user with email and password
 		const userCredential = await createUserWithEmailAndPassword(
-			auth,
+			auth, 
 			email,
 			password
 		);
+
 		const user = userCredential.user;
 		await updateProfile(auth.currentUser, { displayName: username });
 
@@ -35,6 +36,11 @@ export const doCreateUserWithEmailAndPassword = async (
 		throw error; // Rethrow error to handle it in the component
 	}
 };
+
+export const updateUsername = async(username) => {
+	await updateProfile(auth.currentUser, { displayName: username });
+}
+
 // using their email and password to sign in
 export const doSignInWithEmailAndPassword = async (email, password) => {
 	return signInWithEmailAndPassword(auth, email, password);

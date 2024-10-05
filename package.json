@@ -12,13 +12,14 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@supabase/auth-helpers-react": "^0.5.0",
+    "@supabase/supabase-js": "^2.45.4",
     "firebase": "^10.13.0",
     "next": "14.2.6",
     "react": "^18",
-    "react-big-calendar": "^1.15.0",
-    "react-datepicker": "^7.4.0",
     "react-dom": "^18",
     "react-simple-chatbot": "^0.6.1",
+    "react-switch": "^7.0.0",
     "styled-components": "^4.4.1"
   },
   "devDependencies": {

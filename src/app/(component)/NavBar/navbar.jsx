@@ -22,7 +22,7 @@ const links = [
 	{ title: "Game", path: "/pong" },
 	{ title: "Journal", path: "/journal" },
 	{ title: "Breathing Exercise", path: "/breath" },
-	{ title: "Calendar", path: "/calendar" },
+	{ title: "Calendar", path: "/calendar" }, 
 ];
 
 const NavLink = ({ item }) => {
@@ -101,18 +101,14 @@ const Navbar = () => {
 							</h3>
 							<ul>
 								<li className={styles.dropdownItem}>
-									<FontAwesomeIcon icon={faUser} />
-									<a href="#">My Profile</a>
+									<FontAwesomeIcon icon={faCog} />
+									<a href="/setting">Settings</a>
 								</li>
 								<li className={styles.dropdownItem}>
 									<FontAwesomeIcon icon={faSignOutAlt} />
 									<a href="/" onClick={doSignOut}>
 										Logout
 									</a>
-								</li>
-								<li className={styles.dropdownItem}>
-									<FontAwesomeIcon icon={faCog} />
-									<a href="#">Settings</a>
 								</li>
 							</ul>
 						</div>

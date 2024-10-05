@@ -57,7 +57,13 @@
   text-align: center;
 }
 
+.title {
+  font-family: 'Comfortaa', sans-serif;
+}
 
+.para {
+  font-family: 'Comfortaa', sans-serif;
+}
 
 /* Reset Password Container */
 .ResetPassContainer {
@@ -72,6 +78,7 @@
 
 /* Input Styles */
 .inputs {
+  font-family: 'Comfortaa', sans-serif;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.9);
   border: 2px solid #ddd;
@@ -84,6 +91,7 @@
 
 /* Submit Button */
 .SubmitButton {
+  font-family: 'Comfortaa', sans-serif;
   background-color: #ff6b35;
   color: white;
   border: none;
@@ -101,6 +109,7 @@
 
 /* Links */
 .links {
+  font-family: 'Comfortaa', sans-serif;
   text-align: center;
   margin-top: 20px;
   color: #333;
