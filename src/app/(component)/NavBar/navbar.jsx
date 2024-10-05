@@ -16,11 +16,13 @@ import { useAuth } from "@/app/(context)/auth";
 import { auth } from "../Firebase/firebase";
 import { doSignOut } from "../Firebase/auth";
 
+
+
 // links on navbar
 const links = [
 	{ title: "Homepage", path: "/home" },
 	{ title: "Game", path: "/pong" },
-	{ title: "Journal", path: "/journal" },
+	{ title: "Journal", path: "/journalWelcome" },
 ];
 
 const NavLink = ({ item }) => {
@@ -100,17 +102,17 @@ const Navbar = () => {
 							<ul>
 								<li className={styles.dropdownItem}>
 									<FontAwesomeIcon icon={faUser} />
-									<a href="#">My Profile</a>
+									<Link href="#">My Profile</Link>
 								</li>
 								<li className={styles.dropdownItem}>
 									<FontAwesomeIcon icon={faSignOutAlt} />
-									<a href="/" onClick={doSignOut}>
+									<Link href="/" onClick={doSignOut}>
 										Logout
-									</a>
+									</Link>
 								</li>
 								<li className={styles.dropdownItem}>
 									<FontAwesomeIcon icon={faCog} />
-									<a href="#">Settings</a>
+									<Link href="#">Settings</Link>
 								</li>
 							</ul>
 						</div>
