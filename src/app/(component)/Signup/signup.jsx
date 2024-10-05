@@ -5,6 +5,7 @@ import styles from "@/app/(component)/Signup/signup.module.css";
 import { useAuth } from "@/app/(context)/auth";
 import { useRouter } from "next/navigation";
 import { doCreateUserWithEmailAndPassword } from "../Firebase/auth";
+import Link from "next/link";
 
 const Signup = () => {
 	// State variables to handle username, email, password, registration status, and error messages
@@ -132,7 +133,7 @@ const Signup = () => {
 					</button>
 					{/* Link to return to login page */}
 					<div className={styles.links}>
-						<a href="/">Back to login</a>
+						<Link href="/">Back to login</Link>
 					</div>
 				</div>
 			</div>
