@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
 
 :root {
@@ -21,7 +21,7 @@
 	--coffeebrown: #4B3621;
 }
 
-=======
+
 :root {
 	--bg: #0d0c22;
 	--text: rgb(0, 0, 0);
@@ -31,7 +31,7 @@
 	--softOrange: #f5b6a4;
 	--btn: #18a0e9;
 }
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+
 * {
 	margin: 0;
 	padding: 0;
@@ -39,16 +39,16 @@
 }
 
 body {
-<<<<<<< HEAD
+
 	background-color: var(--SoftLemonYellow);
 	color: var(--text);
 	overflow-x: hidden;
 	cursor: url('/cursor.png'), auto;
-=======
+
 	background-color: var(--softGreen);
 	color: var(--text);
 	overflow-x: hidden;
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+
 }
 a {
 	text-decoration: none;

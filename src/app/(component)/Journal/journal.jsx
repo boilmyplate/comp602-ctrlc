@@ -1,6 +1,6 @@
 "use client"; // This directive is specific to Next.js and enables client-side rendering for this component.
 
-<<<<<<< HEAD
+
 import { db } from "../Firebase/firebase"; // Import Firebase configuration
 import React, { useRef } from "react"; // Import React hooks
 import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions for interacting with the database
@@ -129,7 +129,7 @@ const Journal = () => {
             </div>
         </div>
     );
-=======
+
 // Import Firebase configuration
 import { db } from "../Firebase/firebase";
 import React, { useRef, useEffect } from "react";
@@ -311,7 +311,7 @@ const Journal = () => {
 			</div>
 		</div>
 	);
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+
 };
 
 export default Journal;

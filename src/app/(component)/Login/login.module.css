@@ -1,19 +1,18 @@
-<<<<<<< HEAD
+
 /* Container for the entire page */
 .background {
   position: relative;
   width: 100%;
-=======
 
 .background {
   background-color: #93E9BE; 
   margin: 0; 
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-<<<<<<< HEAD
+
   overflow: hidden;
 }
 
@@ -208,7 +207,7 @@
 .links a:hover {
   text-decoration: underline; 
   color: #ff6b35; 
-=======
+
 } 
 
 .heading {
@@ -313,19 +312,19 @@
 
 .links a:hover {
   text-decoration: underline;
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+
 }
 
 .error-message {
   color: red;
-<<<<<<< HEAD
+
   padding-top: 10px;
   margin-bottom: 10px;
   font-size: 14px;
 }
 
-=======
+
   margin-bottom: 10px;
   font-size: 14px;
 }
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+

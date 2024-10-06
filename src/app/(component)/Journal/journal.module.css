@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 .background {
   background-image: url('/journal.jpg');
   background-size: cover; /* Ensures the image covers the entire container */
@@ -136,7 +136,7 @@
   border-color: #7d4c7d; /* Highlight border on focus */
   box-shadow: 0 0 10px rgba(125, 76, 125, 0.4); /* Increase shadow on focus */
 }
-=======
+
 .background { 
   margin-top: 15vh;
   background-color: #93E9BE; /* Sets background color of the page */
@@ -222,4 +222,4 @@
 
 
 
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+

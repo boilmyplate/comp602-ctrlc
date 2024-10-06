@@ -1,161 +1,96 @@
+/* Main container */
 .container {
-	display: flex;
-	gap: 60px;
-	align-items: center;
-	padding: 20px;
-	flex-wrap: wrap;
-	overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
-.textContainer {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 30px;
-	margin: 5px;
+/* Content wrapper for the charts and streak container */
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
 }
 
-.title {
-	font-size: 70px;
-	line-height: 1.2;
+/* Happy streak container */
+.streakContainer {
+    background-color: #f5deb3;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    text-align: center;
+    justify-content: center;
 }
 
-.desc {
-	font-size: 20px;
+.streakContainer h4 {
+    font-size: 20px;
+    margin: 0;
 }
 
-.buttons {
-	display: flex;
-	gap: 20px;
+.fireIcon {
+    width: 30px;
+    height: 30px;
 }
 
-.button {
-	padding: 10px;
-	min-width: 120px;
-	cursor: pointer;
-	border: none;
-	border-radius: 5px;
+/* Sort by dropdown */
+.sortContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.button:first-child {
-	background-color: var(--btn);
-	color: var(--text);
+.sortSelect {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    cursor: pointer;
 }
 
-.brands {
-	width: 500px;
-	height: 50px;
-	position: relative;
-	filter: grayscale(1);
+/* Flexbox container for the charts */
+.chartFlexContainer {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
 }
 
-
-/*responsive css*/
-
-/*Laptop View*/
-@media (max-width: 1015px) {
-	.title {
-		font-size: 58px;
-	}
+/* Pie chart container */
+.pieChartContainer {
+    background-color: #f0e68c;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 50%;
 }
 
-/* Tablet View */
-@media (max-width: 868px) {
-	.container {
-		text-align: center;
-	}
-	.title {
-		font-size: 50px;
-	}
-
-	.imgContainer {
-		display: none;
-	}
-
-	.heroImg {
-		width: 100%;
-		transform: scale(1);
-	}
-
-	.buttons {
-		padding: 20px 50px 20px 50px;
-		flex-direction: column;
-		gap: 10px;
-	}
+/* Bar chart container */
+.barChartContainer {
+    background-color: #98fb98;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 70%;
 }
 
-/* Mobile View */
-@media (max-width: 624px) {
-	.container {
-		flex-direction: column;
-		text-align: center;
-		padding: 20px;
-	}
-
-	.title {
-		font-size: 48px;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
-
-	.desc {
-		font-size: 15px;
-	}
-
-	.imgContainer {
-		margin: 20px 0;
-	}
-
-	.heroImg {
-		width: 80%;
-		transform: scale(1);
-	}
-	.nav {
-		display: block;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 10;
-	}
+/* Adjust the tooltip and legend for the charts */
+.recharts-tooltip-label,
+.recharts-legend-item-text {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
 }
 
-@media (max-width: 494px) {
-	.container {
-		flex-direction: column;
-		text-align: center;
-		padding: 20px;
-	}
-
-	.title {
-		font-size: 28px;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
-
-	.desc {
-		font-size: 10px;
-		padding: 5px 60px 0px 60px;
-	}
-
-	.imgContainer {
-		margin: 20px 0;
-	}
-
-	.heroImg {
-		width: 80%;
-		transform: scale(1);
-	}
-	.nav {
-		display: block;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 10;
-	}
-	.buttons {
-		font-size: 10px;
-		padding: 10px 70px 10px 70px;
-		flex-direction: column;
-		gap: 10px;
-	}
-}
