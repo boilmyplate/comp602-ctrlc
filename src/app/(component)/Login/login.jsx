@@ -64,8 +64,8 @@ const Login = () => {
 
     return (
         <div className={styles.background}>
-            {/* If user is logged in, redirect to the /home page */}
-            {userLoggedIn && router.push("/home")}
+            {/* If user is logged in, redirect to the home page */}
+            {userLoggedIn && router.push("/")}
             <div className={styles.SignupContainer}>
                 <div className={styles.textContainer}>
                     <h1 className={styles.title}>Welcome to Blank Web</h1>

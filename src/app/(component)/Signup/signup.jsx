@@ -83,7 +83,7 @@ const Signup = () => {
 
 	return (
 		<div className={styles.background}>
-			{userLoggedIn && router.push("/home")}
+			{userLoggedIn && router.push("/")}
 			<div className={styles.BlueBox}>
 				<div className={styles.WhiteBox}>
 					<h1 className={styles.heading}>Sign Up</h1>
