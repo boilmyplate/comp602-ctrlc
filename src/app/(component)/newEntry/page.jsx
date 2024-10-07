@@ -1,9 +1,9 @@
 'use client'; // This directive is specific to Next.js and enables client-side rendering for this component.
 
-import { db } from "../(component)/Firebase/firebase"; // Import Firebase configuration
+import { db } from "../Firebase/firebase"; // Import Firebase configuration
 import React, { useState, useRef } from "react";
 import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions for interacting with the database.
-import NavBar from '../(component)/NavBar/navbar'; // Import NavBar component
+import NavBar from '../NavBar/navbar'; // Import NavBar component
 import './newEntry.css'; // Import CSS styles specific to the New Entry component
 
 // Function to add data to Firestore database
