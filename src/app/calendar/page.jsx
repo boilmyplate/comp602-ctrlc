@@ -4,11 +4,12 @@ import Calendar from "../(component)/Calendar/calendar";
 
 
 
+
 export default function page() {
   return (
-  <>
-  <NavBar /> 
-  <Calendar />
+    <>
+      <NavBar />
+        <Calendar />
     </>
-    );
+  );
 }
