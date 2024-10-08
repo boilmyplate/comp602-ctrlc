@@ -93,7 +93,7 @@ const PastEntries = () => {
 
     if (searchTerm.trim() !== "") {
       const filtered = entries.filter((entry) =>
-        entry.entry.toLowerCase().includes(searchTerm.toLowerCase())
+        entry.title && entry.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredEntries(filtered); // Update filtered entries based on user input
       setShowDropdown(true); // Show the dropdown with suggestions
@@ -158,7 +158,7 @@ const PastEntries = () => {
                   onClick={() => onSelectSuggestion(entry)} // Handle selection from dropdown
                   className={styles.dropdownItem}
                 >
-                  {entry.entry}
+                  {entry.title}
                 </div>
               ))}
             </div>
@@ -167,45 +167,53 @@ const PastEntries = () => {
 
           {/* Displaying the list of filtered entries */}
           {filteredEntries.map((entry) => (
-            <div key={entry.id} className={styles["entry-item"]}>
+          <div key={entry.id} className={styles["entry-item"]}>
+            {/* Display Title */}
+            <h3>{entry.title || "Untitled Entry"}</h3>
+            <div className={styles.dateNTags}>
+              {/* Display Date */}
               <p>
-                Date: {entry.day} {entry.month}, {entry.year}
-              </p>
-              {entry.isEditing ? (
-                <textarea
-                  value={entry.entry}
-                  onChange={(e) => updateEntry(entry.id, e.target.value)}
-                />
-              ) : (
-                <p>{entry.entry}</p>
-              )}
-              <div className={styles["button-group"]}>
-                <button
-                  className={styles.button}
-                  onClick={() => toggleEdit(entry.id)}
-                >
-                  {entry.isEditing ? "Save" : "Edit"}
-                </button>
-                <button
-                  className={styles.button}
-                  onClick={() => deleteEntry(entry.id)}
-                >
-                  Delete
-                </button>
-                <button
-                  className={styles.button}
-                  onClick={() => shareEntry(
-                    `${entry.day} ${entry.month}, ${entry.year}`, 
-                    "Entry Title", 
-                    "Category Name", 
-                    entry.entry
-                  )} // Share entry logic
-                >
-                  Share
-                </button>
-              </div>
+                  Date: {entry.day} {entry.month}, {entry.year}
+                </p>
+              {/* Display Tags */}
+                <div className={styles.tags}>
+                  {entry.category ? (
+                    <span className={styles.tag}>#{entry.category}</span> // Use the entry's category as the tag
+                  ) : (
+                    <span className={styles.tag}>#NoCategory</span> // Default tag if no category is provided
+                  )}
+                </div>
             </div>
-          ))}
+            {/* Action Buttons */}
+            <div className={styles["button-group"]}>
+              <button
+                className={styles.button}
+                onClick={() => toggleEdit(entry.id)}
+              >
+                {entry.isEditing ? "Save" : "Edit"}
+              </button>
+              <button
+                className={styles.button}
+                onClick={() => deleteEntry(entry.id)}
+              >
+                Delete
+              </button>
+              <button
+                className={styles.button}
+                onClick={() =>
+                  shareEntry(
+                    `${entry.day} ${entry.month}, ${entry.year}`,
+                    entry.title || "Untitled Entry",
+                    entry.tags ? entry.tags.join(", ") : "No Tags",
+                    entry.entry
+                  )
+                } // Share entry logic
+              >
+                Share
+              </button>
+            </div>
+          </div>
+        ))}
         </div>
         <Link href="/journalWelcome">
           <button className={styles.button}>Back to Journal</button>

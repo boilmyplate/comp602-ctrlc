@@ -21,7 +21,7 @@ import { doSignOut } from "../Firebase/auth";
 // links on navbar
 const links = [
 	{ title: "Homepage", path: "/home" },
-	{ title: "Game", path: "/pong" },
+	{ title: "Game", path: "/gameLibrary" },
 	{ title: "Journal", path: "/journalWelcome" },
 ];
 

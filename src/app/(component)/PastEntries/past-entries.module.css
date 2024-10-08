@@ -58,6 +58,7 @@
 .entry-item p {
   color: var(--coffeebrown);
   margin: 5px 0;
+  font-size: 0.8rem;
 }
 
 /* Entry text area when editing */
@@ -175,6 +176,22 @@
 
 .searchButton:hover {
   background-color: #f0f685; /* Same hover effect */
+}
+
+.dateNTags{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+}
+
+h3 .title{
+  font-size: 2rem;
+}
+
+.tags{
+  font-size: 0.8rem;
+  margin: 5px 0;
 }
 
 
