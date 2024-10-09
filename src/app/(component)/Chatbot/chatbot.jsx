@@ -19,8 +19,8 @@ const theme = {
 const config = {
   floating: true,
   floatingStyle: {
-    right: "60px", // Adjust the right position
-    bottom: "25px", // Adjust the bottom position
+    right: "30px", // Adjust the right position
+    bottom: "20px", // Adjust the bottom position
   },
 };
 
