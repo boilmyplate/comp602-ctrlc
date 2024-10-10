@@ -8,17 +8,14 @@ import { doCreateUserWithEmailAndPassword } from "../Firebase/auth";
 import Link from "next/link";
 
 const Signup = () => {
-	// State variables to handle username, email, password, registration status, and error messages
-	const [username, setUsername] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [isRegistering, setIsRegistering] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-	// Extract userLoggedIn state from the authentication context
-	const { userLoggedIn } = useAuth();
-	// useRouter for redirecting
-	const router = useRouter();
+  const { userLoggedIn } = useAuth();
+  const router = useRouter();
 
 	// Function to check for invalid words in the username
 	const containsInvalidWords = (username) => {
@@ -35,12 +32,11 @@ const Signup = () => {
 		return emailRegex.test(email);
 	};
 
-	// Function to check if the password is strong enough
-	const isValidPassword = (password) => {
-		// Password should be at least 6 characters long and contain letters and numbers
-		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-		return passwordRegex.test(password);
-	};
+  // Function to check password strength
+  const isValidPassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    return passwordRegex.test(password);
+  };
 
 	// Function to handle form submission and user registration
 	const onSubmit = async (e) => {
@@ -54,32 +50,32 @@ const Signup = () => {
 			return;
 		}
 
-		// Validate password strength
-		if (!isValidPassword(password)) {
-			setErrorMessage(
-				"Password must be at least 6 characters long and contain both letters and numbers."
-			);
-			return;
-		}
+    // Validate password strength
+    if (!isValidPassword(password)) {
+      setErrorMessage(
+        "Password must be at least 6 characters long and contain both letters and numbers."
+      );
+      return;
+    }
 
-		// Validate username for invalid words
-		if (containsInvalidWords(username)) {
-			setErrorMessage(
-				"Username contains inappropriate words. Please try another."
-			);
-			return;
-		}
+    // Validate username for invalid words
+    if (containsInvalidWords(username)) {
+      setErrorMessage(
+        "Username contains inappropriate words. Please try another."
+      );
+      return;
+    }
 
-		try {
-			setIsRegistering(true);
-			await doCreateUserWithEmailAndPassword(username, email, password);
-			router.push("/");
-		} catch (error) {
-			setErrorMessage("Invalid Username or Email or Password");
-		} finally {
-			setIsRegistering(false);
-		}
-	};
+    try {
+      setIsRegistering(true);
+      await doCreateUserWithEmailAndPassword(username, email, password);
+      router.push("/"); // Redirect to home on success
+    } catch (error) {
+      setErrorMessage("Invalid Username or Email or Password");
+    } finally {
+      setIsRegistering(false);
+    }
+  };
 
 	return (
 		<div className={styles.background}>
