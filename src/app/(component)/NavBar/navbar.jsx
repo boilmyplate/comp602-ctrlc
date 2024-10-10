@@ -98,13 +98,13 @@ const Navbar = () => {
                             <ul>
                                 <li className={styles.dropdownItem}>
                                     <FontAwesomeIcon icon={faCog} />
-                                    <a href="/setting">Settings</a>
+                                    <Link href="/setting">Settings</Link>
                                 </li>
                                 <li className={styles.dropdownItem}>
                                     <FontAwesomeIcon icon={faSignOutAlt} />
-                                    <a href="/" onClick={doSignOut}>
+                                    <Link href="/" onClick={doSignOut}>
                                         Logout
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>
