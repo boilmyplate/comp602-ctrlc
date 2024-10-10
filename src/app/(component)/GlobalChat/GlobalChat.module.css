@@ -1,94 +1,108 @@
-.background {
+.wrapper {
+  position: absolute;
+  left: 30px;
+  bottom: 50%;
   text-align: center;
-  max-width: 728px;
+  min-width: 400px;
   margin: 0 auto;
   height: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.6ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-.background section {
+.wrapper section {
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 40vh;
   background-color: rgb(40, 37, 53);
 }
 
-.background main {
+.wrapper .headText {
+  border-radius: 8px 8px 0 0;
+  background: #c6f6d5;
+  line-height: 60px;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.wrapper main {
   padding: 10px;
-  height: 80vh;
+  height: 40vh;
   margin: 10vh 0 10vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
 }
 
-.background main::-webkit-scrollbar {
+.wrapper main::-webkit-scrollbar {
   width: 0.25rem;
 }
 
-.background main::-webkit-scrollbar-track {
+.wrapper main::-webkit-scrollbar-track {
   background: #1e1e24;
 }
 
-.background main::-webkit-scrollbar-thumb {
+.wrapper main::-webkit-scrollbar-thumb {
   background: #6649b8;
 }
 
-.background form {
+.form form {
+  border-radius: 10px;
   height: 10vh;
   position: fixed;
   bottom: 0;
   background-color: rgb(24, 23, 23);
   width: 100%;
-  max-width: 728px;
+  max-width: 400px;
   display: flex;
   font-size: 1.5rem;
 }
 
-.background form button {
-  width: 20%;
-  background-color: rgb(56, 56, 143);
-}
-
-.background input {
+.form input {
   line-height: 1.5;
-  width: 100%;
-  font-size: 1.5rem;
+  width: 80%;
+  font-size: 1rem;
   background: rgb(58, 58, 58);
   color: white;
   outline: none;
   border: none;
-  padding: 0 10px;
+  padding: 10px 10px;
+  border-bottom-left-radius: 10px;
 }
 
-.background button {
-  background-color: #282c34; /* Green */
+.form button {
+  border-bottom-right-radius: 10px;
+  width: 20%;
+  background-color: rgb(56, 56, 143);
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 13px 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
-.background button:disabled {
+.form button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.background ul {
+.wrapper ul {
   text-align: left;
   list-style: none;
 }
 
-.background li {
+.wrapper li {
   text-align: left;
   list-style: none;
 }
 
-.background p {
+.wrapper p {
   max-width: 500px;
   margin-bottom: 12px;
   line-height: 24px;
@@ -118,9 +132,60 @@
   color: black;
 }
 
-.background img {
+.wrapper img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin: 2px 5px;
+}
+
+.btnlabel {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  height: 55px;
+  width: 55px;
+  background: #c6f6d5;
+  text-align: center;
+  line-height: 55px;
+  border-radius: 50px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btnlabel i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s ease;
+}
+
+.click:checked ~ .btnlabel i.fac {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.btnlabel i.fax {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.click:checked ~ .btnlabel i.fax {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.click:checked ~ .wrapper {
+  opacity: 1;
+  bottom: 85px;
+  pointer-events: auto;
+}
+
+.click {
+  display: none;
 }

@@ -9,19 +9,34 @@ import {
     limit,
     query,
     serverTimestamp,
-    addDoc,
+    addDoc
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const GlobalChat = () => {
     const [user] = useAuthState(auth);
     return (
         <>
-            <div className={styles["background"]}>
-                <section>
-                    <ChatRoom />
-                </section>
+            <div className="background">
+                <input type="checkbox" name="click" className={styles.click} id="click" />
+                <label className={styles.btnlabel} htmlFor="click">
+                    <i className={styles.fac}>
+                        <FontAwesomeIcon icon={faComments} />
+                    </i>
+                    <i className={styles.fax}>
+                        <FontAwesomeIcon icon={faXmark} />
+                    </i>
+                </label>
+                <div className={styles["wrapper"]}>
+                    <section>
+                        <h1 className={styles.headText}>Global Chat Room</h1>
+                        <ChatRoom />
+                    </section>
+                </div>
             </div>
         </>
     );
@@ -36,16 +51,17 @@ function ChatRoom() {
 
     const [formValue, setFormValue] = useState("");
 
-    const sendMessage = async (e) => {
+    const sendMessage = async e => {
         e.preventDefault();
 
-        const { uid, photoURL } = auth.currentUser;
+        const { uid, photoURL, displayName } = auth.currentUser;
 
         await addDoc(messagesRef, {
             text: formValue,
             createdAt: serverTimestamp(),
             uid,
-            photoURL,
+            displayName,
+            photoURL
         });
 
         setFormValue("");
@@ -56,7 +72,7 @@ function ChatRoom() {
         <>
             <main>
                 {messages &&
-                    messages.docs.map((doc) => (
+                    messages.docs.map(doc => (
                         <ChatMessage
                             key={doc.id}
                             message={{ id: doc.id, ...doc.data() }}
@@ -70,8 +86,8 @@ function ChatRoom() {
                 <input
                     className={styles["inputs"]}
                     value={formValue}
-                    onChange={(e) => setFormValue(e.target.value)}
-                    placeholder="say something nice"
+                    onChange={e => setFormValue(e.target.value)}
+                    placeholder="Message Global Chat"
                 />
 
                 <button
@@ -87,10 +103,11 @@ function ChatRoom() {
 }
 
 function ChatMessage(props) {
-    const { text, uid, photoURL } = props.message;
+    const { text, uid, displayName, photoURL } = props.message;
 
     const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
     const messageRef = useRef();
+    console.log(auth.currentUser);
 
     return (
         <>
@@ -100,8 +117,9 @@ function ChatMessage(props) {
             >
                 <img
                     className={styles["user-photo"]}
-                    src={photoURL || "https://picsum.photos/50/50"}
+                    src={photoURL || "/profile.png"}
                 />
+                <p className={styles.displayname}>{displayName}</p>
                 <p className={styles["chat-messages"]}>{text}</p>
             </div>
         </>
