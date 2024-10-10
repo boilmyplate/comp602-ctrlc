@@ -256,11 +256,6 @@ const Pong = () => {
         setShowText(true);
     };
 
-    // Function to return to homepage
-    const backToHomePage = () => {
-        window.location.href = "/home-page";
-    };
-
     return (
         <div>
             {showText && (

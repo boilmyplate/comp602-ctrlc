@@ -9,7 +9,7 @@ import {
     faBars,
     faUser,
     faCog,
-    faSignOutAlt,
+    faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "@/app/(component)/NavBar/navbar.module.css";
 import { useAuth } from "@/app/(context)/auth";
@@ -22,6 +22,7 @@ const links = [
     { title: "Game", path: "/gameLibrary" },
     { title: "Journal", path: "/journalWelcome" },
     { title: "Breathing Exercise", path: "/breath" },
+    { title: "Calendar", path: "/calendar" }
 ];
 
 const NavLink = ({ item }) => {
@@ -49,7 +50,7 @@ const Navbar = () => {
 
     // Close profile dropdown if clicked outside
     useEffect(() => {
-        const handleClickOutside = (event) => {
+        const handleClickOutside = event => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setProfileMenuOpen(false);
             }
@@ -67,7 +68,7 @@ const Navbar = () => {
 
             {/* Desktop Links */}
             <div className={styles.links}>
-                {links.map((link) => (
+                {links.map(link => (
                     <NavLink item={link} key={link.title} />
                 ))}
 
@@ -96,18 +97,14 @@ const Navbar = () => {
                             </h3>
                             <ul>
                                 <li className={styles.dropdownItem}>
-                                    <FontAwesomeIcon icon={faUser} />
-                                    <Link href="#">My Profile</Link>
+                                    <FontAwesomeIcon icon={faCog} />
+                                    <a href="/setting">Settings</a>
                                 </li>
                                 <li className={styles.dropdownItem}>
                                     <FontAwesomeIcon icon={faSignOutAlt} />
-                                    <Link href="/" onClick={doSignOut}>
+                                    <a href="/" onClick={doSignOut}>
                                         Logout
-                                    </Link>
-                                </li>
-                                <li className={styles.dropdownItem}>
-                                    <FontAwesomeIcon icon={faCog} />
-                                    <Link href="#">Settings</Link>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -118,7 +115,7 @@ const Navbar = () => {
             {/* Hamburger Icon for mobile view */}
             <div
                 className={styles.menuIcon}
-                onClick={() => setOpen((prev) => !prev)}
+                onClick={() => setOpen(prev => !prev)}
             >
                 <FontAwesomeIcon icon={faBars} />
             </div>
@@ -126,7 +123,7 @@ const Navbar = () => {
             {/* Mobile Links */}
             {open && (
                 <div className={styles.mobileLinks}>
-                    {links.map((link) => (
+                    {links.map(link => (
                         <NavLink item={link} key={link.title} />
                     ))}
                 </div>

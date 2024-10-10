@@ -1,15 +1,33 @@
 "use client"; // Ensures the file is treated as a client-side component
 
 import React, { useState, useEffect } from "react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from 'recharts';
+import {
+    PieChart,
+    Pie,
+    Cell,
+    Tooltip,
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Legend
+} from "recharts";
 import styles from "@/app/(component)/Home/home.module.css";
 import { useAuth } from "@/app/(context)/auth";
 import { useRouter } from "next/navigation";
-import { db } from '../Firebase/firebase';
-import { collection, getDocs } from 'firebase/firestore';
-import Image from 'next/image';
+import { db } from "../Firebase/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import Image from "next/image";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF4560', '#32CD32'];
+const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#FF4560",
+    "#32CD32"
+];
 
 export default function Home() {
     const { userLoggedIn } = useAuth();
@@ -19,7 +37,7 @@ export default function Home() {
     const [happyStreak, setHappyStreak] = useState(0);
     const [sortBy, setSortBy] = useState("mood");
     const [categoryCounts, setCategoryCounts] = useState([]);
-    const [leaderboardData, setLeaderboardData] = useState([ ]);
+    const [leaderboardData, setLeaderboardData] = useState([]);
 
     useEffect(() => {
         if (!userLoggedIn) router.push("/");
@@ -36,7 +54,7 @@ export default function Home() {
 
     useEffect(() => {
         const streak = moodHistory.reduceRight((acc, entry) => {
-            if (entry.mood === 'Happy') return acc + 1;
+            if (entry.mood === "Happy") return acc + 1;
             return 0;
         }, 0);
         setHappyStreak(streak);
@@ -50,7 +68,9 @@ export default function Home() {
     }, []);
 
     const sortedMoodData = moodData.sort((a, b) =>
-        sortBy === 'frequency' ? b.value - a.value : a.name.localeCompare(b.name)
+        sortBy === "frequency"
+            ? b.value - a.value
+            : a.name.localeCompare(b.name)
     );
 
     useEffect(() => {
@@ -58,7 +78,12 @@ export default function Home() {
             acc[category] = (acc[category] || 0) + 1;
             return acc;
         }, {});
-        setCategoryCounts(Object.keys(counts).map(category => ({ category, count: counts[category] })));
+        setCategoryCounts(
+            Object.keys(counts).map(category => ({
+                category,
+                count: counts[category]
+            }))
+        );
     }, [messages]);
 
     return (
@@ -68,20 +93,33 @@ export default function Home() {
                     {/* Top Row: Happy Streak, Map Container, and Game Scoreboard */}
                     <div className={styles.topRowContainer}>
                         <div className={styles.streakContainer}>
-                            <Image src="/mood_images/fire.png" alt="Fire Icon" width={30} height={30} className={styles.fireIcon} />
+                            <Image
+                                src="/mood_images/fire.png"
+                                alt="Fire Icon"
+                                width={30}
+                                height={30}
+                                className={styles.fireIcon}
+                            />
                             <h4>Happy Streak: {happyStreak} day(s)</h4>
                         </div>
 
                         {/* Map Container with Image */}
                         <div className={styles.mapContainer}>
-                            <Image src="/map.png" alt="Map"  width={80} height={80} />
+                            <Image
+                                src="/map.png"
+                                alt="Map"
+                                width={80}
+                                height={80}
+                            />
                         </div>
 
                         <div className={styles.scoreboardContainer}>
                             <h4>Game Scoreboard</h4>
                             <ul>
                                 {leaderboardData.map((player, index) => (
-                                    <li key={index}>{player.name}: {player.score} points</li>
+                                    <li key={index}>
+                                        {player.name}: {player.score} points
+                                    </li>
                                 ))}
                             </ul>
                         </div>
@@ -90,7 +128,12 @@ export default function Home() {
                     {/* Dropdown to sort mood data */}
                     <div className={styles.sortContainer}>
                         <label htmlFor="sortBy">Sort By: </label>
-                        <select id="sortBy" value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.sortSelect}>
+                        <select
+                            id="sortBy"
+                            value={sortBy}
+                            onChange={e => setSortBy(e.target.value)}
+                            className={styles.sortSelect}
+                        >
                             <option value="mood">Mood Name</option>
                             <option value="frequency">Mood Frequency</option>
                         </select>
@@ -102,9 +145,27 @@ export default function Home() {
                             <h4>Mood Tracker</h4>
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
-                                    <Pie data={sortedMoodData} cx="50%" cy="60%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
+                                    <Pie
+                                        data={sortedMoodData}
+                                        cx="50%"
+                                        cy="60%"
+                                        outerRadius={100}
+                                        dataKey="value"
+                                        label={({ name, percent }) =>
+                                            `${name}: ${(percent * 100).toFixed(
+                                                0
+                                            )}%`
+                                        }
+                                    >
                                         {sortedMoodData.map((entry, index) => (
-                                            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                            <Cell
+                                                key={index}
+                                                fill={
+                                                    COLORS[
+                                                        index % COLORS.length
+                                                    ]
+                                                }
+                                            />
                                         ))}
                                     </Pie>
                                     <Tooltip />
