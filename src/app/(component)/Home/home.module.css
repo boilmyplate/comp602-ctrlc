@@ -3,94 +3,81 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
     align-items: center;
-    justify-content: center;
-    width: 100%;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-/* Content wrapper for the charts and streak container */
+/* Wrapper for content */
 .contentWrapper {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    align-items: center;
-    justify-content: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
+    padding: 0 20px;
 }
 
-/* Happy streak container */
-.streakContainer {
-    background-color: #f5deb3;
+/* Top row container for Happy Streak, Map, and Scoreboard */
+.topRowContainer {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+/* Happy Streak, Map, and Scoreboard containers */
+.streakContainer, .mapContainer, .scoreboardContainer {
     padding: 15px;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 50%;
-    text-align: center;
-    justify-content: center;
 }
 
-.streakContainer h4 {
-    font-size: 20px;
-    margin: 0;
-}
-
-.fireIcon {
-    width: 30px;
-    height: 30px;
-}
-
-/* Sort by dropdown */
-.sortContainer {
+.streakContainer {
+    background-color: #f5deb3;
+    width: 35%;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.sortSelect {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    cursor: pointer;
+.mapContainer {
+    background-color: #e0f7fa;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
 }
 
-/* Flexbox container for the charts */
+.scoreboardContainer {
+    background-color: #d8f3fc;
+    width: 45%;
+}
+
+/* Flex container for charts */
 .chartFlexContainer {
     display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 1200px;
     gap: 20px;
+    width: 100%;
+    justify-content: space-around;
 }
 
-/* Pie chart container */
+/* Container for Pie and Bar charts */
+.pieChartContainer, .barChartContainer {
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .pieChartContainer {
-    background-color: #f0e68c;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50%;
+    background-color: #f4ec9f;
+    width: 55%;
 }
 
-/* Bar chart container */
 .barChartContainer {
-    background-color: #98fb98;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    width: 70%;
+    background-color: #b0f3b0;
+    width: 100%;
 }
-
-/* Adjust the tooltip and legend for the charts */
-.recharts-tooltip-label,
-.recharts-legend-item-text {
-    font-size: 12px;
-    font-weight: bold;
-    color: #333;
-}
-

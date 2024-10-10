@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from "@/app/(component)/moodTracker/moodTracker.module.css";
+import { useRouter } from 'next/navigation';
 import { db } from '../Firebase/firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
-
 
 const moodOptions = [
   { name: 'Great', img: './mood_images/great.png' },
@@ -19,17 +19,18 @@ const moodOptions = [
 const formatTimestamp = (timestamp) => new Date(timestamp).toLocaleString();
 
 const MoodTracker = () => {
+  const router = useRouter();
   const [selectedMood, setSelectedMood] = useState(null);
   const [moodHistory, setMoodHistory] = useState([]);
   const [showInsights, setShowInsights] = useState(false);
   const [timeFrame, setTimeFrame] = useState('Today');
+  const [selectedEntries, setSelectedEntries] = useState([]);
 
   // Load mood history from Firestore
   useEffect(() => {
     const loadMoodHistory = async () => {
       const querySnapshot = await getDocs(collection(db, "moodHistory"));
-      const data = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      setMoodHistory(data);
+      setMoodHistory(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     loadMoodHistory();
   }, []);
@@ -39,59 +40,73 @@ const MoodTracker = () => {
     setSelectedMood(moodName);
     const newMoodEntry = { mood: moodName, timestamp: new Date().toISOString() };
     const docRef = await addDoc(collection(db, "moodHistory"), newMoodEntry);
-    setMoodHistory([...moodHistory, { ...newMoodEntry, id: docRef.id }]);
+    setMoodHistory((prev) => [...prev, { ...newMoodEntry, id: docRef.id }]);
   };
 
-  // Delete a mood entry
-  const handleDeleteMood = async (id) => {
-    await deleteDoc(doc(db, "moodHistory", id));
-    setMoodHistory(moodHistory.filter((entry) => entry.id !== id));
+  // Delete entries (single or multiple)
+  const handleDelete = async (ids) => {
+    if (window.confirm("Are you sure you want to delete the selected entries?")) {
+      await Promise.all(ids.map((id) => deleteDoc(doc(db, "moodHistory", id))));
+      setMoodHistory((prev) => prev.filter((entry) => !ids.includes(entry.id)));
+      setSelectedEntries([]);
+    }
+  };
+
+  // Convert moodHistory to CSV and download
+  const exportToCSV = () => {
+    const csvContent = ["Mood,Timestamp", ...moodHistory.map(entry => `${entry.mood},${formatTimestamp(entry.timestamp)}`)].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "mood_history.csv";
+    link.click();
   };
 
   // Filter mood history based on time frame
-  const filterMoodHistory = () => moodHistory.filter((entry) => {
+  const filterMoodHistory = () => {
     const now = new Date();
-    const entryDate = new Date(entry.timestamp);
-    if (timeFrame === 'Today') return entryDate.toDateString() === now.toDateString();
-    if (timeFrame === 'Last 7 Days') return now - entryDate <= 7 * 24 * 60 * 60 * 1000;
-    if (timeFrame === 'Last 30 Days') return now - entryDate <= 30 * 24 * 60 * 60 * 1000;
-    return true;
-  });
+    return moodHistory.filter((entry) => {
+      const entryDate = new Date(entry.timestamp);
+      return timeFrame === 'Today' ? entryDate.toDateString() === now.toDateString() :
+             timeFrame === 'Last 7 Days' ? now - entryDate <= 7 * 24 * 60 * 60 * 1000 :
+             timeFrame === 'Last 30 Days' ? now - entryDate <= 30 * 24 * 60 * 60 * 1000 : true;
+    });
+  };
 
   // Calculate insights based on filtered history
   const calculateInsights = () => {
     const filteredHistory = filterMoodHistory();
-    const moodCount = filteredHistory.reduce((acc, entry) => {
-      acc[entry.mood] = (acc[entry.mood] || 0) + 1;
-      return acc;
-    }, {});
+    const moodCount = filteredHistory.reduce((acc, { mood }) => ({ ...acc, [mood]: (acc[mood] || 0) + 1 }), {});
     const mostFrequentMood = Object.keys(moodCount).reduce((a, b) => moodCount[a] > moodCount[b] ? a : b, '');
-
-    return { totalEntries: filteredHistory.length, mostFrequentMood, moodCount, filteredHistory };
+    return { totalEntries: filteredHistory.length, mostFrequentMood, filteredHistory };
   };
 
   const insights = calculateInsights();
 
   return (
     <div className={styles.moodTrackerContainer}>
-      {!showInsights ? (
-        <>
-          <h2>Select Your Mood</h2>
-          <div className={styles.moodGrid}>
-            {moodOptions.map((mood, index) => (
-              <div key={index} className={styles.moodOption} onClick={() => handleMoodSelect(mood.name)}>
-                <img src={mood.img} alt={mood.name} className={styles.moodImage} />
-                <p>{mood.name}</p>
-              </div>
-            ))}
+      <h2>How are you feeling right now?</h2>
+      <div className={styles.moodGrid}>
+        {moodOptions.map((mood) => (
+          <div key={mood.name} className={styles.moodOption} onClick={() => handleMoodSelect(mood.name)}>
+            <img src={mood.img} alt={mood.name} className={styles.moodImage} />
+            <p>{mood.name}</p>
           </div>
-          {selectedMood && <div>You are feeling: {selectedMood}</div>}
-          <button onClick={() => setShowInsights(true)}>Show Insights</button>
-        </>
-      ) : (
+        ))}
+      </div>
+      {selectedMood && <div className={styles.selectedMood}>You are feeling: {selectedMood}</div>}
+
+      <div className={styles.buttonContainer}>
+        <img src="/mood_images/download.png" alt="Download CSV" className={styles.icon} onClick={exportToCSV} />
+        <button onClick={() => setShowInsights(true)} className={styles.insightsButton}>Show Insights</button>
+        <button onClick={() => router.push('/')} className={styles.homeButton}>Back to Homepage</button>
+      </div>
+
+      {showInsights && (
         <div className={styles.insightsContainer}>
           <h3>Mood Insights</h3>
-          <div>
+          <div className={styles.timeFrameContainer}>
             <label>Sort by:</label>
             <select value={timeFrame} onChange={(e) => setTimeFrame(e.target.value)}>
               <option value="Today">Today</option>
@@ -104,15 +119,28 @@ const MoodTracker = () => {
             <>
               <p>Total Entries: {insights.totalEntries}</p>
               <p>Most Frequent Mood: {insights.mostFrequentMood}</p>
-              <ul>{insights.filteredHistory.map((entry) => (<li key={entry.id}>
-                    {entry.mood}: {formatTimestamp(entry.timestamp)}{' '}
-                    <button onClick={() => handleDeleteMood(entry.id)}>Delete</button>
+              <ul className={styles.moodTimestamps}>
+                {insights.filteredHistory.map((entry) => (
+                  <li key={entry.id}>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedEntries.includes(entry.id)} 
+                      onChange={() => setSelectedEntries((prev) =>
+                        prev.includes(entry.id) ? prev.filter((id) => id !== entry.id) : [...prev, entry.id]
+                      )}
+                    />
+                    {entry.mood}: {formatTimestamp(entry.timestamp)}
+                    <button onClick={() => handleDelete([entry.id])} className={styles.deleteButton} style={{ marginLeft: '10px' }}>
+                      Delete
+                    </button>
                   </li>
                 ))}
               </ul>
+              <button onClick={() => handleDelete(selectedEntries)} disabled={selectedEntries.length === 0} className={styles.deleteButton}>
+                Delete Selected
+              </button>
             </>
           ) : <p>No entries available.</p>}
-          <button onClick={() => setShowInsights(false)}>Back to Mood Tracker</button>
         </div>
       )}
     </div>

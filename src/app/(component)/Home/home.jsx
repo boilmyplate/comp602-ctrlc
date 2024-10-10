@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Ensures the file is treated as a client-side component
 
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from 'recharts';
@@ -19,69 +19,75 @@ export default function Home() {
     const [happyStreak, setHappyStreak] = useState(0);
     const [sortBy, setSortBy] = useState("mood");
     const [categoryCounts, setCategoryCounts] = useState([]);
+    const [leaderboardData, setLeaderboardData] = useState([ ]);
 
     useEffect(() => {
-        if (!userLoggedIn) {
-            router.push("/");
-        }
+        if (!userLoggedIn) router.push("/");
+
+        const fetchData = async () => {
+            const moodData = await getDocs(collection(db, "moodHistory"));
+            const messageData = await getDocs(collection(db, "messages"));
+            setMoodHistory(moodData.docs.map(doc => doc.data()));
+            setMessages(messageData.docs.map(doc => doc.data()));
+        };
+
+        if (userLoggedIn) fetchData();
     }, [userLoggedIn, router]);
 
     useEffect(() => {
-        const loadMoodHistory = async () => {
-            const data = (await getDocs(collection(db, "moodHistory"))).docs.map(doc => doc.data());
-            setMoodHistory(data);
-        };
-        if (userLoggedIn) loadMoodHistory();
-    }, [userLoggedIn]);
-
-    useEffect(() => {
-        const loadMessages = async () => {
-            const data = (await getDocs(collection(db, "messages"))).docs.map(doc => doc.data());
-            setMessages(data);
-        };
-        if (userLoggedIn) loadMessages();
-    }, [userLoggedIn]);
-
-    useEffect(() => {
-        let streak = 0;
-        for (let i = moodHistory.length - 1; i >= 0; i--) {
-            if (moodHistory[i].mood === 'Happy') streak++;
-            else break;
-        }
+        const streak = moodHistory.reduceRight((acc, entry) => {
+            if (entry.mood === 'Happy') return acc + 1;
+            return 0;
+        }, 0);
         setHappyStreak(streak);
     }, [moodHistory]);
 
-    const moodData = moodHistory.reduce((acc, entry) => {
-        const found = acc.find(item => item.name === entry.mood);
-        if (found) found.value += 1;
-        else acc.push({ name: entry.mood, value: 1 });
+    const moodData = moodHistory.reduce((acc, { mood }) => {
+        const moodItem = acc.find(item => item.name === mood);
+        if (moodItem) moodItem.value += 1;
+        else acc.push({ name: mood, value: 1 });
         return acc;
     }, []);
 
-    const sortedMoodData = [...moodData].sort((a, b) => 
+    const sortedMoodData = moodData.sort((a, b) =>
         sortBy === 'frequency' ? b.value - a.value : a.name.localeCompare(b.name)
     );
 
     useEffect(() => {
-        if (messages.length > 0) {
-            const counts = messages.reduce((acc, message) => {
-                acc[message.category] = (acc[message.category] || 0) + 1;
-                return acc;
-            }, {});
-
-            setCategoryCounts(Object.keys(counts).map(category => ({ category, count: counts[category] })));
-        }
+        const counts = messages.reduce((acc, { category }) => {
+            acc[category] = (acc[category] || 0) + 1;
+            return acc;
+        }, {});
+        setCategoryCounts(Object.keys(counts).map(category => ({ category, count: counts[category] })));
     }, [messages]);
 
     return (
         <div className={styles.container}>
             {userLoggedIn ? (
                 <div className={styles.contentWrapper}>
-                    <div className={styles.streakContainer}>
-                        <Image src="/mood_images/fire.png" alt="Fire Icon" width={30} height={30} className={styles.fireIcon} />
-                        <h4>Happy Streak: {happyStreak} day(s)</h4>
+                    {/* Top Row: Happy Streak, Map Container, and Game Scoreboard */}
+                    <div className={styles.topRowContainer}>
+                        <div className={styles.streakContainer}>
+                            <Image src="/mood_images/fire.png" alt="Fire Icon" width={30} height={30} className={styles.fireIcon} />
+                            <h4>Happy Streak: {happyStreak} day(s)</h4>
+                        </div>
+
+                        {/* Map Container with Image */}
+                        <div className={styles.mapContainer}>
+                            <Image src="/map.png" alt="Map"  width={80} height={80} />
+                        </div>
+
+                        <div className={styles.scoreboardContainer}>
+                            <h4>Game Scoreboard</h4>
+                            <ul>
+                                {leaderboardData.map((player, index) => (
+                                    <li key={index}>{player.name}: {player.score} points</li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
 
+                    {/* Dropdown to sort mood data */}
                     <div className={styles.sortContainer}>
                         <label htmlFor="sortBy">Sort By: </label>
                         <select id="sortBy" value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.sortSelect}>
@@ -90,12 +96,16 @@ export default function Home() {
                         </select>
                     </div>
 
+                    {/* Charts Container */}
                     <div className={styles.chartFlexContainer}>
                         <div className={styles.pieChartContainer}>
-                            <ResponsiveContainer width="100%" height={400}>
+                            <h4>Mood Tracker</h4>
+                            <ResponsiveContainer width="100%" height={300}>
                                 <PieChart>
-                                    <Pie data={sortedMoodData} cx="50%" cy="50%" outerRadius={129} fill="#8884d8" dataKey="value" label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
-                                        {sortedMoodData.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+                                    <Pie data={sortedMoodData} cx="50%" cy="60%" outerRadius={100} dataKey="value" label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
+                                        {sortedMoodData.map((entry, index) => (
+                                            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                        ))}
                                     </Pie>
                                     <Tooltip />
                                 </PieChart>
@@ -103,8 +113,9 @@ export default function Home() {
                         </div>
 
                         <div className={styles.barChartContainer}>
+                            <h4>Journal Entry</h4>
                             <ResponsiveContainer width="80%" height={400}>
-                                <BarChart data={categoryCounts} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                <BarChart data={categoryCounts}>
                                     <XAxis dataKey="category" />
                                     <YAxis />
                                     <Tooltip />
