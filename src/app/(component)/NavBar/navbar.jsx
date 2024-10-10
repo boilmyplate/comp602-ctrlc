@@ -21,6 +21,7 @@ const links = [
     { title: "Homepage", path: "/" },
     { title: "Game", path: "/gameLibrary" },
     { title: "Journal", path: "/journalWelcome" },
+    { title: "Breathing Exercise", path: "/breath" },
 ];
 
 const NavLink = ({ item }) => {
