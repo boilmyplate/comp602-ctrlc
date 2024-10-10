@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import styles from "@/app/(component)/ResetPass/resetpass.module.css";
 import { doPasswordReset } from "@/app/(component)/Firebase/auth";
+import Link from "next/link";
 
 const Reset = () => {
   const [email, setEmail] = useState("");
@@ -71,7 +72,7 @@ const Reset = () => {
 
         {/* Back to Login Link */}
         <div className={styles.links}>
-          <a href="/">Back to login</a>
+          <Link href="/">Back to login</Link>
         </div>
       </div>
     </div>

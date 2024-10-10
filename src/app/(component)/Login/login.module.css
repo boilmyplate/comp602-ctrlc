@@ -143,6 +143,21 @@
   font-size: 16px;
   color: #333; 
   margin-top: 10px;
+  cursor: text;
+  box-sizing: border-box;
+}
+
+.GoogleSignIn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2); 
+  border: 2px solid #ddd; 
+  border-radius: 8px; 
+  padding: 12px 15px; 
+  font-size: 16px;
+  color: #333; 
+  margin-top: 10px;
   cursor: pointer;
   box-sizing: border-box;
 }
