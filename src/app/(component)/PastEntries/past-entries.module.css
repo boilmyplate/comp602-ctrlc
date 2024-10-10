@@ -6,7 +6,7 @@
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
 }
 
 /* Main container for past entries */
@@ -68,7 +68,7 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
   font-size: 16px;
   resize: vertical;
 }
@@ -111,7 +111,7 @@
   font-size: 16px;
 }
 
-.search-container-withoutInput{
+.search-container-withoutInput {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -178,22 +178,20 @@
   background-color: #f0f685; /* Same hover effect */
 }
 
-.dateNTags{
+.dateNTags {
   display: flex;
   flex-direction: row;
   gap: 8px;
-
 }
 
-h3 .title{
+h3 .title {
   font-size: 2rem;
 }
 
-.tags{
+.tags {
   font-size: 0.8rem;
   margin: 5px 0;
 }
-
 
 /* Hide dropdown on small screens */
 @media (max-width: 768px) {

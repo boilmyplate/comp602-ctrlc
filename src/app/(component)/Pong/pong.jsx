@@ -3,43 +3,49 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "@/app/(component)/Pong/pong.module.css";
 import Link from "next/link";
 
+// Pong component
 const Pong = () => {
-    const canvasRef = useRef(null);
-    const [paddleHeight] = useState(100);
-    const [paddleWidth] = useState(10);
-    const [ballSize] = useState(20);
-    const [playerY, setPlayerY] = useState(0);
-    const [computerY, setComputerY] = useState(0);
-    const [ball, setBall] = useState({ x: 10, y: 10, dx: 5, dy: 7 });
-    const [playerScore, setPlayerScore] = useState(0);
-    const [computerScore, setComputerScore] = useState(0);
-    const [isGameRunning, setIsGameRunning] = useState(false);
-    const [isGamePaused, setIsGamePaused] = useState(false);
-    const [showText, setShowText] = useState(true);
-    const [showRestartConfirm, setShowRestartConfirm] = useState(false);
+    const canvasRef = useRef(null); // Reference to the canvas element
+    const [paddleHeight] = useState(100); // Paddle height state
+    const [paddleWidth] = useState(10); // Paddle width state
+    const [ballSize] = useState(20); // Ball size state
+    const [playerY, setPlayerY] = useState(0); // Player paddle position on Y-axis
+    const [computerY, setComputerY] = useState(0); // Computer paddle position on Y-axis
+    const [ball, setBall] = useState({ x: 10, y: 10, dx: 10, dy: 12 }); // Ball position and direction
+    const [playerScore, setPlayerScore] = useState(0); // Player's score
+    const [computerScore, setComputerScore] = useState(0); // Computer's score
+    const [isGameRunning, setIsGameRunning] = useState(false); // Game running state
+    const [isGamePaused, setIsGamePaused] = useState(false); // Game paused state
+    const [showText, setShowText] = useState(true); // Show start menu state
+    const [showRestartConfirm, setShowRestartConfirm] = useState(false); // Show restart confirmation dialog state
 
+    // useEffect to handle game updates
     useEffect(() => {
         if (!isGameRunning || isGamePaused) return;
 
         const canvas = canvasRef.current;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; // Set canvas width
+        canvas.height = window.innerHeight; // Set canvas height
         const context = canvas.getContext("2d");
 
         let animationFrameId;
 
+        // Function to update game state and draw objects
         const update = () => {
             let { x, y, dx, dy } = ball;
-            x += dx;
+            x += dx; // Update ball position
             y += dy;
 
+            // Bounce the ball off the top and bottom walls
             if (y < 0 || y > canvas.height - ballSize) dy *= -1;
 
+            // Player paddle collision detection
             if (x < paddleWidth && y > playerY && y < playerY + paddleHeight) {
-                dx *= -1;
+                dx *= -1; // Change ball direction
                 x = paddleWidth;
             }
 
+            // Computer paddle collision detection
             if (
                 x > canvas.width - paddleWidth - ballSize &&
                 y > computerY &&
@@ -49,16 +55,18 @@ const Pong = () => {
                 x = canvas.width - paddleWidth - ballSize;
             }
 
+            // Check if player/computer scores
             if (x < 0) {
-                setComputerScore((score) => score + 1);
-                resetBall();
+                setComputerScore(score => score + 1); // Computer scores
+                resetBall(); // Reset ball to center
                 return;
             } else if (x > canvas.width - ballSize) {
-                setPlayerScore((score) => score + 1);
-                resetBall();
+                setPlayerScore(score => score + 1); // Player scores
+                resetBall(); // Reset ball
                 return;
             }
 
+            // Move computer paddle towards the ball
             if (computerY + paddleHeight / 2 < y) {
                 setComputerY(
                     Math.min(computerY + 10, canvas.height - paddleHeight)
@@ -67,23 +75,27 @@ const Pong = () => {
                 setComputerY(Math.max(computerY - 4, 0));
             }
 
+            // Update ball position
             setBall({ x, y, dx, dy });
 
+            // Clear canvas and redraw everything
             context.clearRect(0, 0, canvas.width, canvas.height);
-            drawDashedLine(context); // Draw the dashed line
-            drawPaddle(context, 0, playerY);
-            drawPaddle(context, canvas.width - paddleWidth, computerY);
-            drawBall(context, x, y);
-            drawScore(context);
+            drawDashedLine(context); // Draw middle dashed line
+            drawPaddle(context, 0, playerY); // Draw player paddle
+            drawPaddle(context, canvas.width - paddleWidth, computerY); // Draw computer paddle
+            drawBall(context, x, y); // Draw ball
+            drawScore(context); // Display scores
 
-            animationFrameId = requestAnimationFrame(update);
+            animationFrameId = requestAnimationFrame(update); // Request next frame
         };
 
+        // Function to draw a paddle
         const drawPaddle = (ctx, x, y) => {
             ctx.fillStyle = "white";
             ctx.fillRect(x, y, paddleWidth, paddleHeight);
         };
 
+        // Function to draw the ball
         const drawBall = (ctx, x, y) => {
             ctx.fillStyle = "white";
             ctx.beginPath();
@@ -97,8 +109,9 @@ const Pong = () => {
             ctx.fill();
         };
 
-        const drawDashedLine = (ctx) => {
-            ctx.setLineDash([10, 10]); // Dash pattern: 10px line, 10px space
+        // Function to draw the middle dashed line
+        const drawDashedLine = ctx => {
+            ctx.setLineDash([10, 10]); // Set dash pattern
             ctx.beginPath();
             ctx.moveTo(canvas.width / 2, 0);
             ctx.lineTo(canvas.width / 2, canvas.height);
@@ -108,15 +121,16 @@ const Pong = () => {
             ctx.setLineDash([]); // Reset to solid lines
         };
 
-        const drawScore = (ctx) => {
-            ctx.fillStyle = "gray"; // Set the color of the score
-            ctx.font = "120px Arial"; // Increase the font size to make the score larger
-            ctx.textAlign = "center"; // Center the text horizontally
+        // Function to draw the scores
+        const drawScore = ctx => {
+            ctx.fillStyle = "gray";
+            ctx.font = "120px Arial"; // Set larger font
+            ctx.textAlign = "center"; // Center the score text
 
             // Display player's score on the left
             ctx.fillText(playerScore, canvas.width / 4, canvas.height / 5);
 
-            // Display opponent's score on the right
+            // Display computer's score on the right
             ctx.fillText(
                 computerScore,
                 (3 * canvas.width) / 4,
@@ -124,6 +138,7 @@ const Pong = () => {
             );
         };
 
+        // Function to reset ball position after a point is scored
         const resetBall = () => {
             const canvas = canvasRef.current;
 
@@ -134,13 +149,13 @@ const Pong = () => {
                 x: canvas.width / 2,
                 y: canvas.height / 2,
                 dx: randomDirectionX * Math.abs(ball.dx),
-                dy: randomDirectionY * Math.abs(ball.dy),
+                dy: randomDirectionY * Math.abs(ball.dy)
             });
         };
 
         animationFrameId = requestAnimationFrame(update);
 
-        return () => cancelAnimationFrame(animationFrameId);
+        return () => cancelAnimationFrame(animationFrameId); // Clean up animation frame
     }, [
         ball,
         computerY,
@@ -151,23 +166,25 @@ const Pong = () => {
         paddleWidth,
         ballSize,
         isGameRunning,
-        isGamePaused,
+        isGamePaused
     ]);
 
-    const handleKeyDown = (e) => {
+    // Function to handle key press for player paddle movement
+    const handleKeyDown = e => {
         if (e.key === "ArrowUp" && playerY > 0) {
-            setPlayerY(Math.max(playerY - 20, 0));
+            setPlayerY(Math.max(playerY - 20, 0)); // Move paddle up
         } else if (
             e.key === "ArrowDown" &&
             playerY < canvasRef.current.height - paddleHeight
         ) {
             setPlayerY(
                 Math.min(playerY + 20, canvasRef.current.height - paddleHeight)
-            );
+            ); // Move paddle down
         }
     };
 
-    const handleMouseMove = (e) => {
+    // Function to handle mouse movement for player paddle
+    const handleMouseMove = e => {
         const canvas = canvasRef.current;
         const mouseY = e.clientY - canvas.getBoundingClientRect().top;
         setPlayerY(
@@ -178,6 +195,7 @@ const Pong = () => {
         );
     };
 
+    // Add event listeners for key and mouse input
     useEffect(() => {
         if (!isGameRunning || isGamePaused) return;
 
@@ -190,25 +208,30 @@ const Pong = () => {
         };
     }, [playerY, isGameRunning, isGamePaused]);
 
+    // Function to start the game
     const startGame = () => {
         setIsGameRunning(true);
         setIsGamePaused(false);
         setShowText(false);
     };
 
+    // Function to pause the game
     const pauseGame = () => {
         setIsGamePaused(true);
     };
 
+    // Function to resume the game
     const resumeGame = () => {
         setIsGamePaused(false);
     };
 
+    // Function to show restart confirmation dialog
     const confirmRestart = () => {
         setShowRestartConfirm(true);
     };
 
-    const handleRestartConfirm = (confirm) => {
+    // Function to handle restart confirmation
+    const handleRestartConfirm = confirm => {
         setShowRestartConfirm(false);
         if (confirm) {
             setPlayerScore(0);
@@ -221,6 +244,7 @@ const Pong = () => {
         }
     };
 
+    // Function to reset game and return to main menu
     const backToMainMenu = () => {
         setPlayerScore(0);
         setComputerScore(0);
@@ -230,6 +254,11 @@ const Pong = () => {
         setIsGamePaused(false);
         setIsGameRunning(false);
         setShowText(true);
+    };
+
+    // Function to return to homepage
+    const backToHomePage = () => {
+        window.location.href = "/home-page";
     };
 
     return (
