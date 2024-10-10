@@ -18,6 +18,7 @@
     "@schedule-x/react": "^2.4.0",
     "@schedule-x/theme-default": "^2.4.0",
     "firebase": "^10.13.0",
+    "jest": "^29.7.0",
     "next": "14.2.6",
     "react": "^18",
     "react-dom": "^18",
