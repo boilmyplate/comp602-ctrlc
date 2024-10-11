@@ -7,8 +7,8 @@ import { db } from '../Firebase/firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 const moodOptions = [
-  { name: 'Great', img: './mood_images/great.png' },
   { name: 'Happy', img: './mood_images/happy.png' },
+  { name: 'Great', img: './mood_images/great.png' },
   { name: 'Neutral', img: './mood_images/neutral.png' },
   { name: 'Sad', img: './mood_images/sad.png' },
   { name: 'Angry', img: './mood_images/angry.png' },

@@ -1,12 +1,11 @@
-"use client"; // Ensures the file is treated as a client-side component
-
+"use client";
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from 'recharts';
 import styles from "@/app/(component)/Home/home.module.css";
 import { useAuth } from "@/app/(context)/auth";
 import { useRouter } from "next/navigation";
 import { db } from '../Firebase/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import Image from 'next/image';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF4560', '#32CD32'];
@@ -19,7 +18,37 @@ export default function Home() {
     const [happyStreak, setHappyStreak] = useState(0);
     const [sortBy, setSortBy] = useState("mood");
     const [categoryCounts, setCategoryCounts] = useState([]);
-    const [leaderboardData, setLeaderboardData] = useState([ ]);
+    const [leaderboardData, setLeaderboardData] = useState([]);
+    const [penguinScore, setPenguinScore] = useState(0);
+    const [alphabet2048Score, setAlphabet2048Score] = useState(0);
+
+    // Fetch high scores for Penguin and 2048 games from Firebase
+    useEffect(() => {
+        const fetchScores = async () => {
+            try {
+                // Fetch score for the Penguin game
+                const penguinDoc = await getDoc(doc(db, "scores", "penguin_score"));
+                if (penguinDoc.exists()) {
+                    setPenguinScore(penguinDoc.data().score); // Use "score" instead of "highScore"
+                } else {
+                    console.log("Penguin score document does not exist.");
+                }
+    
+                // Fetch score for the 2048 game
+                const alphabet2048Doc = await getDoc(doc(db, "scores", "2048_score"));
+                if (alphabet2048Doc.exists()) {
+                    setAlphabet2048Score(alphabet2048Doc.data().score); // Use "score" instead of "highScore"
+                } else {
+                    console.log("2048 score document does not exist.");
+                }
+            } catch (error) {
+                console.error("Error fetching scores from Firebase:", error);
+            }
+        };
+        
+        fetchScores();
+    }, []);
+    
 
     useEffect(() => {
         if (!userLoggedIn) router.push("/");
@@ -35,11 +64,42 @@ export default function Home() {
     }, [userLoggedIn, router]);
 
     useEffect(() => {
-        const streak = moodHistory.reduceRight((acc, entry) => {
-            if (entry.mood === 'Happy') return acc + 1;
-            return 0;
-        }, 0);
-        setHappyStreak(streak);
+        // Calculate Happy Streak
+        const sortedHistory = [...moodHistory]
+            .filter(entry => entry.mood === 'Happy')
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+        let streak = 0;
+        let currentStreak = true;
+        const today = new Date();
+        
+        if (sortedHistory.length > 0) {
+            const latestEntryDate = new Date(sortedHistory[0].date);
+            const dayDifference = Math.floor((today - latestEntryDate) / (1000 * 60 * 60 * 24));
+            
+            if (dayDifference <= 1) {
+                streak = 1;
+                for (let i = 1; i < sortedHistory.length; i++) {
+                    const currentDate = new Date(sortedHistory[i - 1].date);
+                    const nextDate = new Date(sortedHistory[i].date);
+                    
+                    const dayDiff = Math.floor((currentDate - nextDate) / (1000 * 60 * 60 * 24));
+                    
+                    if (dayDiff === 1) {
+                        streak += 1;
+                    } else {
+                        currentStreak = false;
+                        break;
+                    }
+                }
+            } else {
+                currentStreak = false;
+            }
+        } else {
+            currentStreak = false;
+        }
+        
+        setHappyStreak(currentStreak ? streak : 0);
     }, [moodHistory]);
 
     const moodData = moodHistory.reduce((acc, { mood }) => {
@@ -77,14 +137,21 @@ export default function Home() {
                             <Image src="/map.png" alt="Map"  width={80} height={80} />
                         </div>
 
-                        <div className={styles.scoreboardContainer}>
-                            <h4>Game Scoreboard</h4>
-                            <ul>
-                                {leaderboardData.map((player, index) => (
-                                    <li key={index}>{player.name}: {player.score} points</li>
-                                ))}
-                            </ul>
-                        </div>
+                        {/* Game Scoreboard displaying 2048 and Penguin high scores */}
+<div className={styles.scoreboardContainer}>
+    <h4>Current Game High Score</h4>
+    <ul className={styles.scoreList}>
+        <li className={styles.scoreItem}>
+            <span className={styles.gameTitle}>Penguin Game:</span>
+            <span className={styles.scoreValue}>{penguinScore} points</span>
+        </li>
+        <li className={styles.scoreItem}>
+            <span className={styles.gameTitle}>2048 Alphabet:</span>
+            <span className={styles.scoreValue}>{alphabet2048Score} points</span>
+        </li>
+    </ul>
+</div>
+
                     </div>
 
                     {/* Dropdown to sort mood data */}
@@ -110,6 +177,8 @@ export default function Home() {
                                     <Tooltip />
                                 </PieChart>
                             </ResponsiveContainer>
+                            <button onClick={() => router.push("/moodTracker")} className={styles.moodTrackerButton}>Go to Mood Tracker
+                            </button>
                         </div>
 
                         <div className={styles.barChartContainer}>

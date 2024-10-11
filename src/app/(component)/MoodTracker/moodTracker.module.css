@@ -31,14 +31,14 @@
 }
 
 .selected {
-  border: 3px solid #D2B48C;
+  border: 3px solid #785d3a;
   border-radius: 50%;
 }
 
 .selectedMood {
   margin-top: 20px;
   font-size: 18px;
-  color: #D2B48C;
+  color: #785d3a;
 }
 
 .timeFrameContainer {
