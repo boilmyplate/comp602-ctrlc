@@ -1,3 +1,4 @@
+/* Main container styles for Game and Home containers */
 .gameContainer, .homeContainer {
     display: flex;
     flex-direction: column;
@@ -7,6 +8,7 @@
     font-family: Arial, sans-serif;
 }
 
+/* Header section styling, aligning items to the center and setting font size */
 .header {
     display: flex;
     flex-direction: column;
@@ -15,6 +17,7 @@
     margin-bottom: 20px;
 }
 
+/* Button container styling to stack buttons vertically with spacing */
 .buttonContainer {
     display: flex;
     flex-direction: column;
@@ -23,6 +26,7 @@
     margin-top: 10px;
 }
 
+/* Grid container for the game grid, defining rows and columns and adding styling */
 .gridContainer {
     display: grid;
     grid-template-columns: repeat(4, 100px);
@@ -34,6 +38,7 @@
     border-radius: 10px;
 }
 
+/* Styling for each individual tile, including size, color, font, and shadow */
 .tile {
     width: 100px;
     height: 100px;
@@ -50,7 +55,7 @@
     transition: transform 0.2s ease-in-out;
 }
 
-/* Tile colors */
+/* Tile color gradients, setting background color and text color based on tile value */
 .tile[data-value="A"] { background-color: #e6e0f8; color: #4b0082; }
 .tile[data-value="B"] { background-color: #d1c4f2; color: #4b0082; }
 .tile[data-value="C"] { background-color: #b39ddb; color: #4b0082; }
@@ -62,7 +67,10 @@
 .tile[data-value="I"] { background-color: #4527a0; color: #ffffff; }
 .tile[data-value="J"] { background-color: #311b92; color: #ffffff; }
 .tile[data-value="K"] { background-color: #23036a; color: #ffffff; }
+.tile[data-value="L"] { background-color: #1a1a5e; color: #ffffff;}
 
+
+/* Scoreboard styling, centering and adding margin */
 .scoreBoard {
     display: flex;
     flex-direction: column;
@@ -70,16 +78,19 @@
     margin-bottom: 20px;
 }
 
+/* Score and best score text styling within scoreboard */
 .scoreBoard div {
     font-size: 1.2rem;
     margin: 5px 0;
 }
 
+/* Final score display styling, setting font size and margin */
 .finalScore {
     font-size: 1.2rem;
     margin: 10px 0;
 }
 
+/* Title text styling for general headings */
 .title {
     font-size: 2rem;
     font-weight: bold;
@@ -87,24 +98,27 @@
     margin-bottom: 20px;
 }
 
+/* Puzzle image styling, setting width and bottom margin */
 .puzzleImage {
     width: 250px;
     margin-bottom: 70px;
 }
 
+/* Start button styling, setting color, padding, border, and margin */
 .start {
     color: white;
     background-color: green;
     padding: 10px 20px;
     border-radius: 5px;
     margin-top: 10px;
-    cursor: pointer;
 }
 
+/* Hover effect for start button */
 .start:hover {
-    background-color: darkgreen;
+    background-color: pink;
 }
 
+/* Overlay for Game Over message, centering content and adding a semi-transparent background */
 .overlay {
     position: absolute;
     top: 0;
@@ -117,6 +131,7 @@
     justify-content: center;
 }
 
+/* Game Over message container styling, adding background, padding, and shadow */
 .gameOverMessage {
     background: white;
     padding: 20px;
@@ -125,10 +140,12 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Styling for Game Over header */
 .gameOverMessage h2 {
     margin-bottom: 15px;
 }
 
+/* Button styling within Game Over message */
 .gameOverMessage button {
     padding: 10px 20px;
     background-color: green;
@@ -140,6 +157,7 @@
     max-height: 40px;
 }
 
+/* General button styling */
 .button {
     background-color: green;
     color: white;
@@ -152,6 +170,30 @@
     max-height: 40px;
 }
 
+/* Hover effect for all buttons */
 .button:hover {
-    background-color: darkgreen;
+    background-color: pink;
+}
+
+/* Container styling for the title section, adding background, padding, and shadow */
+.titleContainer {
+    background-color: #4b0082; /* Dark purple background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%; /* Adjust width as needed */
+    max-width: 300px; /* Optional: set a max width for alignment */
+}
+
+/* Block title styling, making text bold and uppercase */
+.blockTitle {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #fff; /* White text for contrast */
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0; /* Remove default margin */
 }

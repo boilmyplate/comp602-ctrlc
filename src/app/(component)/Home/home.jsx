@@ -114,7 +114,7 @@ export default function Home() {
 
                         <div className={styles.barChartContainer}>
                             <h4>Journal Entry</h4>
-                            <ResponsiveContainer width="80%" height={400}>
+                            <ResponsiveContainer width="70%" height={400}>
                                 <BarChart data={categoryCounts}>
                                     <XAxis dataKey="category" />
                                     <YAxis />
