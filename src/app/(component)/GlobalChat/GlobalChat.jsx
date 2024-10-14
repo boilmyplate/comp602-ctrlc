@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./GlobalChat.module.css";
 import { db, auth } from "../Firebase/firebase";
+import { onSnapshot } from "firebase/firestore";
 import {
     collection,
     orderBy,
@@ -11,18 +12,28 @@ import {
     serverTimestamp,
     addDoc
 } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollection } from "react-firebase-hooks/firestore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComments, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+    faComments,
+    faXmark,
+    faPaperPlane
+} from "@fortawesome/free-solid-svg-icons";
 
 const GlobalChat = () => {
-    const [user] = useAuthState(auth);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const handleChatOpen = () => setIsChatOpen(!isChatOpen);
+
     return (
         <>
             <div className="background">
-                <input type="checkbox" name="click" className={styles.click} id="click" />
+                <input
+                    type="checkbox"
+                    name="click"
+                    className={styles.click}
+                    id="click"
+                    onChange={handleChatOpen}
+                />
                 <label className={styles.btnlabel} htmlFor="click">
                     <i className={styles.fac}>
                         <FontAwesomeIcon icon={faComments} />
@@ -33,8 +44,12 @@ const GlobalChat = () => {
                 </label>
                 <div className={styles["wrapper"]}>
                     <section>
-                        <h1 className={styles.headText}>Global Chat Room</h1>
-                        <ChatRoom />
+                        <div className={styles["chatbox-header"]}>
+                            <h2 className={styles["chatbox-header-title"]}>
+                                Global Chat Room
+                            </h2>
+                        </div>
+                        {isChatOpen && <ChatRoom />}
                     </section>
                 </div>
             </div>
@@ -44,13 +59,38 @@ const GlobalChat = () => {
 
 function ChatRoom() {
     const dummy = useRef();
-    const messagesRef = collection(db, "chats");
-    const messagesQuery = query(messagesRef, orderBy("createdAt"), limit(25));
-
-    const [messages] = useCollection(messagesQuery);
-
+    const [messages, setMessages] = useState([]);
     const [formValue, setFormValue] = useState("");
 
+    const messagesRef = collection(db, "chats");
+    const messagesQuery = query(
+        messagesRef,
+        orderBy("createdAt", "desc"),
+        limit(20)
+    );
+
+    // READ: useEffect to ensure read requests are sent only when the chat is open
+    useEffect(() => {
+        const unsubscribe = onSnapshot(messagesQuery, snapshot => {
+            console.log(
+                "Received new data from Firestore:",
+                snapshot.docs.length,
+                "documents."
+            );
+            setMessages(
+                snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .reverse()
+            );
+        });
+
+        return () => {
+            console.log("Cleaning up Firestore listener...");
+            unsubscribe();
+        };
+    }, []);
+
+    // WRITE: sends message to firestore
     const sendMessage = async e => {
         e.preventDefault();
 
@@ -72,11 +112,8 @@ function ChatRoom() {
         <>
             <main>
                 {messages &&
-                    messages.docs.map(doc => (
-                        <ChatMessage
-                            key={doc.id}
-                            message={{ id: doc.id, ...doc.data() }}
-                        />
+                    messages.map(message => (
+                        <ChatMessage key={message.id} message={message} />
                     ))}
 
                 <span ref={dummy}></span>
@@ -95,7 +132,7 @@ function ChatRoom() {
                     type="submit"
                     disabled={!formValue}
                 >
-                    Send
+                    <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
             </form>
         </>
@@ -107,7 +144,6 @@ function ChatMessage(props) {
 
     const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
     const messageRef = useRef();
-    console.log(auth.currentUser);
 
     return (
         <>
@@ -119,8 +155,10 @@ function ChatMessage(props) {
                     className={styles["user-photo"]}
                     src={photoURL || "/profile.png"}
                 />
-                <p className={styles.displayname}>{displayName}</p>
-                <p className={styles["chat-messages"]}>{text}</p>
+                <div className={styles["msg-container"]}>
+                    <p className={styles.displayname}>{displayName}</p>
+                    <p className={styles["chat-messages"]}>{text}</p>
+                </div>
             </div>
         </>
     );

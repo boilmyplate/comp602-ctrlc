@@ -7,6 +7,7 @@ import HomePage from "./(component)/Home/home";
 import Chat from "./(component)/Chatbot/chatbot";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./(component)/Firebase/firebase";
+import GlobalChat from "./(component)/GlobalChat/GlobalChat";
 
 export default function Home() {
     const [user] = useAuthState(auth);
@@ -19,6 +20,7 @@ export default function Home() {
                 <Navbar />
                 <HomePage />
                 <Chat />
+                <GlobalChat />
             </>
         );
     }
