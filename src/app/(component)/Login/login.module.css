@@ -65,7 +65,6 @@
 /* Google button styling */
 
 .inputs.google {
-  
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -131,19 +130,20 @@
 }
 
 .inputs {
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: white;
   border: 2px solid #ddd;
   border-radius: 8px;
-  padding: 12px 15px;
+  padding: 10px;
   font-size: 16px;
   color: #333;
   margin-top: 10px;
   cursor: text;
   box-sizing: border-box;
+  justify-content: center;
 }
 
 .GoogleSignIn {
@@ -180,7 +180,7 @@
 }
 
 .SignupButton {
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
   background-color: #ff6b35;
   color: white;
   border: none;
@@ -255,19 +255,6 @@
   flex-direction: column;
   align-items: center;
   min-height: 500px;
-}
-
-.inputs {
-  background-color: white;
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 16px;
-  margin-top: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .label-input-container {

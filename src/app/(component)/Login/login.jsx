@@ -4,7 +4,7 @@ import styles from "@/app/(component)/Login/login.module.css";
 import React, { useState } from "react";
 import {
     doSignInWithEmailAndPassword,
-    doSignInWithGoogle,
+    doSignInWithGoogle
 } from "@/app/(component)/Firebase/auth";
 
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ const Login = () => {
     const router = useRouter();
 
     // Function to handle form submission for email and password login
-    const onSubmit = async (e) => {
+    const onSubmit = async e => {
         e.preventDefault();
 
         if (!isSigningIn) {
@@ -43,7 +43,7 @@ const Login = () => {
     };
 
     // Function to handle sign-in with Google
-    const onGoogleSignIn = async (e) => {
+    const onGoogleSignIn = async e => {
         e.preventDefault();
 
         if (!isSigningIn) {
@@ -94,31 +94,31 @@ const Login = () => {
 
                     {/* Email Input */}
                     <div className={styles["label-input-container"]}>
-                        <label className={styles.text}>Email</label>
+                        <p className={styles.text}>Email</p>
                         <input
                             className={styles.inputs}
                             type="email"
                             placeholder="Email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)} // Updates email state
+                            onChange={e => setEmail(e.target.value)} // Updates email state
                         />
                     </div>
 
                     {/* Password Input */}
                     <div className={styles["label-input-container"]}>
-                        <div className={styles.text}>Password</div>
+                        <p className={styles.text}>Password</p>
                         <input
                             className={styles.inputs}
                             type="password"
                             placeholder="Password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)} // Updates password state
+                            onChange={e => setPassword(e.target.value)} // Updates password state
                         />
                     </div>
 
                     {/* Sign In with Google Button */}
                     <div className={styles["label-input-container"]}>
-                        <div className={styles.text}>Sign In With Google</div>
+                        <p className={styles.text}>Sign In With Google</p>
                         <button
                             className={styles["GoogleSignIn"]}
                             onClick={onGoogleSignIn} // Handles Google sign-in
@@ -132,14 +132,14 @@ const Login = () => {
                         </button>
                     </div>
 
-					{/* Login Button */}
-					<button
-						className={styles.SignupButton}
-						onClick={onSubmit}
-						disabled={isSigningIn}
-					>
-						Login
-					</button>
+                    {/* Login Button */}
+                    <button
+                        className={styles.SignupButton}
+                        onClick={onSubmit}
+                        disabled={isSigningIn}
+                    >
+                        Login
+                    </button>
 
                     {/* Links for password reset and signup */}
                     <div className={styles.links}>
