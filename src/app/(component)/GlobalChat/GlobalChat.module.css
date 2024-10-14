@@ -161,7 +161,7 @@
 }
 
 .btnlabel {
-  position: absolute;
+  position: fixed;
   left: 30px;
   bottom: 20px;
   height: 55px;
