@@ -1,7 +1,7 @@
 "use client"; // Add this at the top of the file
 
 import React, { useState, useEffect } from 'react';
-import styles from "@/app/(component)/moodTracker/moodTracker.module.css";
+import styles from "@/app/(component)/MoodTracker/moodTracker.module.css";
 import { useRouter } from 'next/navigation';
 import { auth, db } from '../Firebase/firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, where, query } from 'firebase/firestore';
