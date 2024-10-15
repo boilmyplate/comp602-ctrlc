@@ -1,0 +1,153 @@
+.gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 32px;
+    grid-template-areas: 
+      "main main"
+      "left right";
+    margin: 0 auto;
+    width: 70vw;
+    grid-auto-flow: row;
+    margin-bottom: 20vh;
+  }
+ 
+  .mainContainer {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background-color: lightgray;
+    height: 400px;
+    position: relative;
+    border-radius: 15px;
+    background-image: url('/pongGame.jpg'); 
+    background-size: cover;
+    background-position: center;
+    padding: 25px; 
+  }
+  
+ .mainContainer h1, 
+.mainContainer p {
+  margin: 0;
+  color: var(--white); /* White color for contrast */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 700px; /* Limits the width of the text */
+  word-wrap: break-word; /* Ensures long words are wrapped */
+}
+  
+  .mainContainer h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+  
+  .mainContainer p {
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 0.8em;
+    line-height: 25px;
+  }
+  
+  .leftContainer, .rightContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+    position: relative; 
+    border-radius: 15px;
+    background-color: lightgray;
+  }
+
+  .leftContainer{
+    background-image: url('/DinoGame.jpg'); 
+    background-size: cover;
+    background-position: center;
+  }
+
+  .rightContainer{
+    background-image: url('/2048.jpg'); 
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .gameCard {
+    position: relative;
+    width: 100%;
+    height: 100%; /* Make sure the game card takes full height of the container */
+    text-align: center;
+    overflow: hidden; /* Ensures hover content doesn't overflow */
+  }
+  
+  .gameImage {
+    width: 100%;
+    height: 100%; /* Ensure the image takes full height and width of the card */
+  }
+  
+  .hoverOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 15px;
+    transition: all 0.3s ease; /* Smooth transition */
+  }
+  
+  .mainContainer:hover .hoverOverlay,
+  .gameCard:hover .hoverOverlay {
+    display: flex; /* Shows Play Now button on hover */
+  }
+  
+  .playButton {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3em;
+    color: var(--text);
+    text-decoration: none;
+    padding: 4px 8px;
+    border: 2px solid var(--text);
+    border-radius: 12px;
+    background-color: var(--SoftLemonYellow); 
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    font-family: 'Comfortaa', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  
+
+  @media (max-width: 968px) {
+    .gridContainer {
+      grid-template-columns: 1fr; 
+      grid-template-areas: 
+        "main"
+        "left"
+        "right";
+      width: 90vw; 
+    }
+    .mainContainer, .leftContainer,
+    .rightContainer{
+        height: 200px;
+    }
+    .mainContainer h1 {
+        font-size: 1em;
+        margin-bottom: 10px;
+      }
+      
+      .mainContainer p {
+        font-size: 10px;
+        line-height: 15px;
+      }
+      .playButton {
+        font-size: 0.9em;
+      }
+
+  }  
+  

@@ -1,73 +1,76 @@
 .background {
-  background-color: #f0f4f8; 
-  min-height: 100vh; 
+  background-color: #f0f4f8;
+  min-height: 100vh;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  font-family: 'Comfortaa', sans-serif; 
+  font-family: "Comfortaa", sans-serif;
 }
 
 /* Main container for past entries */
 .past-entries-container {
-  background-color: white; 
+  background-color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for a lifted effect */
-  border-radius: 10px; 
-  padding: 30px; 
-  max-width: 800px; 
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 800px;
   width: 100%;
   box-sizing: border-box;
 }
 
 /* Header styling */
 .past-entries-container h1 {
-  text-align: center; 
-  color: var(--coffeebrown); 
-  font-size: 2rem; 
-  margin-bottom: 20px; 
+  text-align: center;
+  color: var(--coffeebrown);
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 /* Container for displaying entries */
 .display-container {
-  margin-bottom: 20px; 
-  max-height: 60vh;   
+  margin-bottom: 20px;
+  max-height: 60vh;
   overflow-y: auto; /*make it scrollable*/
-  padding-right: 10px; 
+  padding-right: 10px;
 }
 
 /* Individual entry item */
 .entry-item {
-  background-color: #f7f9fc; 
-  border: 1px solid #e0e6eb; 
-  border-radius: 8px; 
+  position: sticky;
+  background-color: #f7f9fc;
+  border: 1px solid #e0e6eb;
+  border-radius: 8px;
   padding: 15px;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
   transition: transform 0.2s ease, box-shadow 0.2s ease; /*animation*/
+  z-index: 0;
 }
 
 /* Hover effect for entry items */
 .entry-item:hover {
   transform: translateY(-5px); /* hovering over animation */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Entry date text */
 .entry-item p {
-  color: var(--coffeebrown); 
+  color: var(--coffeebrown);
   margin: 5px 0;
+  font-size: 0.8rem;
 }
 
 /* Entry text area when editing */
 .entry-item textarea {
-  width: 100%; 
-  min-height: 100px; 
+  width: 100%;
+  min-height: 100px;
   padding: 10px;
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
-  font-family: 'Comfortaa', sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: "Comfortaa", sans-serif;
   font-size: 16px;
-  resize: vertical; 
+  resize: vertical;
 }
 
 /* Button styling */
@@ -76,14 +79,14 @@
   color: var(--coffeebrown);
   border: none;
   padding: 10px 20px;
-  border-radius: 5px; 
-  margin-right: 10px; 
+  border-radius: 5px;
+  margin-right: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* Smooth color transition */
 }
 
 .button:hover {
-  background-color: #f0f685; 
+  background-color: #f0f685;
 }
 
 /* "Back to Journal" button */
@@ -92,14 +95,111 @@
 }
 
 .past-entries-container a .button {
-  width: 100%; 
+  width: 100%;
   text-align: center;
-  margin-top: 20px; 
+  margin-top: 20px;
 }
 
-/* Responsive adjustments */
+/* Search bar styling */
+.searchInput {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.search-container-withoutInput {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+/* Dropdown styling */
+.dropdown {
+  position: relative;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: -14px;
+  width: 335px;
+}
+
+.dropdownItem {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f685; /* Matches button hover */
+}
+
+/* Wrapper for search input and button */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Search input field */
+.searchInput {
+  flex: 1; /* Ensures the input takes up the remaining space */
+  border-radius: 8px 0 0 8px; /* Rounded corners only on the left */
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  outline: none;
+}
+
+/* Search button */
+.searchButton {
+  background-color: var(--SoftLemonYellow);
+  color: var(--coffeebrown);
+  border: none;
+  padding: 13px 20px 12px 20px;
+  margin-bottom: 16px;
+  border-radius: 0 8px 8px 0; /* Rounded corners only on the right */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+  font-size: 16px; /* Consistent font size */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchButton:hover {
+  background-color: #f0f685; /* Same hover effect */
+}
+
+.dateNTags {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+h3 .title {
+  font-size: 2rem;
+}
+
+.tags {
+  font-size: 0.8rem;
+  margin: 5px 0;
+}
+
+/* Hide dropdown on small screens */
 @media (max-width: 768px) {
   .past-entries-container {
-    padding: 20px; 
+    padding: 20px;
+  }
+
+  .dropdown {
+    max-height: 100px;
   }
 }

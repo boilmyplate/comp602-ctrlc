@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from "@/app/(component)/moodTracker/moodTracker.module.css";
 import { useRouter } from 'next/navigation';
-import { db } from '../Firebase/firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { auth, db } from '../Firebase/firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc, where, query } from 'firebase/firestore';
+import { useAuth } from '@/app/(context)/auth';
 
 const moodOptions = [
   { name: 'Great', img: './mood_images/great.png' },
@@ -25,20 +26,31 @@ const MoodTracker = () => {
   const [showInsights, setShowInsights] = useState(false);
   const [timeFrame, setTimeFrame] = useState('Today');
   const [selectedEntries, setSelectedEntries] = useState([]);
-
+  const { userLoggedIn, loading } = useAuth();
+  
+  useEffect(() => {
+    if(!userLoggedIn && !loading) {
+      router.push("/");
+    }
+  }, [userLoggedIn, loading, router]);
+  
   // Load mood history from Firestore
   useEffect(() => {
+    const currentUser = auth.currentUser?.uid;
     const loadMoodHistory = async () => {
-      const querySnapshot = await getDocs(collection(db, "moodHistory"));
+      const q = query(collection(db, "moodHistory"), where("uid", "==", currentUser));
+      const querySnapshot = await getDocs(q);
       setMoodHistory(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
+    console.log(`current uid: ${currentUser}`)
     loadMoodHistory();
   }, []);
 
   // Save selected mood to Firestore
   const handleMoodSelect = async (moodName) => {
+    const currentUser = auth.currentUser?.uid;
     setSelectedMood(moodName);
-    const newMoodEntry = { mood: moodName, timestamp: new Date().toISOString() };
+    const newMoodEntry = { mood: moodName, timestamp: new Date().toISOString(), uid: currentUser };
     const docRef = await addDoc(collection(db, "moodHistory"), newMoodEntry);
     setMoodHistory((prev) => [...prev, { ...newMoodEntry, id: docRef.id }]);
   };
@@ -83,9 +95,14 @@ const MoodTracker = () => {
   };
 
   const insights = calculateInsights();
+  console.log("insights", insights);
 
   return (
     <div className={styles.moodTrackerContainer}>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
       <h2>How are you feeling right now?</h2>
       <div className={styles.moodGrid}>
         {moodOptions.map((mood) => (
@@ -128,7 +145,7 @@ const MoodTracker = () => {
                       onChange={() => setSelectedEntries((prev) =>
                         prev.includes(entry.id) ? prev.filter((id) => id !== entry.id) : [...prev, entry.id]
                       )}
-                    />
+                      />
                     {entry.mood}: {formatTimestamp(entry.timestamp)}
                     <button onClick={() => handleDelete([entry.id])} className={styles.deleteButton} style={{ marginLeft: '10px' }}>
                       Delete
@@ -142,6 +159,8 @@ const MoodTracker = () => {
             </>
           ) : <p>No entries available.</p>}
         </div>
+      )}
+      </>
       )}
     </div>
   );

@@ -28,7 +28,7 @@
 
 /* SignupContainer with Grid */
 .SignupContainer {
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-areas: "text form";
@@ -42,7 +42,7 @@
   padding: 50px;
   z-index: 1;
   position: relative;
-  align-items: center;    
+  align-items: center;
   height: auto;
 }
 
@@ -54,19 +54,17 @@
   padding: 30px 40px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
+  align-items: flex-start;
   justify-content: center;
-  width: 100%; 
+  width: 100%;
   position: relative;
   z-index: 2;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
 }
 
 /* Google button styling */
 
 .inputs.google {
-  
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -82,36 +80,34 @@
 
 .textContainer {
   grid-area: text;
-  display: flex;              
-  flex-direction: column;      
-  justify-content: center;     
-  align-items: flex-start;     
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   gap: 20px;
   color: white;
   padding-right: 50px;
-  height: 100%; 
-  width: 100%;           
+  height: 100%;
+  width: 100%;
 }
 
-
 .title {
-  font-size: 4rem; 
+  font-size: 4rem;
   font-weight: 900;
   line-height: 1.1;
   white-space: pre-line;
-  overflow: visible; 
+  overflow: visible;
   color: var(--coffeebrown);
 }
 
 .desc {
-  font-size: 0.8rem; 
+  font-size: 0.8rem;
   font-weight: 500;
-  line-height: 0.1; 
-  letter-spacing: 0.02em; 
-  max-width: 500px; 
-  color: #4B3621;
+  line-height: 0.1;
+  letter-spacing: 0.02em;
+  max-width: 500px;
+  color: #4b3621;
 }
-
 
 .socialIcons {
   display: flex;
@@ -134,26 +130,41 @@
 }
 
 .inputs {
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.2); 
-  border: 2px solid #ddd; 
-  border-radius: 8px; 
-  padding: 12px 15px; 
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
   font-size: 16px;
-  color: #333; 
+  color: #333;
+  margin-top: 10px;
+  cursor: text;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.GoogleSignIn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 16px;
+  color: #333;
   margin-top: 10px;
   cursor: pointer;
   box-sizing: border-box;
 }
 
 .inputs:focus {
-  outline: none; 
+  outline: none;
   border-color: #ff6b35;
 }
-
 
 .label-input-container {
   display: flex;
@@ -169,7 +180,7 @@
 }
 
 .SignupButton {
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
   background-color: #ff6b35;
   color: white;
   border: none;
@@ -187,22 +198,112 @@
 }
 
 .links {
-  text-align: center; 
+  text-align: center;
   margin-top: 20px;
   display: block;
   color: #333;
-  font-size: 0.9em; 
-  width: 100%; 
+  font-size: 0.9em;
+  width: 100%;
 }
 
 .links a {
   color: #333;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 .links a:hover {
-  text-decoration: underline; 
-  color: #ff6b35; 
+  text-decoration: underline;
+  color: #ff6b35;
+}
+
+.heading {
+  display: flex;
+  justify-content: center;
+  margin-right: 35px;
+  font-weight: 700;
+  color: #333;
+}
+
+.image {
+  max-width: 400px;
+  display: block;
+  padding-right: 50px;
+}
+
+.BlueBox {
+  background-color: #92b5d8;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  padding: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.LoginText {
+  font-size: 25px;
+}
+
+.WhiteBox {
+  background-color: white;
+  width: 500px;
+  border-radius: 10px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 500px;
+}
+
+.label-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.label-input-container label {
+  margin-bottom: 5px;
+  text-align: left;
+}
+.googleicon {
+  width: 23px;
+  padding-right: 4px;
+}
+.LoginButton {
+  background-color: white;
+  border: 2px solid black;
+  margin-top: 20px;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.LoginButton:hover {
+  background-color: rgba(0, 0, 0, 0.183);
+  opacity: 0.8;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.links a {
+  display: block;
+  color: #333;
+  font-size: 0.8em;
+  text-decoration: none;
+  margin: 5px 0;
+}
+
+.links a:hover {
+  text-decoration: underline;
 }
 
 .error-message {
@@ -211,4 +312,3 @@
   margin-bottom: 10px;
   font-size: 14px;
 }
-
