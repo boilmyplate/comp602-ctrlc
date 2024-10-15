@@ -12,8 +12,6 @@ import { useAuth } from "@/app/(context)/auth";
 import Link from "next/link";
 
 const Login = () => {
-    // Extract userLoggedIn state from the authentication context
-    const { userLoggedIn } = useAuth();
     // Set up state variables for email, password, sign-in status, and error messages
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -64,8 +62,6 @@ const Login = () => {
 
     return (
         <div className={styles.background}>
-            {/* If user is logged in, redirect to the home page */}
-            {userLoggedIn && router.push("/")}
             <div className={styles.SignupContainer}>
                 <div className={styles.textContainer}>
                     <h1 className={styles.title}>Welcome to Blank Web</h1>

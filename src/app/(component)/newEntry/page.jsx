@@ -1,6 +1,6 @@
 'use client'; // This directive is specific to Next.js and enables client-side rendering for this component.
 
-import { db } from "../Firebase/firebase"; // Import Firebase configuration
+import { auth, db } from "../Firebase/firebase"; // Import Firebase configuration
 import React, { useState, useRef } from "react";
 import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions for interacting with the database.
 import NavBar from '../NavBar/navbar'; // Import NavBar component
@@ -8,6 +8,8 @@ import './newEntry.css'; // Import CSS styles specific to the New Entry componen
 
 // Function to add data to Firestore database
 async function addDataToFireStore(category, title, day, month, year, entry) {
+  const currentUser = auth.currentUser?.uid;
+
   try {
     // Add a new document to the "messages" collection in Firestore
     const docRef = await addDoc(collection(db, "messages"), {
@@ -17,6 +19,7 @@ async function addDataToFireStore(category, title, day, month, year, entry) {
       month: month,       // Store month value
       year: year,         // Store year value
       entry: entry,       // Store the journal entry text
+      uid: currentUser
     });
     console.log("Document written with ID: ", docRef.id);
     return true; // Return true if document addition was successful

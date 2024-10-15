@@ -1,7 +1,7 @@
 "use client"; // Enable client-side rendering for this component
 
 // Import the Firestore configuration from the firebaseConfig file.
-import { db } from "../Firebase/firebase";
+import { auth, db } from "../Firebase/firebase";
 // Import CSS styles specific to the PastEntries component.
 import styles from "@/app/(component)/PastEntries/past-entries.module.css";
 // Import Firestore functions to interact with the database.
@@ -11,6 +11,8 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  query,
+  where,
 } from "firebase/firestore";
 // Import React and hooks for state management and side effects.
 import React, { useState, useEffect } from "react";
@@ -21,17 +23,19 @@ const PastEntries = () => {
   const [filteredEntries, setFilteredEntries] = useState([]); // State to hold filtered search results
   const [value, setValue] = useState(''); // State for input value
   const [showDropdown, setShowDropdown] = useState(false); // State to track dropdown visibility
+  const currentUser = auth.currentUser?.uid;
 
   // Fetch entries from Firestore when the component mounts
   useEffect(() => {
     const fetchEntries = async () => {
       try {
         // Fetch all documents from the "messages" collection in Firestore
-        const snapshot = await getDocs(collection(db, "messages"));
+        const q = query(collection(db, "messages"), where("uid", "==", currentUser))
+        const snapshot = await getDocs(q);
         // Map over the documents to extract data and add document IDs to each entry
         const entriesList = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         }));
         setEntries(entriesList); // Update the state with the list of entries
         setFilteredEntries(entriesList); // Initially, display all entries
