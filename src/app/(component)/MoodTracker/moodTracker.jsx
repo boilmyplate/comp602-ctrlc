@@ -117,7 +117,7 @@ const MoodTracker = () => {
       <div className={styles.buttonContainer}>
         <img src="/mood_images/download.png" alt="Download CSV" className={styles.icon} onClick={exportToCSV} />
         <button onClick={() => setShowInsights(true)} className={styles.insightsButton}>Show Insights</button>
-        <button onClick={() => router.push('/home')} className={styles.homeButton}>Back to Homepage</button>
+        <button onClick={() => router.push('/')} className={styles.homeButton}>Back to Homepage</button>
       </div>
 
       {showInsights && (
