@@ -1,4 +1,109 @@
 .pong-canvas {
+<<<<<<< HEAD
+  background-color: black;
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.start-button, .pause-button, .pause-menu-button, .back-home-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.start-controls {
+  gap: 10px;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+}
+
+.pause-button {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.pause-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 30;
+  background-color: rgba(91, 88, 88, 0.9);
+  padding: 50px 40px;
+  border-radius: 15px;
+}
+
+.pause-menu-button {
+  width: 180px;
+  text-align: center;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.main-menu {
+  z-index: 30;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: white;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+}
+
+.heading {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.welcome-text {
+  margin: 5px 0;
+}
+
+.confirm-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 40;
+  background-color: white;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: black;
+}
+
+.confirm-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+=======
   background-color: black; /* Set the background color of the game canvas to black */
   position: fixed; /* Fix the canvas in the viewport */
   left: 0; /* Align it to the left edge */
@@ -102,6 +207,7 @@
   border: none; /* Remove border */
   border-radius: 5px; /* Rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
+>>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
 }
 
 .confirm-button:hover {

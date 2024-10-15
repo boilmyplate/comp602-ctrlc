@@ -1,178 +1,83 @@
+/* Main container */
 .container {
-	display: flex;
-	gap: 60px;
-	align-items: center;
-	padding: 20px;
-	flex-wrap: wrap;
-	overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-.textContainer {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 30px;
-	margin: 5px;
+/* Wrapper for content */
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 20px;
 }
 
-.title {
-	font-size: 70px;
-	line-height: 1.2;
+/* Top row container for Happy Streak, Map, and Scoreboard */
+.topRowContainer {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    justify-content: space-around;
 }
 
-.desc {
-	font-size: 20px;
+/* Happy Streak, Map, and Scoreboard containers */
+.streakContainer, .mapContainer, .scoreboardContainer {
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.buttons {
-	display: flex;
-	gap: 20px;
+.streakContainer {
+    background-color: #f5deb3;
+    width: 35%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.button {
-	padding: 10px;
-	min-width: 120px;
-	cursor: pointer;
-	border: none;
-	border-radius: 5px;
+.mapContainer {
+    background-color: #e0f7fa;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
 }
 
-.button:first-child {
-	background-color: var(--btn);
-	color: var(--text);
+.scoreboardContainer {
+    background-color: #d8f3fc;
+    width: 45%;
 }
 
-.brands {
-	width: 500px;
-	height: 50px;
-	position: relative;
-	filter: grayscale(1);
+/* Flex container for charts */
+.chartFlexContainer {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-around;
 }
 
-.imgContainer {
-	flex: 1;
-	position: relative;
-	height: 400px;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+/* Container for Pie and Bar charts */
+.pieChartContainer, .barChartContainer {
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.heroImg {
-	object-fit: cover;
-	width: 100%;
-	height: auto;
-	max-height: 100%;
-	transform: scale(1.1);
+.pieChartContainer {
+    background-color: #f4ec9f;
+    width: 55%;
 }
 
-/*responsive css*/
-
-/*Laptop View*/
-@media (max-width: 1015px) {
-	.title {
-		font-size: 58px;
-	}
-}
-
-/* Tablet View */
-@media (max-width: 868px) {
-	.container {
-		text-align: center;
-	}
-	.title {
-		font-size: 50px;
-	}
-
-	.imgContainer {
-		display: none;
-	}
-
-	.heroImg {
-		width: 100%;
-		transform: scale(1);
-	}
-
-	.buttons {
-		padding: 20px 50px 20px 50px;
-		flex-direction: column;
-		gap: 10px;
-	}
-}
-
-/* Mobile View */
-@media (max-width: 624px) {
-	.container {
-		flex-direction: column;
-		text-align: center;
-		padding: 20px;
-	}
-
-	.title {
-		font-size: 48px;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
-
-	.desc {
-		font-size: 15px;
-	}
-
-	.imgContainer {
-		margin: 20px 0;
-	}
-
-	.heroImg {
-		width: 80%;
-		transform: scale(1);
-	}
-	.nav {
-		display: block;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 10;
-	}
-}
-
-@media (max-width: 494px) {
-	.container {
-		flex-direction: column;
-		text-align: center;
-		padding: 20px;
-	}
-
-	.title {
-		font-size: 28px;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
-
-	.desc {
-		font-size: 10px;
-		padding: 5px 60px 0px 60px;
-	}
-
-	.imgContainer {
-		margin: 20px 0;
-	}
-
-	.heroImg {
-		width: 80%;
-		transform: scale(1);
-	}
-	.nav {
-		display: block;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 10;
-	}
-	.buttons {
-		font-size: 10px;
-		padding: 10px 70px 10px 70px;
-		flex-direction: column;
-		gap: 10px;
-	}
+.barChartContainer {
+    background-color: #b0f3b0;
+    width: 100%;
 }

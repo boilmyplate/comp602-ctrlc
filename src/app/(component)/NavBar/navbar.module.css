@@ -1,20 +1,68 @@
 .container {
-    margin-bottom: 15vh;
-    height: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 100px;
     width: 100%;
     padding: 0 20px;
     position: relative;
     box-sizing: border-box;
+    margin-bottom: 5vh;
 }
 
-.links {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+.logo{
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--text); 
+    font-family: 'Rubik Bubbles', sans-serif;
 }
+.links{
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+/* Link button styling */
+.link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+    color: var(--text);
+    text-decoration: none;
+    padding: 4px 8px;
+    border: 2px solid var(--text);
+    border-radius: 12px;
+    background-color: var(--SoftLemonYellow); 
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    font-family: 'Comfortaa', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect for button links */
+.link:hover {
+    margin-top: 3px; 
+    background-color: var(--white); 
+    color: var(--text); 
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+}
+
+.link:active {
+    transform: scale(0.98); 
+    background-color: var(--white); 
+    box-shadow: 0 8px 15px rgba(255, 255, 255, 0.7);
+    padding-top: 10px; 
+    padding-bottom: 6px;
+}
+
+/*when link is active*/
+.active {
+    background-color: var(--white); 
+    color: var(--text); 
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--text); 
+}
+
 
 .logout {
     padding: 8px;
