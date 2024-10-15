@@ -2,19 +2,19 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '../Firebase/firebase';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db, auth, saveScore } from '../Firebase/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import styles from './Game_2048.module.css';
-// Initialise the grid with two random tiles at the start
+
 const initialGrid = () => {
     const grid = Array(4).fill(null).map(() => Array(4).fill({ value: null, moved: false }));
     addRandomTile(grid);
     addRandomTile(grid);
     return grid;
 };
-// Calculate the score value based on the letter's position in the alphabet
+
 const getScoreValue = (letter) => Math.pow(2, letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1);
-// Add a random tile with the letter 'A' to an empty spot on the grid
+
 const addRandomTile = (grid) => {
     const availableSpots = [];
     for (let row = 0; row < 4; row++) {
@@ -23,14 +23,14 @@ const addRandomTile = (grid) => {
         }
     }
     if (!availableSpots.length) return;
-    const [row, col] = availableSpots[Math.floor(Math.random() * availableSpots.length)];// Choose a random spot and place a new tile
+    const [row, col] = availableSpots[Math.floor(Math.random() * availableSpots.length)];
     grid[row][col] = { value: 'A', moved: false };
 };
-// Handle moving and merging tiles in a specific direction
+
 const moveTiles = (grid, direction, setScore) => {
     let moved = false;
     let newScore = 0;
-  // Function to slide and merge tiles within a row or column
+
     const slideAndMerge = (line) => {
         const filteredLine = line.filter(tile => tile.value !== null);
         for (let i = 0; i < filteredLine.length - 1; i++) {
@@ -39,11 +39,11 @@ const moveTiles = (grid, direction, setScore) => {
                 filteredLine[i] = { value: String.fromCharCode(filteredLine[i].value.charCodeAt(0) + 1), moved: true };
                 filteredLine[i + 1] = { value: null, moved: true };
             }
-        } // Fill in empty spots after merging
+        }
         while (filteredLine.length < 4) filteredLine.push({ value: null, moved: false });
         return filteredLine;
     };
-// Move tiles left, right, up, or down based on direction
+
     if (direction === 'left') {
         for (let row = 0; row < 4; row++) {
             const newRow = slideAndMerge(grid[row]);
@@ -75,6 +75,7 @@ const moveTiles = (grid, direction, setScore) => {
             }
         }
     }
+
     setScore(prevScore => prevScore + newScore);
     return moved;
 };
@@ -87,36 +88,40 @@ const Alphabet2048 = () => {
     const [isMoving, setIsMoving] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const router = useRouter();
-   // Function to reset the game state
+
     const resetGame = useCallback(() => {
         setGrid(initialGrid());
         setScore(0);
         setGameOver(false);
         setIsMoving(false);
     }, []);
-   // Function to reset the game state
+
     useEffect(() => {
         const fetchBestScore = async () => {
-            const docRef = doc(db, "scores", "2048_score");
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                setBestScore(docSnap.data().score);
+            const user = auth.currentUser;
+            if (user) {
+                const docRef = doc(db, 'scores', `${user.uid}_2048`);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setBestScore(docSnap.data().score);
+                }
             }
         };
         fetchBestScore();
     }, []);
- // Save the best score to Firebase if the current score exceeds it
+
     useEffect(() => {
         const saveBestScore = async () => {
-            if (score > bestScore) {
+            const user = auth.currentUser;
+            if (user && score > bestScore) {
                 setBestScore(score);
-                const docRef = doc(db, "scores", "2048_score");
-                await setDoc(docRef, { score });
+                await saveScore(user.uid, "2048", score);
+                console.log("High score saved successfully");
             }
         };
         saveBestScore();
-    }, [score]);
- // Handle key presses for moving tiles
+    }, [score, bestScore]);
+
     const handleKeyDown = useCallback((e) => {
         if (isMoving || gameOver) return;
 
@@ -136,10 +141,10 @@ const Alphabet2048 = () => {
                 setGrid([...grid]);
                 setIsMoving(false);
                 checkGameOver();
-            }, 50);  // Reduced delay to improve responsiveness
+            }, 50);
         }
-    }, [grid, isMoving, gameOver]); 
-    // Check if there are no more valid moves, ending the game
+    }, [grid, isMoving, gameOver]);
+
     const checkGameOver = () => {
         let noMovesLeft = true;
         for (let row = 0; row < 4; row++) {
@@ -178,8 +183,10 @@ const Alphabet2048 = () => {
                 <div className={styles.overlay}>
                     <div className={styles.gameOverMessage}>
                         <h2>Game Over</h2>
-                        <button onClick={resetGame} className={styles.button}>Restart Game</button>
-                        <button onClick={() => { setIsGameStarted(false); resetGame(); }} className={styles.button}>Main Menu</button>
+                        <div className={styles.buttonContainer}>
+                            <button onClick={resetGame} className={styles.button}>Restart Game</button>
+                            <button onClick={() => { setIsGameStarted(false); resetGame(); }} className={styles.button}>Main Menu</button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -193,7 +200,7 @@ const Alphabet2048 = () => {
         </div>
     );
 };
-// ScoreBoard component displays current and best scores
+
 const ScoreBoard = ({ score, bestScore }) => (
     <div className={styles.scoreBoard}>
         <div className={styles.titleContainer}>
@@ -203,7 +210,7 @@ const ScoreBoard = ({ score, bestScore }) => (
         <div>Best Score: {bestScore}</div>
     </div>
 );
-// Grid component displays the 4x4 grid of tiles
+
 const Grid = ({ grid }) => (
     <div className={styles.gridContainer}>
         {grid.map((row, rowIndex) => row.map((tile, colIndex) => 
@@ -211,7 +218,7 @@ const Grid = ({ grid }) => (
         ))}
     </div>
 );
-// Tile component represents each tile on the grid
+
 const Tile = ({ value, moved }) => (
     <div className={`${styles.tile} ${moved ? styles.slide : ''}`} data-value={value}>
         {value || ''}

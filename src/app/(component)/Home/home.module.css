@@ -19,44 +19,41 @@
     padding: 0 20px;
 }
 
-/* Top row container for Happy Streak, Map, and Scoreboard */
+/* Top row container for Happy Streak and Scoreboard */
 .topRowContainer {
     display: flex;
     width: 100%;
-    gap: 5px; /* Minimal gap between the containers */
-    justify-content: space-between; /* Removes extra space around containers */
+    gap: 10px; /* Updated gap for balanced spacing */
+    justify-content: space-between;
 }
 
-.streakContainer, .mapContainer, .scoreboardContainer {
-    margin: 0; /* Remove any additional margin if present */
-    padding: 10px; /* Reduced padding */
+.streakContainer, .scoreboardContainer {
+    margin: 0;
+    padding: 10px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    height: 110px; /* Set fixed height */
-    overflow: hidden; /* Prevents overflow if content exceeds height */
+    height: 110px;
+    overflow: hidden;
 }
 
+/* Happy Streak container */
 .streakContainer {
     background-color: #f5deb3;
-    width: 35%;
+    width: 40%; /* Adjusted width to fit without the map */
     display: flex;
     align-items: center;
     margin-bottom: 20px;
- 
 }
 
-.mapContainer {
-    background-color: #e0f7fa;
-    width: 22%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Scoreboard container */
 .scoreboardContainer {
     background-color: #f0f4fa;
-    width: 40%;
+    width: 55%; /* Adjusted width to fit without the map */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    overflow: visible;
 }
 
 /* Flex container for charts */
@@ -89,43 +86,25 @@
     background-color: #4b8f8c;
     border-radius: 5px;
     font-weight: bold;
+    color: #ffffff;
 }
 
 .moodTrackerButton:hover {
     background-color: #397b7b;
 }
-.scoreboardContainer {
-    background-color: #f0f4fa; /* Light background for contrast */
-    width: 40%; /* Increased width for better spacing */
-    padding: 15px; /* Adjust padding as needed */
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    overflow: visible; /* Ensure content is not cut off */
-}
 
-.scoreboardContainer {
-    background-color: #f0f4fa;
-    width: 40%; /* Adjust width as needed */
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    overflow: hidden; /* Ensure content is not cut off */
-}
-
+/* Scoreboard List and Items */
 .scoreList {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-
 .scoreItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0; /* Reduced padding for compactness */
+    padding: 5px 0;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -135,12 +114,12 @@
 
 .gameTitle {
     font-weight: bold;
-    color: #4a90e2; /* Distinct color for game names */
-    font-size: 1.1rem; /* Reduced font size for better fit */
+    color: #4a90e2;
+    font-size: 1.1rem;
 }
 
 .scoreValue {
-    font-size: 1.1rem; /* Reduced font size for better fit */
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #ff8042; /* Distinct color for scores */
+    color: #ff8042;
 }

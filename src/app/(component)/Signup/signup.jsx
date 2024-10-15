@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { doCreateUserWithEmailAndPassword } from "../Firebase/auth";
 
 const Signup = () => {
-<<<<<<< HEAD
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -134,7 +134,7 @@ const Signup = () => {
 };
 
 export default Signup;
-=======
+
 	// State variables to handle username, email, password, registration status, and error messages
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
@@ -279,4 +279,4 @@ export default Signup;
 };
 
 export default Signup;
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+

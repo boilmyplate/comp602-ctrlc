@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 .background {
   background-color: #f0f4f8; 
   min-height: 100vh; 
@@ -98,12 +98,8 @@
   margin-top: 20px; 
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .past-entries-container {
-    padding: 20px; 
-  }
-=======
+
+
 /* Set the background color of the entire body and center its content */
 .background {
     margin-top: 15vh;
@@ -143,5 +139,5 @@ a.button {
   border-radius: 20px; /* Rounded corners */
   margin: 40px 0 40px 60px; /* Top, bottom, and left margin */
   padding: 15px; /* Padding inside the display area */
->>>>>>> f7b58342267fe2b69c4f1f2f1a804a351c5cc7b7
+
 }

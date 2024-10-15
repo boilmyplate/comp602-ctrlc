@@ -1,10 +1,11 @@
-"use client"; // Ensures this file is treated as a Client Component
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import styles from './penguin.module.css'; // Import CSS module
-import { db } from '../Firebase/firebase'; // Import Firebase Firestore configuration
-import { doc, setDoc, getDoc } from 'firebase/firestore'; // Firestore functions for saving and retrieving data
+import { useRouter } from 'next/navigation';
+import styles from './penguin.module.css';
+import { saveScore, db, auth } from '../Firebase/firebase'; // Import saveScore, db, and auth
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from 'firebase/firestore';
 import penguinImage from '/public/penguin/penguin.png';
 import fishImage from '/public/penguin/fish.png';
 import backgroundImage from '/public/penguin/background.png';
@@ -23,14 +24,44 @@ export default function PenguinGame() {
   const [fish, setFish] = useState(generateFish());
   const [direction, setDirection] = useState(DIRECTIONS.ArrowRight);
   const [score, setScore] = useState(0);
-  const [bestScore, setBestScore] = useState(0); // To store the best score
+  const [bestScore, setBestScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false); // Paused state
+  const [isPaused, setIsPaused] = useState(false);
+  const [uid, setUid] = useState(null);
 
-  const router = useRouter(); // Initialize router for navigation
+  const router = useRouter();
 
-  // Generate a new fish position
+  // Get the user ID on component mount and auth state change
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+        fetchBestScore(user.uid);
+      } else {
+        setUid(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Fetch the best score for the authenticated user
+  const fetchBestScore = async (uid) => {
+    if (uid) {
+      try {
+        const docRef = doc(db, 'scores', `penguin_score_${uid}`);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setBestScore(docSnap.data().score || 0);
+        } else {
+          console.log("No existing score found for user.");
+        }
+      } catch (error) {
+        console.error("Error fetching best score:", error);
+      }
+    }
+  };
+
   function generateFish() {
     return {
       x: Math.floor(Math.random() * GRID_SIZE),
@@ -38,7 +69,6 @@ export default function PenguinGame() {
     };
   }
 
-  // Handle keyboard input to set direction
   const handleKeyDown = (e) => {
     const newDirection = DIRECTIONS[e.key];
     if (newDirection && (newDirection.x !== -direction.x || newDirection.y !== -direction.y)) {
@@ -46,7 +76,6 @@ export default function PenguinGame() {
     }
   };
 
-  // Game loop: update penguin position
   useEffect(() => {
     if (!gameStarted || gameOver || isPaused) return;
 
@@ -57,13 +86,11 @@ export default function PenguinGame() {
           y: prevPenguin[0].y + direction.y
         };
 
-        // Check for edge collision
         if (newHead.x < 0 || newHead.x >= GRID_SIZE || newHead.y < 0 || newHead.y >= GRID_SIZE) {
           endGame();
           return prevPenguin;
         }
 
-        // Check for self-collision
         if (prevPenguin.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
           endGame();
           return prevPenguin;
@@ -71,7 +98,6 @@ export default function PenguinGame() {
 
         const newPenguin = [newHead, ...prevPenguin];
 
-        // Check if penguin has eaten the fish
         if (newHead.x === fish.x && newHead.y === fish.y) {
           setFish(generateFish());
           setScore((score) => score + 1);
@@ -81,30 +107,16 @@ export default function PenguinGame() {
 
         return newPenguin;
       });
-    }, 200); // Set back to normal speed (200ms)
+    }, 200);
 
     return () => clearInterval(movePenguin);
   }, [gameStarted, direction, fish, gameOver, isPaused]);
 
-  // Fetch the best score from Firebase when the game loads
-  useEffect(() => {
-    const fetchBestScore = async () => {
-      const docRef = doc(db, "scores", "penguin_score");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setBestScore(docSnap.data().score);
-      }
-    };
-    fetchBestScore();
-  }, []);
-
-  // Add keyboard event listener
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [direction]);
 
-  // Start or restart the game
   const startGame = () => {
     setPenguin(INITIAL_PENGUIN);
     setFish(generateFish());
@@ -112,25 +124,26 @@ export default function PenguinGame() {
     setScore(0);
     setGameOver(false);
     setGameStarted(true);
-    setIsPaused(false); // Ensure game is not paused
+    setIsPaused(false);
   };
 
-  // End the game and save score to Firebase if it's a new best
   const endGame = async () => {
     setGameOver(true);
-    if (score > bestScore) {
-      setBestScore(score);
-      const docRef = doc(db, "scores", "penguin_score");
-      await setDoc(docRef, { score }); // Save the new best score
+    if (score > bestScore && uid) { 
+      try {
+        await saveScore(uid, "penguin_score", score);
+        setBestScore(score); // Update bestScore locally only if Firebase update is successful
+        console.log("Score successfully saved to Firebase:", score);
+      } catch (error) {
+        console.error("Error saving score to Firebase:", error);
+      }
     }
   };
 
-  // Exit the game and go to the home page
   const exitGame = () => {
-    router.push('/'); // Navigate to the home page
+    router.push('/');
   };
 
-  // Toggle pause and resume
   const togglePause = () => {
     setIsPaused((prev) => !prev);
   };
@@ -139,9 +152,8 @@ export default function PenguinGame() {
     <div className={styles.bodyWrapper} style={{ backgroundImage: `url(${backgroundImage.src})` }}>
       <h2>Penguin Game</h2>
       <div className={styles.score}>Score: {score}</div>
-      <div className={styles.bestScore}>Best Score: {bestScore}</div> {/* Display best score */}
+      <div className={styles.bestScore}>Best Score: {bestScore}</div>
 
-      {/* Buttons shown based on game state */}
       {!gameStarted ? (
         <>
           <button onClick={startGame} className={styles.startButton}>

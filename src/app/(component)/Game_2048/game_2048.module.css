@@ -131,18 +131,23 @@
     justify-content: center;
 }
 
-/* Game Over message container styling, adding background, padding, and shadow */
-.gameOverMessage {
-    background: white;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
 /* Styling for Game Over header */
 .gameOverMessage h2 {
+    color: white; /* Change text color to white */
     margin-bottom: 15px;
+    font-size: 2rem; /* Optional: Adjust font size if needed */
+    font-weight: bold;
+}
+
+
+/* Button container within Game Over message for horizontal alignment */
+.gameOverMessage .buttonContainer {
+    display: flex;
+    
+    justify-content: center; /* Centers the buttons horizontally */
+    gap: 20px; /* Adds space between the buttons */
+    margin-top: 15px;
+    width: 100%; /* Ensures container takes full width */
 }
 
 /* Button styling within Game Over message */
@@ -153,9 +158,20 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    flex: 1; /* Makes buttons take equal width within container */
     max-width: 120px;
-    max-height: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+/* Hover effect for Game Over buttons */
+.gameOverMessage button:hover {
+    background-color: pink;
+}
+
+
 
 /* General button styling */
 .button {
