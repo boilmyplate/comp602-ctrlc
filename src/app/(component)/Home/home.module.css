@@ -123,3 +123,59 @@
     font-weight: bold;
     color: #ff8042;
 }
+
+
+/* Game Leaderboard Container */
+.leaderboardContainer {
+    background-color: #e8f5e9;
+    width: 40%;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Leaderboard title */
+.leaderboardContainer h4 {
+    font-size: 1.2rem;
+    color: #388e3c;
+    margin-bottom: 10px;
+}
+
+/* Leaderboard List and Items */
+.leaderboardList {
+    list-style: none;
+    padding: 0;
+}
+
+.leaderboardItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #c8e6c9;
+}
+
+.leaderboardItem:last-child {
+    border-bottom: none;
+}
+
+.leaderboardRank, .leaderboardUser, .leaderboardScore {
+    font-size: 1rem;
+}
+
+.leaderboardRank {
+    color: #388e3c;
+}
+
+.leaderboardUser {
+    color: #4a4a4a;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.leaderboardScore {
+    color: #ff8a65;
+    font-weight: bold;
+}
+
