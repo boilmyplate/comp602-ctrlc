@@ -1,12 +1,17 @@
-"use client"; // Ensures this file is treated as a Client Component
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import styles from './penguin.module.css'; // Import CSS module
+import { useRouter } from 'next/navigation';
+import styles from './penguin.module.css';
+import { saveScore, db, auth } from '../Firebase/firebase'; // Import saveScore, db, and auth
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from 'firebase/firestore';
 import penguinImage from '/public/penguin/penguin.png';
 import fishImage from '/public/penguin/fish.png';
+import backgroundImage from '/public/penguin/background.png';
 
-const GRID_SIZE = 15; // Size of the grid (15x15)
-const INITIAL_PENGUIN = [{ x: 7, y: 7 }]; // Initial penguin position
+const GRID_SIZE = 15;
+const INITIAL_PENGUIN = [{ x: 7, y: 7 }];
 const DIRECTIONS = {
   ArrowUp: { x: 0, y: -1 },
   ArrowDown: { x: 0, y: 1 },
@@ -15,14 +20,48 @@ const DIRECTIONS = {
 };
 
 export default function PenguinGame() {
-  const [penguin, setPenguin] = useState(INITIAL_PENGUIN); // Penguin segments
-  const [fish, setFish] = useState(generateFish()); // Fish position (the food)
-  const [direction, setDirection] = useState(DIRECTIONS.ArrowRight); // Penguin's movement direction
-  const [score, setScore] = useState(0); // Player's score
-  const [gameOver, setGameOver] = useState(false); // Game-over flag
-  const [gameStarted, setGameStarted] = useState(false); // Track if game is active
+  const [penguin, setPenguin] = useState(INITIAL_PENGUIN);
+  const [fish, setFish] = useState(generateFish());
+  const [direction, setDirection] = useState(DIRECTIONS.ArrowRight);
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [uid, setUid] = useState(null);
 
-  // Generate a new fish position
+  const router = useRouter();
+
+  // Get the user ID on component mount and auth state change
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+        fetchBestScore(user.uid);
+      } else {
+        setUid(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Fetch the best score for the authenticated user
+  const fetchBestScore = async (uid) => {
+    if (uid) {
+      try {
+        const docRef = doc(db, 'scores', `penguin_score_${uid}`);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setBestScore(docSnap.data().score || 0);
+        } else {
+          console.log("No existing score found for user.");
+        }
+      } catch (error) {
+        console.error("Error fetching best score:", error);
+      }
+    }
+  };
+
   function generateFish() {
     return {
       x: Math.floor(Math.random() * GRID_SIZE),
@@ -30,17 +69,15 @@ export default function PenguinGame() {
     };
   }
 
-  // Handle keyboard input to set direction
   const handleKeyDown = (e) => {
     const newDirection = DIRECTIONS[e.key];
     if (newDirection && (newDirection.x !== -direction.x || newDirection.y !== -direction.y)) {
-      setDirection(newDirection); // Prevent reversing direction
+      setDirection(newDirection);
     }
   };
 
-  // Game loop: update penguin position
   useEffect(() => {
-    if (!gameStarted || gameOver) return; // Stop if game isn't active or is over
+    if (!gameStarted || gameOver || isPaused) return;
 
     const movePenguin = setInterval(() => {
       setPenguin((prevPenguin) => {
@@ -49,48 +86,37 @@ export default function PenguinGame() {
           y: prevPenguin[0].y + direction.y
         };
 
-        // Check for edge collision
-        if (
-          newHead.x < 0 || 
-          newHead.x >= GRID_SIZE || 
-          newHead.y < 0 || 
-          newHead.y >= GRID_SIZE
-        ) {
-          setGameOver(true); // Game over if penguin hits an edge
+        if (newHead.x < 0 || newHead.x >= GRID_SIZE || newHead.y < 0 || newHead.y >= GRID_SIZE) {
+          endGame();
           return prevPenguin;
         }
 
-        // Check for self-collision
         if (prevPenguin.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
-          setGameOver(true);
+          endGame();
           return prevPenguin;
         }
 
         const newPenguin = [newHead, ...prevPenguin];
 
-        // Check if penguin has eaten the fish
         if (newHead.x === fish.x && newHead.y === fish.y) {
-          setFish(generateFish()); // Generate new fish
-          setScore((score) => score + 1); // Increase score
+          setFish(generateFish());
+          setScore((score) => score + 1);
         } else {
-          newPenguin.pop(); // Remove tail if no fish eaten
+          newPenguin.pop();
         }
 
         return newPenguin;
       });
     }, 200);
 
-    // Cleanup interval
     return () => clearInterval(movePenguin);
-  }, [gameStarted, direction, fish, gameOver]);
+  }, [gameStarted, direction, fish, gameOver, isPaused]);
 
-  // Add keyboard event listener
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [direction]);
 
-  // Start or restart the game
   const startGame = () => {
     setPenguin(INITIAL_PENGUIN);
     setFish(generateFish());
@@ -98,15 +124,73 @@ export default function PenguinGame() {
     setScore(0);
     setGameOver(false);
     setGameStarted(true);
+    setIsPaused(false);
+  };
+
+  const endGame = async () => {
+    setGameOver(true);
+    if (score > bestScore && uid) { 
+      try {
+        await saveScore(uid, "penguin_score", score);
+        setBestScore(score); // Update bestScore locally only if Firebase update is successful
+        console.log("Score successfully saved to Firebase:", score);
+      } catch (error) {
+        console.error("Error saving score to Firebase:", error);
+      }
+    }
+  };
+
+  const exitGame = () => {
+    router.push('/');
+  };
+
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
   };
 
   return (
-    <div className={styles.gameContainer}>
+    <div className={styles.bodyWrapper} style={{ backgroundImage: `url(${backgroundImage.src})` }}>
       <h2>Penguin Game</h2>
       <div className={styles.score}>Score: {score}</div>
-      <button onClick={startGame} className={styles.startButton}>
-        {gameStarted ? "Restart" : "Start"}
-      </button>
+      <div className={styles.bestScore}>Best Score: {bestScore}</div>
+
+      {!gameStarted ? (
+        <>
+          <button onClick={startGame} className={styles.startButton}>
+            Start
+          </button>
+          <button onClick={exitGame} className={styles.startButton}>
+            Exit Game
+          </button>
+        </>
+      ) : (
+        <>
+          {!gameOver && !isPaused && (
+            <button onClick={togglePause} className={styles.startButton}>
+              Pause
+            </button>
+          )}
+          {!gameOver && isPaused && (
+            <button onClick={togglePause} className={styles.startButton}>
+              Resume
+            </button>
+          )}
+          {gameOver && (
+            <>
+              <div className={`${styles.gameOverMessage} ${gameOver ? styles.show : ''}`}>
+                Game Over
+              </div>
+              <button onClick={startGame} className={styles.startButton}>
+                Restart
+              </button>
+              <button onClick={exitGame} className={styles.startButton}>
+                Exit Game
+              </button>
+            </>
+          )}
+        </>
+      )}
+
       <div className={styles.grid}>
         {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, i) => {
           const x = i % GRID_SIZE;
@@ -121,7 +205,6 @@ export default function PenguinGame() {
           );
         })}
       </div>
-      {gameOver && <div className={styles.gameOver}>Game Over</div>}
     </div>
   );
 }
