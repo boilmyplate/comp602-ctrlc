@@ -1,115 +1,182 @@
-.page-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* Full viewport height */
-  padding: 0; /* Remove any extra padding */
-}
+  /* Container Styles */
+  .page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0;
+  }
 
-.all {
-  font-family: 'Comfortaa', sans-serif;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  margin: auto;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
-}
+  /* Theme Styles for page-container */
+  .pageContainerLight {
+    background-color: #fff5b7; /* Light background color */
+  }
 
-#light {
-  background-color: #FFF5B7;
-}
+  .pageContainerDark {
+    background-color: #333; /* Dark background color */
+  }
 
-#dark {
-  background-color: #784949;
-}
+  .all {
+    font-family: 'Comfortaa', sans-serif;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    margin: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+  }
 
-#light .all {
-  background-color: #FFF5B7;
-}
+  /* Theme Styles for all */
+  .allLight {
+    background-color: #fff5b7;
+    color: black;
+  }
 
-#dark .all {
-  background-color: #784949;
-}
+  .allDark {
+    background-color: #444;
+    color: white;
+  }
 
+  /* Setting Header */
+  .setting {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
 
-.setting {
-  background-color: white;
-  font-weight: bold;
-  text-align: center;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
+  /* Content Container */
+  .container {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 
-.container {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+  /* Theme Styles for container */
+  .containerLight {
+    background-color: white;
+    color: black;
+  }
 
-.label-input-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
-}
+  .containerDark {
+    background-color: #555;
+    color: white;
+  }
 
-/* Inout field */
-.inputs {
-  width: 100%;
-  background-color: white;
-  border: 2px solid #ddd;
-  font-family: 'Comfortaa', sans-serif;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 16px;
-  margin-top: 10px;
-  margin-left: 10px;
-  
-}
+  /* Form Fields */
+  .label-input-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+  }
 
-/* Save Button */
- .save {
-  background-color: white;
-  border: 2px solid #ddd;
-  font-family: 'Comfortaa', sans-serif;
-  margin-left: 10px;
-  border-radius: 20px;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
+  .inputs {
+    width: 100%;
+    background-color: white;
+    border: 2px solid #ddd;
+    font-family: 'Comfortaa', sans-serif;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: border 0.3s ease;
+  }
 
-.save:hover {
-  background-color: #e0e0e0;
-}
+  /* Theme Styles for inputs */
+  .inputsLight {
+    background-color: white;
+    color: black;
+    border: 2px solid #ddd;
+  }
 
-.back {
-  margin-top: 30px;
-}
-/* Links */
-.links {
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  color: #333;
-}
+  .inputsDark {
+    background-color: #666;
+    color: white;
+    border: 2px solid #999;
+  }
 
-.links a {
-  color: #333;
-  font-size: 0.9em;
-}
+  /* Buttons */
+  .save {
+    background-color: white;
+    border: 2px solid #ddd;
+    font-family: 'Comfortaa', sans-serif;
+    margin-top: 10px;
+    border-radius: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border 0.3s ease;
+  }
 
-.links a:hover {
-  text-decoration: underline;
-  color: #4B3621; 
-}
+  .save:hover {
+    background-color: #e0e0e0;
+  }
 
-.switch {
-  margin-top: 30px;
-  justify-content: center;
-  align-items: center;
-}
+  /* Theme Styles for save button */
+  .saveLight {
+    background-color: white;
+    border: 2px solid #ddd;
+    color: black;
+  }
+
+  .saveDark {
+    background-color: #666;
+    border: 2px solid #888;
+    color: white;
+  }
+
+  .saveDark:hover {
+    background-color: #555;
+  }
+
+  /* Back Link */
+  .back {
+    margin-top: 30px;
+  }
+
+  /* Links */
+  .links {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: #333;
+  }
+
+  .links a {
+    color: #333;
+    font-size: 0.9em;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+    color: #4b3621;
+  }
+
+  /* Theme Styles for links */
+  .linksDark {
+    color: #ddd;
+  }
+
+  .linksDark a {
+    color: #ddd;
+  }
+
+  .linksDark a:hover {
+    color: #bbb;
+  }
+
+  /* Switch Toggle */
+  .switch {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+  }
