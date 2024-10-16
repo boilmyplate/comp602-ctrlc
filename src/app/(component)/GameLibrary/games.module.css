@@ -25,17 +25,18 @@
     background-size: cover;
     background-position: center;
     padding: 25px; 
+    border: 2px solid black;
   }
   
  .mainContainer h1, 
 .mainContainer p {
   margin: 0;
-  color: var(--white); /* White color for contrast */
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+  color: var(--white); 
+  background: rgba(0, 0, 0, 0.5); 
   padding: 10px;
   border-radius: 5px;
-  max-width: 700px; /* Limits the width of the text */
-  word-wrap: break-word; /* Ensures long words are wrapped */
+  max-width: 700px; 
+  word-wrap: break-word; 
 }
   
   .mainContainer h1 {
@@ -60,15 +61,17 @@
   }
 
   .leftContainer{
-    background-image: url('/DinoGame.jpg'); 
+    background-image: url('/ppGame.png'); 
     background-size: cover;
     background-position: center;
+    border: 2px solid black;
   }
 
   .rightContainer{
-    background-image: url('/2048.jpg'); 
+    background-image: url('/letterGame.png'); 
     background-size: cover;
     background-position: center;
+    border: 2px solid black;
   }
   
   .gameCard {
