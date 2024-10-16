@@ -44,32 +44,31 @@ export default function Home() {
     }, [user]);
 
     // Fetch leaderboard data from Firestore
-    // Fetch leaderboard data from Firestore
-useEffect(() => {
-    const fetchLeaderboard = async () => {
-        try {
-            const leaderboardData = [];
-            const leaderboardQuery = query(collection(db, "scores"), orderBy("score", "desc"), limit(10));
-            const leaderboardSnapshot = await getDocs(leaderboardQuery);
+    useEffect(() => {
+        const fetchLeaderboard = async () => {
+            try {
+                const leaderboardData = [];
+                const leaderboardQuery = query(collection(db, "scores"), orderBy("score", "desc"), limit(10));
+                const leaderboardSnapshot = await getDocs(leaderboardQuery);
 
-            for (const scoreDoc of leaderboardSnapshot.docs) {
-                const { uid, gameType, score } = scoreDoc.data();
+                for (const scoreDoc of leaderboardSnapshot.docs) {
+                    const { uid, gameType, score } = scoreDoc.data();
 
-                // Fetch user's email using uid from the "users" collection
-                const userDoc = await getDoc(doc(db, "users", uid));
-                const email = userDoc.exists() ? userDoc.data().email : "No email available";
+                    // Fetch user's email using uid from the "users" collection
+                    const userDoc = await getDoc(doc(db, "users", uid));
+                    const email = userDoc.exists() ? userDoc.data().email : "No email available";
 
-                leaderboardData.push({ uid, email, gameType, score });
+                    leaderboardData.push({ uid, email, gameType, score });
+                }
+
+                setLeaderboard(leaderboardData);
+            } catch (error) {
+                console.error("Error fetching leaderboard:", error);
             }
+        };
 
-            setLeaderboard(leaderboardData);
-        } catch (error) {
-            console.error("Error fetching leaderboard:", error);
-        }
-    };
-
-    fetchLeaderboard();
-}, []);
+        fetchLeaderboard();
+    }, []);
 
     // Sort leaderboard based on selected criteria
     useEffect(() => {
@@ -90,13 +89,18 @@ useEffect(() => {
 
         const fetchData = async () => {
             try {
-                const moodQuery = query(collection(db, "moodHistory"), where("userId", "==", user.uid));
+                const moodQuery = query(collection(db, "moodHistory"), where("uid", "==", user.uid));
                 const moodData = await getDocs(moodQuery);
-                setMoodHistory(moodData.docs.map(doc => doc.data()));
 
-                const messageQuery = query(collection(db, "messages"), where("userId", "==", user.uid));
-                const messageData = await getDocs(messageQuery);
-                setMessages(messageData.docs.map(doc => doc.data()));
+                const moodHistoryData = moodData.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        ...data,
+                        date: new Date(data.timestamp)
+                    };
+                });
+
+                setMoodHistory(moodHistoryData);
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -105,39 +109,43 @@ useEffect(() => {
         fetchData();
     }, [user]);
 
-    // Calculate the happy streak based on consecutive "Happy" moods
+    // Calculate the happy streak dynamically
     useEffect(() => {
-        if (moodHistory.length === 0) return;
-
-        const sortedHistory = moodHistory
-            .filter(entry => entry.mood === 'Happy')
-            .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        let streak = 0;
-        let currentStreak = true;
-        const today = new Date();
-
-        if (sortedHistory.length > 0) {
-            streak = 1; // Start with the first day as part of the streak
-            for (let i = 1; i < sortedHistory.length; i++) {
-                const currentDate = new Date(sortedHistory[i - 1].date);
-                const nextDate = new Date(sortedHistory[i].date);
-
-                const dayDiff = Math.floor((currentDate - nextDate) / (1000 * 60 * 60 * 24));
-
-                if (dayDiff === 1) {
-                    streak += 1;
-                } else {
-                    currentStreak = false;
-                    break;
-                }
-            }
+        if (moodHistory.length === 0) {
+            setHappyStreak(0);
+            return;
         }
 
-        setHappyStreak(currentStreak ? streak : 0);
+        const happyMoods = moodHistory
+            .filter(entry => entry.mood === 'Happy')
+            .sort((a, b) => b.date - a.date);
+
+        let streak = 0;
+        let currentStreakDate = new Date();
+
+        happyMoods.forEach((entry) => {
+            const entryDate = new Date(entry.date);
+            entryDate.setHours(0, 0, 0, 0);
+
+            if (streak === 0) {
+                currentStreakDate = entryDate;
+                streak = 1;
+            } else {
+                const diffDays = Math.round((currentStreakDate - entryDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) {
+                    streak += 1;
+                    currentStreakDate = entryDate;
+                } else if (diffDays > 1) {
+                    return;
+                }
+            }
+        });
+
+        setHappyStreak(streak);
+
     }, [moodHistory]);
 
-    // Calculate the frequency of each mood for the Pie chart
+    // Mood data calculation for the Pie chart
     const moodData = moodHistory.reduce((acc, { mood }) => {
         const moodItem = acc.find(item => item.name === mood);
         if (moodItem) moodItem.value += 1;
@@ -149,7 +157,7 @@ useEffect(() => {
         sortBy === 'frequency' ? b.value - a.value : a.name.localeCompare(b.name)
     );
 
-    // Calculate the frequency of each category for the Bar chart
+    // Frequency calculation for the Bar chart
     useEffect(() => {
         if (messages.length === 0) return;
 
@@ -173,7 +181,11 @@ useEffect(() => {
                 <div className={styles.topRowContainer}>
                     <div className={styles.streakContainer}>
                         <Image src="/mood_images/fire.png" alt="Fire Icon" width={30} height={30} className={styles.fireIcon} />
-                        <h4>Happy Streak: {happyStreak > 0 ? `${happyStreak} day(s)` : "No happy streak yet"}</h4>
+                        <h4>
+                            Happy Streak: {happyStreak === 0 ? "0 days happy streak" : 
+                                           happyStreak === 1 ? "1 day happy streak" : 
+                                           `${happyStreak} days happy streak`}
+                        </h4>
                     </div>
 
                     <div className={styles.scoreboardContainer}>
@@ -211,57 +223,54 @@ useEffect(() => {
                             </select>
                         </div>
                         <ul className={styles.leaderboardList}>
-    {leaderboard.map((entry, index) => (
-        <li key={index} className={styles.leaderboardItem}>
-            <span className={styles.leaderboardRank}>{index + 1}.</span>
-            <span className={styles.leaderboardUser}>User: {entry.email}</span>
-            <span className={styles.leaderboardScore}>{entry.gameType}: {entry.score}</span>
-        </li>
-    ))}
-</ul>
-
+                            {leaderboard.map((entry, index) => (
+                                <li key={index} className={styles.leaderboardItem}>
+                                    <span className={styles.leaderboardRank}>{index + 1}.</span>
+                                    <span className={styles.leaderboardUser}>User: {entry.email}</span>
+                                    <span className={styles.leaderboardScore}>{entry.gameType}: {entry.score}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
-<div className={styles.chartFlexContainer}>
-    <div className={styles.pieChartContainer}>
-        <h4>Mood Tracker</h4>
-        
-        {/* Sort By Dropdown inside Mood Tracker container */}
-        <div className={styles.sortContainer}>
-            <label htmlFor="sortBy">Sort By: </label>
-            <select id="sortBy" value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.sortSelect}>
-                <option value="mood">Mood Name</option>
-                <option value="frequency">Mood Frequency</option>
-            </select>
-        </div>
-        
-        <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-                <Pie data={sortedMoodData.length ? sortedMoodData : [{ name: "No data", value: 1 }]} cx="50%" cy="60%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
-                    {sortedMoodData.length ? sortedMoodData.map((entry, index) => (
-                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                    )) : <Cell fill="#cccccc" />}
-                </Pie>
-                <Tooltip />
-            </PieChart>
-        </ResponsiveContainer>
-        <button onClick={() => router.push("/moodTracker")} className={styles.moodTrackerButton}>Go to Mood Tracker</button>
-    </div>
 
-    <div className={styles.barChartContainer}>
-        <h4>Journal Entry</h4>
-        <ResponsiveContainer width="70%" height={400}>
-            <BarChart data={categoryCounts.length ? categoryCounts : [{ category: "No data", count: 0 }]}>
-                <XAxis dataKey="category" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#7151d1" />
-            </BarChart>
-        </ResponsiveContainer>
-    </div>
-</div>
+                <div className={styles.chartFlexContainer}>
+                    <div className={styles.pieChartContainer}>
+                        <h4>Mood Tracker</h4>
+                        <div className={styles.sortContainer}>
+                            <label htmlFor="sortBy">Sort By: </label>
+                            <select id="sortBy" value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.sortSelect}>
+                                <option value="mood">Mood Name</option>
+                                <option value="frequency">Mood Frequency</option>
+                            </select>
+                        </div>
+                        
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie data={sortedMoodData.length ? sortedMoodData : [{ name: "No data", value: 1 }]} cx="50%" cy="60%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
+                                    {sortedMoodData.length ? sortedMoodData.map((entry, index) => (
+                                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                    )) : <Cell fill="#cccccc" />}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                        <button onClick={() => router.push("/moodTracker")} className={styles.moodTrackerButton}>Go to Mood Tracker</button>
+                    </div>
 
+                    <div className={styles.barChartContainer}>
+                        <h4>Journal Entry</h4>
+                        <ResponsiveContainer width="70%" height={400}>
+                            <BarChart data={categoryCounts.length ? categoryCounts : [{ category: "No data", count: 0 }]}>
+                                <XAxis dataKey="category" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="count" fill="#7151d1" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
             </div>
         </div>
     );

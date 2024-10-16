@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from "@/app/(component)/moodTracker/moodTracker.module.css";
 import { useRouter } from 'next/navigation';
-import { db, auth } from '../Firebase/firebase'; // Import auth to get user info
-import { collection, addDoc, getDocs, deleteDoc, doc, query, where } from 'firebase/firestore';
+import { db, auth } from '../Firebase/firebase';
+import { collection, setDoc, getDocs, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
 const moodOptions = [
@@ -20,21 +20,20 @@ const formatTimestamp = (timestamp) => new Date(timestamp).toLocaleString();
 
 const MoodTracker = () => {
   const router = useRouter();
-  const [userId, setUserId] = useState(null); // State to store userId from auth
-
+  const [uid, setUid] = useState(null); // State to store uid from auth
   const [selectedMood, setSelectedMood] = useState(null);
   const [moodHistory, setMoodHistory] = useState([]);
   const [showInsights, setShowInsights] = useState(false);
   const [timeFrame, setTimeFrame] = useState('Today');
   const [selectedEntries, setSelectedEntries] = useState([]);
 
-  // Monitor Firebase auth state and set userId
+  // Monitor Firebase auth state and set uid
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserId(user.uid);
+        setUid(user.uid); // Set the uid for the logged-in user
       } else {
-        setUserId(null);
+        setUid(null);
       }
     });
     return unsubscribe;
@@ -42,13 +41,13 @@ const MoodTracker = () => {
 
   // Load mood history for the specific user from Firestore
   useEffect(() => {
-    if (!userId) return;
+    if (!uid) return; // Only fetch data if uid is available
 
     const loadMoodHistory = async () => {
       try {
         const moodHistoryQuery = query(
           collection(db, "moodHistory"),
-          where("userId", "==", userId)
+          where("uid", "==", uid) // Query based on uid to fetch user-specific data
         );
         const querySnapshot = await getDocs(moodHistoryQuery);
         setMoodHistory(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -57,31 +56,36 @@ const MoodTracker = () => {
       }
     };
     loadMoodHistory();
-  }, [userId]);
+  }, [uid]);
 
   // Save selected mood to Firestore for the specific user
   const handleMoodSelect = async (moodName) => {
-    if (!userId) {
+    if (!uid) {
       console.error("User ID is null. Cannot save mood entry.");
       return;
     }
 
     setSelectedMood(moodName);
+    const timestamp = new Date().toISOString(); // Current timestamp
+
+    // Set the document ID as `${uid}_${timestamp}` to allow multiple entries per user
+    const docId = `${uid}_${timestamp}`;
+
     const newMoodEntry = { 
       mood: moodName, 
-      timestamp: new Date().toISOString(), 
-      userId // Associate mood entry with userId
+      timestamp: timestamp, 
+      uid // Associate mood entry with uid
     };
-    
+
     try {
-      const docRef = await addDoc(collection(db, "moodHistory"), newMoodEntry);
-      setMoodHistory((prev) => [...prev, { ...newMoodEntry, id: docRef.id }]);
+      await setDoc(doc(db, "moodHistory", docId), newMoodEntry); // Use `setDoc` with custom doc ID
+      setMoodHistory((prev) => [...prev, { ...newMoodEntry, id: docId }]); // Update local state with new entry
     } catch (error) {
       console.error("Error saving mood entry:", error);
     }
   };
 
-  // Delete entries (single or multiple)
+  // Delete selected entries from Firestore
   const handleDelete = async (ids) => {
     if (window.confirm("Are you sure you want to delete the selected entries?")) {
       try {
@@ -105,7 +109,7 @@ const MoodTracker = () => {
     link.click();
   };
 
-  // Filter mood history by time frame
+  // Filter mood history by selected time frame
   const filterMoodHistory = () => {
     const now = new Date();
     return moodHistory.filter((entry) => {
