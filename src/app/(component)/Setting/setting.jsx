@@ -5,7 +5,7 @@ import ReactSwitch from "react-switch";
 import styles from "./setting.module.css";
 import { auth } from "../Firebase/firebase";
 import { doPasswordChange, updateUsername } from "../Firebase/auth";
-import { ThemeContext } from '../ThemeProvider/themeProvider'; // Correct path to ThemeContext
+import { ThemeContext } from '../ThemeProvider/themeProvider'; 
 
 const Setting = () => {
   const [username, setNewUsername] = useState("");
