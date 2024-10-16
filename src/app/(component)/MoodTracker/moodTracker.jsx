@@ -144,49 +144,51 @@ const MoodTracker = () => {
 
       <div className={styles.buttonContainer}>
         <img src="/mood_images/download.png" alt="Download CSV" className={styles.icon} onClick={exportToCSV} />
-        <button onClick={() => setShowInsights(true)} className={styles.insightsButton}>Show Insights</button>
+        <button onClick={() => setShowInsights(!showInsights)} className={styles.insightsButton}>Show Insights</button>
         <button onClick={() => router.push('/')} className={styles.homeButton}>Back to Homepage</button>
       </div>
 
       {showInsights && (
-        <div className={styles.insightsContainer}>
-          <h3>Mood Insights</h3>
-          <div className={styles.timeFrameContainer}>
-            <label>Sort by:</label>
-            <select value={timeFrame} onChange={(e) => setTimeFrame(e.target.value)}>
-              <option value="Today">Today</option>
-              <option value="Last 7 Days">Last 7 Days</option>
-              <option value="Last 30 Days">Last 30 Days</option>
-              <option value="All Time">All Time</option>
-            </select>
-          </div>
-          {insights.totalEntries > 0 ? (
-            <>
-              <p>Total Entries: {insights.totalEntries}</p>
-              <p>Most Frequent Mood: {insights.mostFrequentMood}</p>
-              <ul className={styles.moodTimestamps}>
-                {insights.filteredHistory.map((entry) => (
-                  <li key={entry.id}>
-                    <input 
-                      type="checkbox" 
-                      checked={selectedEntries.includes(entry.id)} 
-                      onChange={() => setSelectedEntries((prev) =>
-                        prev.includes(entry.id) ? prev.filter((id) => id !== entry.id) : [...prev, entry.id]
-                      )}/>
-                    {entry.mood}: {formatTimestamp(entry.timestamp)}
-                    <button onClick={() => handleDelete([entry.id])} className={styles.deleteButton} style={{ marginLeft: '10px' }}>
-                      Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <button onClick={() => handleDelete(selectedEntries)} disabled={selectedEntries.length === 0} className={styles.deleteButton}>
-                Delete Selected
-              </button>
-            </>
-          ) : <p>No entries available.</p>}
+      <div className={styles.insightsContainer}>
+        <button className={styles.closeButton} onClick={() => setShowInsights(false)}>Close</button>
+        <h3>Mood Insights</h3>
+        <div className={styles.timeFrameContainer}>
+          <label>Sort by:</label>
+          <select value={timeFrame} onChange={(e) => setTimeFrame(e.target.value)}>
+            <option value="Today">Today</option>
+            <option value="Last 7 Days">Last 7 Days</option>
+            <option value="Last 30 Days">Last 30 Days</option>
+            <option value="All Time">All Time</option>
+          </select>
         </div>
-      )}
+        {insights.totalEntries > 0 ? (
+          <>
+            <p>Total Entries: {insights.totalEntries}</p>
+            <p>Most Frequent Mood: {insights.mostFrequentMood}</p>
+            <ul className={styles.moodTimestamps}>
+              {insights.filteredHistory.map((entry) => (
+                <li key={entry.id}>
+                  <input 
+                    type="checkbox" 
+                    checked={selectedEntries.includes(entry.id)} 
+                    onChange={() => setSelectedEntries((prev) =>
+                      prev.includes(entry.id) ? prev.filter((id) => id !== entry.id) : [...prev, entry.id]
+                    )}
+                  />
+                  {entry.mood}: {formatTimestamp(entry.timestamp)}
+                  <button onClick={() => handleDelete([entry.id])} className={styles.deleteButton} style={{ marginLeft: '10px' }}>
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <button onClick={() => handleDelete(selectedEntries)} disabled={selectedEntries.length === 0} className={styles.deleteButton}>
+              Delete Selected
+            </button>
+          </>
+        ) : <p>No entries available.</p>}
+      </div>
+    )}
     </div>
   );
 };
