@@ -17,8 +17,6 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [isSigningIn, setIsSigningIn] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    // useRouter for redirecting users
-    const router = useRouter();
 
     // Function to handle form submission for email and password login
     const onSubmit = async e => {

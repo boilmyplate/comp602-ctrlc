@@ -39,7 +39,7 @@ const JournalWelcome = () => {
                             {/* New Entry Button (Plus Icon) */}
                             <div className={styles["new-entry-container"]}>
                                 <Link
-                                    href="/newEntry"
+                                    href="/newentry"
                                     className={styles["plus-link"]}
                                 >
                                     <div className={styles["plus-icon"]}>+</div>

@@ -79,66 +79,68 @@ const Signup = () => {
         }
     };
 
-    return (
-        <div className={styles.background}>
-            {userLoggedIn && router.push("/")}
-            <div className={styles.BlueBox}>
-                <div className={styles.WhiteBox}>
-                    <h1 className={styles.heading}>Sign Up</h1>
-                    {errorMessage && (
-                        <div className={styles["error-message"]}>
-                            {errorMessage}
+    if (userLoggedIn) router.replace("/");
+    else if (!userLoggedIn) {
+        return (
+            <div className={styles.background}>
+                <div className={styles.BlueBox}>
+                    <div className={styles.WhiteBox}>
+                        <h1 className={styles.heading}>Sign Up</h1>
+                        {errorMessage && (
+                            <div className={styles["error-message"]}>
+                                {errorMessage}
+                            </div>
+                        )}
+                        {/* Username Input Field */}
+                        <div className={styles["label-input-container"]}>
+                            <label>Username</label>
+                            <input
+                                className={styles.inputs}
+                                type="text"
+                                placeholder="username"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                            />
                         </div>
-                    )}
-                    {/* Username Input Field */}
-                    <div className={styles["label-input-container"]}>
-                        <label>Username</label>
-                        <input
-                            className={styles.inputs}
-                            type="text"
-                            placeholder="username"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                        />
-                    </div>
-                    {/* Email Input Field */}
-                    <div className={styles["label-input-container"]}>
-                        <label>Email</label>
-                        <input
-                            className={styles.inputs}
-                            type="email"
-                            placeholder="name@example.com"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                        />
-                    </div>
-                    {/* Password Input Field */}
-                    <div className={styles["label-input-container"]}>
-                        <label>Password</label>
-                        <input
-                            className={styles.inputs}
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                        />
-                    </div>
-                    {/* Submit Button */}
-                    <button
-                        className={styles.LoginButton}
-                        onClick={onSubmit}
-                        disabled={isRegistering}
-                    >
-                        Sign Up
-                    </button>
-                    {/* Link to return to login page */}
-                    <div className={styles.links}>
-                        <Link href="/">Back to login</Link>
+                        {/* Email Input Field */}
+                        <div className={styles["label-input-container"]}>
+                            <label>Email</label>
+                            <input
+                                className={styles.inputs}
+                                type="email"
+                                placeholder="name@example.com"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                        </div>
+                        {/* Password Input Field */}
+                        <div className={styles["label-input-container"]}>
+                            <label>Password</label>
+                            <input
+                                className={styles.inputs}
+                                type="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                        </div>
+                        {/* Submit Button */}
+                        <button
+                            className={styles.LoginButton}
+                            onClick={onSubmit}
+                            disabled={isRegistering}
+                        >
+                            Sign Up
+                        </button>
+                        {/* Link to return to login page */}
+                        <div className={styles.links}>
+                            <Link href="/">Back to login</Link>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    };
 };
 
 export default Signup;

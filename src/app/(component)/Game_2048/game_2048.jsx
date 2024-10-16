@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './Game_2048.module.css';
+import styles from './game_2048.module.css';
 
 const initialGrid = () => {
     const grid = Array(4).fill(null).map(() => Array(4).fill({ value: null, moved: false }));
