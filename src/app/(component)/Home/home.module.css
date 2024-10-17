@@ -1,83 +1,200 @@
 /* Main container */
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 /* Wrapper for content */
 .contentWrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    max-width: 1400px;
-    padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 20px;
+  gap: 15px;
 }
 
-/* Top row container for Happy Streak, Map, and Scoreboard */
+/* Top row container for Happy Streak and Scoreboard */
 .topRowContainer {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-    justify-content: space-around;
+  display: flex;
+  width: 100%;
+  gap: 15px; /* Updated gap for balanced spacing */
+  justify-content: space-between;
 }
 
-/* Happy Streak, Map, and Scoreboard containers */
-.streakContainer, .mapContainer, .scoreboardContainer {
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.streakContainer {
-    background-color: #f5deb3;
-    width: 35%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.mapContainer {
-    background-color: #e0f7fa;
-    width: 15%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100px;
-}
-
+.streakContainer,
 .scoreboardContainer {
-    background-color: #d8f3fc;
-    width: 45%;
+  margin: 0;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Happy Streak container */
+.streakContainer {
+  background-color: #f5deb3;
+  width: 40%; /* Adjusted width to fit without the map */
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Scoreboard container */
+.scoreboardContainer {
+  background-color: #f0f4fa;
+  width: 55%; /* Adjusted width to fit without the map */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow: visible;
 }
 
 /* Flex container for charts */
 .chartFlexContainer {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    justify-content: space-around;
+  display: flex;
+  gap: 15px;
+  width: 100%;
 }
 
 /* Container for Pie and Bar charts */
-.pieChartContainer, .barChartContainer {
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+.pieChartContainer,
+.barChartContainer {
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pieChartContainer {
-    background-color: #f4ec9f;
-    width: 55%;
+  background-color: #f4ec9f;
+  width: 55%;
 }
 
 .barChartContainer {
-    background-color: #b0f3b0;
-    width: 100%;
+  background-color: #b0f3b0;
+  width: 100%;
+  display: flex;
+}
+
+.moodTrackerButton {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: #4b8f8c;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.moodTrackerButton:hover {
+  background-color: #397b7b;
+}
+
+.playButton {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: #4b8f8c;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.playButton:hover {
+  background-color: #397b7b;
+}
+
+/* Scoreboard List and Items */
+.scoreList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.scoreItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.scoreItem:last-child {
+  border-bottom: none;
+}
+
+.gameTitle {
+  font-weight: bold;
+  color: #4a90e2;
+  font-size: 1.1rem;
+}
+
+.scoreValue {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ff8042;
+}
+
+/* Game Leaderboard Container */
+.leaderboardContainer {
+  background-color: #e8f5e9;
+  width: 40%;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Leaderboard title */
+.leaderboardContainer h4 {
+  font-size: 1.2rem;
+  color: #388e3c;
+  margin-bottom: 10px;
+}
+
+/* Leaderboard List and Items */
+.leaderboardList {
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboardItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #c8e6c9;
+}
+
+.leaderboardItem:last-child {
+  border-bottom: none;
+}
+
+.leaderboardRank,
+.leaderboardUser,
+.leaderboardScore {
+  font-size: 1rem;
+}
+
+.leaderboardRank {
+  color: #388e3c;
+}
+
+.leaderboardUser {
+  color: #4a4a4a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboardScore {
+  color: #ff8a65;
+  font-weight: bold;
 }

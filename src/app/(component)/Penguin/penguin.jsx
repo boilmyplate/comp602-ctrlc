@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './penguin.module.css';
-import { saveScore, db, auth } from '../Firebase/firebase'; // Import saveScore, db, and auth
+import { db, auth } from '../Firebase/firebase'; // Import db, and auth
+import { saveScore } from '../Firebase/firestore/gameDB';
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from 'firebase/firestore';
 import penguinImage from '/public/penguin/penguin.png';
@@ -29,6 +30,7 @@ export default function PenguinGame() {
   const [gameStarted, setGameStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [uid, setUid] = useState(null);
+  const [displayName, setDisplayName] = useState(null);
 
   const router = useRouter();
 
@@ -37,7 +39,8 @@ export default function PenguinGame() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUid(user.uid);
-        fetchBestScore(user.uid);
+        setDisplayName(user.displayName);
+        fetchBestScore(uid, displayName);
       } else {
         setUid(null);
       }
@@ -131,7 +134,7 @@ export default function PenguinGame() {
     setGameOver(true);
     if (score > bestScore && uid) { 
       try {
-        await saveScore(uid, "penguin_score", score);
+        await saveScore(uid, "Penguin", score, displayName);
         setBestScore(score); // Update bestScore locally only if Firebase update is successful
         console.log("Score successfully saved to Firebase:", score);
       } catch (error) {
@@ -141,7 +144,7 @@ export default function PenguinGame() {
   };
 
   const exitGame = () => {
-    router.push('/');
+    router.push('/gamelibrary');
   };
 
   const togglePause = () => {

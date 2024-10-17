@@ -286,10 +286,10 @@ const Pong = () => {
                         Start Game
                     </button>
 
-                    <Link href="/">
+                    <Link href="/gamelibrary">
                         <button className={styles["back-home-button"]}>
                             {" "}
-                            Back to Homepage
+                            Back to library
                         </button>
                     </Link>
                 </div>
