@@ -271,12 +271,7 @@ export default function Home() {
                                 <span className={styles.scoreValue}>
                                     {penguinScore}
                                 </span>
-                                <button
-                                    onClick={() => router.push("/penguin")}
-                                    className={styles.playButton}
-                                >
-                                    Play Penguin Game
-                                </button>
+                                
                             </li>
                             <li className={styles.scoreItem}>
                                 <span className={styles.gameTitle}>
@@ -285,12 +280,7 @@ export default function Home() {
                                 <span className={styles.scoreValue}>
                                     {alphabet2048Score}
                                 </span>
-                                <button
-                                    onClick={() => router.push("/game_2048")}
-                                    className={styles.playButton}
-                                >
-                                    Play 2048 Alphabet
-                                </button>
+                                
                             </li>
                         </ul>
                     </div>
@@ -402,8 +392,7 @@ export default function Home() {
                                     categoryCounts.length
                                         ? categoryCounts
                                         : [{ category: "No data", count: 0 }]
-                                }
-                            >
+                                }>
                                 <XAxis dataKey="category" />
                                 <YAxis />
                                 <Tooltip />

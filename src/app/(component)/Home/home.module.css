@@ -98,20 +98,6 @@
   background-color: #397b7b;
 }
 
-.playButton {
-  margin-bottom: 10px;
-  padding: 10px 20px;
-  background-color: #4b8f8c;
-  border-radius: 5px;
-  font-weight: bold;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-.playButton:hover {
-  background-color: #397b7b;
-}
-
 /* Scoreboard List and Items */
 .scoreList {
   list-style: none;
