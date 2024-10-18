@@ -86,28 +86,37 @@ const Login = () => {
                         </div>
                     )}
 
-                    {/* Email Input */}
-                    <div className={styles["label-input-container"]}>
-                        <p className={styles.text}>Email</p>
-                        <input
-                            className={styles.inputs}
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)} // Updates email state
-                        />
-                    </div>
+                    <div className={styles["form-container"]}>
+                        <form onSubmit={onSubmit}>
+                            {/* Email Input */}
+                            <div className={styles["label-input-container"]}>
+                                <p className={styles.text}>Email</p>
+                                <input
+                                    className={styles.inputs}
+                                    type="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)} // Updates email state
+                                />
+                            </div>
 
-                    {/* Password Input */}
-                    <div className={styles["label-input-container"]}>
-                        <p className={styles.text}>Password</p>
-                        <input
-                            className={styles.inputs}
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)} // Updates password state
-                        />
+                            {/* Password Input */}
+                            <div className={styles["label-input-container"]}>
+                                <p className={styles.text}>Password</p>
+                                <input
+                                    className={styles.inputs}
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)} // Updates password state
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                style={{ display: "none" }}
+                            ></button>
+                        </form>
                     </div>
 
                     {/* Sign In with Google Button */}
