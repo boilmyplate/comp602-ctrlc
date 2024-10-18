@@ -1,12 +1,10 @@
-.all {
-  width: 400px;
-  margin: 30px auto;
+
+.form {
+  margin-bottom: 10px;
 }
 
 .eventForm {
-
   font-family: 'Comfortaa', sans-serif;
-
 }
 
 .eventForm input {

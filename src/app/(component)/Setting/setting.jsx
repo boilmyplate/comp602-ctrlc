@@ -12,39 +12,48 @@ import {
 export const ThemeContext = createContext(null);
 
 const Setting = () => {
-    const [username, setNewUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const user = auth.currentUser;
-    const [theme, setTheme] = useState("dark");
+  // variables for username, password, theme, and current user
+  const [username, setNewUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const user = auth.currentUser;
+  const [theme, setTheme] = useState("dark");
 
     const toggleTheme = () => {
         setTheme(curr => (curr === "light" ? "dark" : "light"));
         console.log(theme);
     };
 
-    const passSubmit = async () => {
-        try {
-            // Call the doPasswordChange function with the new password
-            await doPasswordChange(password);
-            alert("Password updated successfully!");
-            setPassword("");
-        } catch (error) {
-            console.error("Error updating password:", error);
-            alert("Failed to update password. Please try again.");
-        }
-    };
 
-    const userSubmit = async () => {
-        try {
-            // Call the updateProfile function with the new username
-            await updateUsername(username);
-            alert("Username updated successfully!");
-            setNewUsername("");
-        } catch (error) {
-            console.error("Error updating password:", error);
-            alert("Failed to update username. Please try again.");
-        }
-    };
+  //allow user to change password 
+  const passSubmit = async () => {
+    try {
+      // call the doPasswordChange function with the new password
+      await doPasswordChange(password);
+      // alert user when password have been updated
+      alert("Password updated successfully!"); 
+      setPassword(""); // clear the password input
+    } catch (error) {
+      console.error("Error updating password:", error); 
+      // alert user when after failing to update password 
+      alert("Failed to update password. Please try again.");
+    }
+  };
+
+    // allow user to change username
+  const userSubmit = async () => {
+    try {
+      // Call the updateProfile function with the new username
+      await updateUsername(username);
+      // alert user when username have been updated
+      alert("Username updated successfully!");
+      // clear the username input
+      setNewUsername("");
+    } catch (error) {
+      console.error("Error updating password:", error);
+      // alert user when after failing to update username 
+      alert("Failed to update username. Please try again.");
+    }
+  };
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
