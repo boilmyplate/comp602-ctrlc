@@ -93,41 +93,38 @@ export default function Home() {
                     limit(10)
                 );
                 const leaderboardSnapshot = await getDocs(leaderboardQuery);
-
-                for (const scoreDoc of leaderboardSnapshot.docs) {
-                    const {
-                        uid,
-                        gameType,
-                        score,
-                        displayName
-                    } = scoreDoc.data();
-                    // console.log(scoreDoc.data());
-                    leaderboardData.push({ uid, displayName, gameType, score });
-                }
-
+        
+                leaderboardSnapshot.forEach(scoreDoc => {
+                    const { displayName, gameType, score } = scoreDoc.data(); 
+                    leaderboardData.push({ displayName, gameType, score });
+                });
+        
                 setLeaderboard(leaderboardData);
             } catch (error) {
                 console.error("Error fetching leaderboard:", error);
             }
         };
+        
 
         fetchLeaderboard();
     }, []);
 
-    // Sort leaderboard based on selected criteria
-    useEffect(() => {
-        if (leaderboardSortBy === "score") {
-            setLeaderboard(prevLeaderboard =>
-                [...prevLeaderboard].sort((a, b) => b.score - a.score)
-            );
-        } else if (leaderboardSortBy === "gameType") {
-            setLeaderboard(prevLeaderboard =>
-                [...prevLeaderboard].sort((a, b) =>
-                    a.gameType.localeCompare(b.gameType)
-                )
-            );
-        }
-    }, [leaderboardSortBy]);
+    // Sort leaderboard based on selected criteria (either by score or game type)
+useEffect(() => {
+    if (leaderboardSortBy === "score") {
+        // Sort by score in descending order
+        setLeaderboard(prevLeaderboard =>
+            [...prevLeaderboard].sort((a, b) => b.score - a.score)
+        );
+    } else if (leaderboardSortBy === "gameType") {
+        // Sort by gameType alphabetically and then by score within each game type
+        setLeaderboard(prevLeaderboard =>
+            [...prevLeaderboard]
+                .sort((a, b) => a.gameType.localeCompare(b.gameType))
+                .sort((a, b) => b.score - a.score)  // Keep high scores on top within each game type
+        );
+    }
+}, [leaderboardSortBy]);
 
     // Fetch mood history and messages from Firestore
     useEffect(() => {
@@ -302,23 +299,21 @@ export default function Home() {
                             </select>
                         </div>
                         <ul className={styles.leaderboardList}>
-                            {leaderboard.map((entry, index) => (
-                                <li
-                                    key={index}
-                                    className={styles.leaderboardItem}
-                                >
-                                    <span className={styles.leaderboardRank}>
-                                        {index + 1}.
-                                    </span>
-                                    <span className={styles.leaderboardUser}>
-                                        {entry.displayName}
-                                    </span>
-                                    <span className={styles.leaderboardScore}>
-                                        {entry.gameType}: {entry.score}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
+                   {leaderboard.map((entry, index) => (
+                   <li key={index} className={styles.leaderboardItem}>
+                   <span className={styles.leaderboardRank}>{index + 1}.</span>
+                   <span className={styles.leaderboardUser}>
+                  {entry.displayName ? entry.displayName : 'Unknown User'} {/* Display username */}
+                 </span>
+                 <span className={styles.leaderboardScore}>
+                {entry.gameType}: {entry.score}
+                 </span>
+            </li>
+    ))}
+</ul>
+
+
+
                     </div>
                 </div>
 
