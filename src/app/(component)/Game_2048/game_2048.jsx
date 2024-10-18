@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { db, auth } from '../Firebase/firebase';
-import { saveScore } from '../Firebase/firestore/gameDB';
+import { fetchHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
 import { doc, getDoc } from 'firebase/firestore';
 import styles from './game_2048.module.css';
 
@@ -98,30 +98,27 @@ const Alphabet2048 = () => {
     }, []);
 
     useEffect(() => {
-        const fetchBestScore = async () => {
-            const user = auth.currentUser;
-            if (user) {
-                const docRef = doc(db, 'scores', `${user.uid}_2048`);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setBestScore(docSnap.data().score);
-                }
-            }
+        const fetchData = async () => {
+            const user = auth.currentUser.uid;
+            const highScore = await fetchHighScore(user, "2048");
+            setBestScore(highScore);
         };
-        fetchBestScore();
+
+        fetchData();
     }, []);
 
     useEffect(() => {
         const saveBestScore = async () => {
             const user = auth.currentUser;
-            if (user && score > bestScore) {
+            if (gameOver && score > bestScore) {
                 setBestScore(score);
-                await saveScore(user.uid, "2048", score, user.displayName);
+                await saveHighScore(user.uid, "2048", score, user.displayName);
                 console.log("High score saved successfully");
             }
         };
+        
         saveBestScore();
-    }, [score, bestScore]);
+    }, [gameOver, score, bestScore]);
 
     const handleKeyDown = useCallback((e) => {
         if (isMoving || gameOver) return;

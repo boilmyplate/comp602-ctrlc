@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './penguin.module.css';
 import { db, auth } from '../Firebase/firebase'; // Import db, and auth
-import { saveScore } from '../Firebase/firestore/gameDB';
+import { fetchHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from 'firebase/firestore';
 import penguinImage from '/public/penguin/penguin.png';
@@ -29,41 +29,19 @@ export default function PenguinGame() {
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [uid, setUid] = useState(null);
-  const [displayName, setDisplayName] = useState(null);
-
+  
+  const user = auth.currentUser;
   const router = useRouter();
 
-  // Get the user ID on component mount and auth state change
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUid(user.uid);
-        setDisplayName(user.displayName);
-        fetchBestScore(uid, displayName);
-      } else {
-        setUid(null);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
   // Fetch the best score for the authenticated user
-  const fetchBestScore = async (uid) => {
-    if (uid) {
-      try {
-        const docRef = doc(db, 'scores', `penguin_score_${uid}`);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setBestScore(docSnap.data().score || 0);
-        } else {
-          console.log("No existing score found for user.");
-        }
-      } catch (error) {
-        console.error("Error fetching best score:", error);
-      }
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+        const highScore = await fetchHighScore(user.uid, "penguinscore");
+        setBestScore(highScore);
+    };
+
+    fetchData();
+}, [user]);
 
   function generateFish() {
     return {
@@ -132,9 +110,9 @@ export default function PenguinGame() {
 
   const endGame = async () => {
     setGameOver(true);
-    if (score > bestScore && uid) { 
+    if (score > bestScore) { 
       try {
-        await saveScore(uid, "Penguin", score, displayName);
+        await saveHighScore(user.uid, "penguinscore", score, user.displayName);
         setBestScore(score); // Update bestScore locally only if Firebase update is successful
         console.log("Score successfully saved to Firebase:", score);
       } catch (error) {
