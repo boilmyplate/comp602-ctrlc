@@ -25,3 +25,60 @@
 .wrapper {
   width: 90vw;
 }
+
+
+/* Assuming this is added to your calendar.module.css */
+
+/* Container for the edit form */
+.editForm {
+  background-color: #f9f9f9; /* Light background */
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Light shadow for some depth */
+  max-width: 400px; /* Limiting the width */
+  margin: 0 auto; /* Center the form */
+}
+
+/* Header for the form */
+.editForm h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333; /* Darker text */
+}
+
+/* Form fields */
+.editForm input {
+  width: 100%; /* Full width input fields */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 16px;
+}
+
+/* Buttons */
+.editForm button {
+  background-color: #007bff; /* Primary blue color */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px; /* Space between buttons */
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.editForm button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Delete button styling */
+.editForm button[type="button"] {
+  background-color: #dc3545; /* Red for delete button */
+}
+
+.editForm button[type="button"]:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
