@@ -11,9 +11,16 @@ import {
     deleteDoc,
     doc,
     query,
-    where
+    addDoc
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import {
+    addMoodHistory,
+    calculateInsights,
+    deleteMoodHistory,
+    exportToCSV,
+    fetchMoodHistory
+} from "../Firebase/firestore/moodTrackerDB";
 
 const moodOptions = [
     { name: "Happy", img: "./mood_images/happy.png" },
@@ -24,78 +31,39 @@ const moodOptions = [
     { name: "Worried", img: "./mood_images/worried.png" }
 ];
 
-const formatTimestamp = timestamp => new Date(timestamp).toLocaleString();
-
 const MoodTracker = () => {
     const router = useRouter();
-    const [uid, setUid] = useState(null); // State to store uid from auth
     const [selectedMood, setSelectedMood] = useState(null);
     const [moodHistory, setMoodHistory] = useState([]);
     const [showInsights, setShowInsights] = useState(false);
     const [timeFrame, setTimeFrame] = useState("Today");
     const [selectedEntries, setSelectedEntries] = useState([]);
+    const user = auth.currentUser.uid;
+    const insights = calculateInsights(moodHistory);
+    // console.log("insights", insights);
 
-    // Monitor Firebase auth state and set uid
+    // Load mood history
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, user => {
-            if (user) {
-                setUid(user.uid); // Set the uid for the logged-in user
-            } else {
-                setUid(null);
-            }
-        });
-        return unsubscribe;
-    }, []);
-
-    // Load mood history for the specific user from Firestore
-    useEffect(() => {
-        if (!uid) return; // Only fetch data if uid is available
-
-        const loadMoodHistory = async () => {
-            try {
-                const moodHistoryQuery = query(
-                    collection(db, "moodHistory"),
-                    where("uid", "==", uid) // Query based on uid to fetch user-specific data
-                );
-                const querySnapshot = await getDocs(moodHistoryQuery);
-                setMoodHistory(
-                    querySnapshot.docs.map(doc => ({
-                        ...doc.data(),
-                        id: doc.id
-                    }))
-                );
-            } catch (error) {
-                console.error("Error fetching mood history:", error);
-            }
+        const fetchData = async () => {
+            const moodHistoryRef = await fetchMoodHistory(user);
+            setMoodHistory(moodHistoryRef);
         };
-        loadMoodHistory();
-    }, [uid]);
+
+        fetchData();
+        console.log("FETCHING DATA: ", moodHistory);
+    }, [user]);
 
     // Save selected mood to Firestore for the specific user
     const handleMoodSelect = async moodName => {
-        if (!uid) {
-            console.error("User ID is null. Cannot save mood entry.");
-            return;
-        }
-
-        setSelectedMood(moodName);
         const timestamp = new Date().toISOString(); // Current timestamp
-
-        // Set the document ID as `${uid}_${timestamp}` to allow multiple entries per user
-        const docId = `${uid}_${timestamp}`;
 
         const newMoodEntry = {
             mood: moodName,
-            timestamp: timestamp,
-            uid // Associate mood entry with uid
+            timestamp: timestamp
         };
 
-        try {
-            await setDoc(doc(db, "moodHistory", docId), newMoodEntry); // Use `setDoc` with custom doc ID
-            setMoodHistory(prev => [...prev, { ...newMoodEntry, id: docId }]); // Update local state with new entry
-        } catch (error) {
-            console.error("Error saving mood entry:", error);
-        }
+        const docRef = await addMoodHistory(user, newMoodEntry);
+        setMoodHistory(prev => [...prev, { ...newMoodEntry, id: docRef.id }]); // Update local state with new entry
     };
 
     // Delete selected entries from Firestore
@@ -105,70 +73,13 @@ const MoodTracker = () => {
                 "Are you sure you want to delete the selected entries?"
             )
         ) {
-            try {
-                await Promise.all(
-                    ids.map(id => deleteDoc(doc(db, "moodHistory", id)))
-                );
-                setMoodHistory(prev =>
-                    prev.filter(entry => !ids.includes(entry.id))
-                );
-                setSelectedEntries([]);
-            } catch (error) {
-                console.error("Error deleting entries:", error);
-            }
+            await deleteMoodHistory(user, ids);
+            setMoodHistory(prev =>
+                prev.filter(entry => !ids.includes(entry.id))
+            );
+            setSelectedEntries([]);
         }
     };
-
-    // Export mood history to CSV
-    const exportToCSV = () => {
-        const csvContent = [
-            "Mood,Timestamp",
-            ...moodHistory.map(
-                entry => `${entry.mood},${formatTimestamp(entry.timestamp)}`
-            )
-        ].join("\n");
-        const blob = new Blob([csvContent], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "mood_history.csv";
-        link.click();
-    };
-
-    // Filter mood history by selected time frame
-    const filterMoodHistory = () => {
-        const now = new Date();
-        return moodHistory.filter(entry => {
-            const entryDate = new Date(entry.timestamp);
-            return timeFrame === "Today"
-                ? entryDate.toDateString() === now.toDateString()
-                : timeFrame === "Last 7 Days"
-                ? now - entryDate <= 7 * 24 * 60 * 60 * 1000
-                : timeFrame === "Last 30 Days"
-                ? now - entryDate <= 30 * 24 * 60 * 60 * 1000
-                : true;
-        });
-    };
-
-    const calculateInsights = () => {
-        const filteredHistory = filterMoodHistory();
-        const moodCount = filteredHistory.reduce(
-            (acc, { mood }) => ({ ...acc, [mood]: (acc[mood] || 0) + 1 }),
-            {}
-        );
-        const mostFrequentMood = Object.keys(moodCount).reduce(
-            (a, b) => (moodCount[a] > moodCount[b] ? a : b),
-            ""
-        );
-        return {
-            totalEntries: filteredHistory.length,
-            mostFrequentMood,
-            filteredHistory
-        };
-    };
-
-    const insights = calculateInsights();
-    console.log("insights", insights);
 
     return (
         <div className={styles.moodTrackerContainer}>
@@ -199,7 +110,7 @@ const MoodTracker = () => {
                     src="/mood_images/download.png"
                     alt="Download CSV"
                     className={styles.icon}
-                    onClick={exportToCSV}
+                    onClick={() => exportToCSV(moodHistory)}
                 />
                 <button
                     onClick={() => setShowInsights(!showInsights)}
