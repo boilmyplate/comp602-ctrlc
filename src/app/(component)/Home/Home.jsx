@@ -27,6 +27,8 @@ import {
     limit
 } from "firebase/firestore";
 import Image from "next/image";
+import { fetchHighScore } from "../Firebase/firestore/gameDB";
+import { fetchMoodHistory } from "../Firebase/firestore/moodTrackerDB";
 
 const COLORS = [
     "#0088FE",
@@ -49,37 +51,24 @@ export default function Home() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [leaderboardSortBy, setLeaderboardSortBy] = useState("score");
 
-    const user = auth.currentUser;
+    const user = auth.currentUser?.uid;
 
     // Fetch high scores for the authenticated user
     useEffect(() => {
-        if (user) {
-            const fetchHighScores = async () => {
-                try {
-                    const penguinDoc = await getDoc(
-                        doc(db, "scores", `${user.uid}_penguin_score`)
-                    );
-                    const alphabet2048Doc = await getDoc(
-                        doc(db, "scores", `${user.uid}_2048`)
-                    );
+        const fetchData = async () => {
+            const penguinScoreRef = await fetchHighScore(user, "penguinscore");
+            const alphabet2048ScoreRef = await fetchHighScore(user, "2048");
+            setPenguinScore(
+                penguinScoreRef.exists() ? penguinScoreRef : "No score yet"
+            );
+            setAlphabet2048Score(
+                alphabet2048ScoreRef.exists()
+                    ? alphabet2048ScoreRef
+                    : "No score yet"
+            );
+        };
 
-                    setPenguinScore(
-                        penguinDoc.exists()
-                            ? penguinDoc.data().score
-                            : "No score yet"
-                    );
-                    setAlphabet2048Score(
-                        alphabet2048Doc.exists()
-                            ? alphabet2048Doc.data().score
-                            : "No score yet"
-                    );
-                } catch (error) {
-                    console.error("Error fetching scores:", error);
-                }
-            };
-
-            fetchHighScores();
-        }
+        fetchData();
     }, [user]);
 
     // Fetch leaderboard data from Firestore
@@ -88,7 +77,7 @@ export default function Home() {
             try {
                 const leaderboardData = [];
                 const leaderboardQuery = query(
-                    collection(db, "scores"),
+                    collection(db, "users"),
                     orderBy("score", "desc"),
                     limit(10)
                 );
@@ -132,25 +121,8 @@ export default function Home() {
     // Fetch mood history and messages from Firestore
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const moodQuery = query(
-                    collection(db, "moodHistory"),
-                    where("uid", "==", user.uid)
-                );
-                const moodData = await getDocs(moodQuery);
-
-                const moodHistoryData = moodData.docs.map(doc => {
-                    const data = doc.data();
-                    return {
-                        ...data,
-                        date: new Date(data.timestamp)
-                    };
-                });
-
-                setMoodHistory(moodHistoryData);
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
+            const moodHistoryRef = await fetchMoodHistory(user);
+            setMoodHistory(moodHistoryRef);
         };
 
         fetchData();
