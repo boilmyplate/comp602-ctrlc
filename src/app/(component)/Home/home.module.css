@@ -1,161 +1,200 @@
+/* Main container */
 .container {
-	display: flex;
-	gap: 60px;
-	align-items: center;
-	padding: 20px;
-	flex-wrap: wrap;
-	overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-.textContainer {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 30px;
-	margin: 5px;
+/* Wrapper for content */
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 20px;
+  gap: 15px;
 }
 
-.title {
-	font-size: 70px;
-	line-height: 1.2;
+/* Top row container for Happy Streak and Scoreboard */
+.topRowContainer {
+  display: flex;
+  width: 100%;
+  gap: 15px; /* Updated gap for balanced spacing */
+  justify-content: space-between;
 }
 
-.desc {
-	font-size: 20px;
+.streakContainer,
+.scoreboardContainer {
+  margin: 0;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow: hidden;
 }
 
-.buttons {
-	display: flex;
-	gap: 20px;
+/* Happy Streak container */
+.streakContainer {
+  background-color: #f5deb3;
+  width: 40%; /* Adjusted width to fit without the map */
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.button {
-	padding: 10px;
-	min-width: 120px;
-	cursor: pointer;
-	border: none;
-	border-radius: 5px;
+/* Scoreboard container */
+.scoreboardContainer {
+  background-color: #f0f4fa;
+  width: 55%; /* Adjusted width to fit without the map */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow: visible;
 }
 
-.button:first-child {
-	background-color: var(--btn);
-	color: var(--text);
+/* Flex container for charts */
+.chartFlexContainer {
+  display: flex;
+  gap: 15px;
+  width: 100%;
 }
 
-.brands {
-	width: 500px;
-	height: 50px;
-	position: relative;
-	filter: grayscale(1);
+/* Container for Pie and Bar charts */
+.pieChartContainer,
+.barChartContainer {
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-/*responsive css*/
-
-/*Laptop View*/
-@media (max-width: 1015px) {
-	.title {
-		font-size: 58px;
-	}
+.pieChartContainer {
+  background-color: #f4ec9f;
+  width: 55%;
 }
 
-/* Tablet View */
-@media (max-width: 868px) {
-	.container {
-		text-align: center;
-	}
-	.title {
-		font-size: 50px;
-	}
-
-	.imgContainer {
-		display: none;
-	}
-
-	.heroImg {
-		width: 100%;
-		transform: scale(1);
-	}
-
-	.buttons {
-		padding: 20px 50px 20px 50px;
-		flex-direction: column;
-		gap: 10px;
-	}
+.barChartContainer {
+  background-color: #b0f3b0;
+  width: 100%;
+  display: flex;
 }
 
-/* Mobile View */
-@media (max-width: 624px) {
-	.container {
-		flex-direction: column;
-		text-align: center;
-		padding: 20px;
-	}
-
-	.title {
-		font-size: 48px;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
-
-	.desc {
-		font-size: 15px;
-	}
-
-	.imgContainer {
-		margin: 20px 0;
-	}
-
-	.heroImg {
-		width: 80%;
-		transform: scale(1);
-	}
-	.nav {
-		display: block;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 10;
-	}
+.moodTrackerButton {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: #4b8f8c;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
 }
 
-@media (max-width: 494px) {
-	.container {
-		flex-direction: column;
-		text-align: center;
-		padding: 20px;
-	}
+.moodTrackerButton:hover {
+  background-color: #397b7b;
+}
 
-	.title {
-		font-size: 28px;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
+.playButton {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  background-color: #4b8f8c;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}
 
-	.desc {
-		font-size: 10px;
-		padding: 5px 60px 0px 60px;
-	}
+.playButton:hover {
+  background-color: #397b7b;
+}
 
-	.imgContainer {
-		margin: 20px 0;
-	}
+/* Scoreboard List and Items */
+.scoreList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-	.heroImg {
-		width: 80%;
-		transform: scale(1);
-	}
-	.nav {
-		display: block;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 10;
-	}
-	.buttons {
-		font-size: 10px;
-		padding: 10px 70px 10px 70px;
-		flex-direction: column;
-		gap: 10px;
-	}
+.scoreItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.scoreItem:last-child {
+  border-bottom: none;
+}
+
+.gameTitle {
+  font-weight: bold;
+  color: #4a90e2;
+  font-size: 1.1rem;
+}
+
+.scoreValue {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ff8042;
+}
+
+/* Game Leaderboard Container */
+.leaderboardContainer {
+  background-color: #e8f5e9;
+  width: 40%;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Leaderboard title */
+.leaderboardContainer h4 {
+  font-size: 1.2rem;
+  color: #388e3c;
+  margin-bottom: 10px;
+}
+
+/* Leaderboard List and Items */
+.leaderboardList {
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboardItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #c8e6c9;
+}
+
+.leaderboardItem:last-child {
+  border-bottom: none;
+}
+
+.leaderboardRank,
+.leaderboardUser,
+.leaderboardScore {
+  font-size: 1rem;
+}
+
+.leaderboardRank {
+  color: #388e3c;
+}
+
+.leaderboardUser {
+  color: #4a4a4a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboardScore {
+  color: #ff8a65;
+  font-weight: bold;
 }

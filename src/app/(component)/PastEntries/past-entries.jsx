@@ -1,7 +1,7 @@
 "use client"; // Enable client-side rendering for this component
 
 // Import the Firestore configuration from the firebaseConfig file.
-import { db } from "../Firebase/firebase";
+import { auth, db } from "../Firebase/firebase";
 // Import CSS styles specific to the PastEntries component.
 import styles from "@/app/(component)/PastEntries/past-entries.module.css";
 // Import Firestore functions to interact with the database.
@@ -11,25 +11,34 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  query,
+  where,
 } from "firebase/firestore";
 // Import React and hooks for state management and side effects.
 import React, { useState, useEffect } from "react";
+import Link from 'next/link';
 
 const PastEntries = () => {
   const [entries, setEntries] = useState([]); // State to hold the list of journal entries.
+  const [filteredEntries, setFilteredEntries] = useState([]); // State to hold filtered search results
+  const [value, setValue] = useState(''); // State for input value
+  const [showDropdown, setShowDropdown] = useState(false); // State to track dropdown visibility
+  const currentUser = auth.currentUser?.uid;
 
   // Fetch entries from Firestore when the component mounts
   useEffect(() => {
     const fetchEntries = async () => {
       try {
         // Fetch all documents from the "messages" collection in Firestore
-        const snapshot = await getDocs(collection(db, "messages"));
+        const q = query(collection(db, "messages"), where("uid", "==", currentUser))
+        const snapshot = await getDocs(q);
         // Map over the documents to extract data and add document IDs to each entry
         const entriesList = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         }));
         setEntries(entriesList); // Update the state with the list of entries
+        setFilteredEntries(entriesList); // Initially, display all entries
       } catch (error) {
         console.error("Error fetching entries:", error); // Log any errors that occur during the fetch
       }
@@ -81,60 +90,141 @@ const PastEntries = () => {
     }
   };
 
+  // Handle the search input changes and filter dynamically
+  const onChange = (event) => {
+    const searchTerm = event.target.value;
+    setValue(searchTerm); // Set the input value based on user typing
+
+    if (searchTerm.trim() !== "") {
+      const filtered = entries.filter((entry) =>
+        entry.title && entry.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredEntries(filtered); // Update filtered entries based on user input
+      setShowDropdown(true); // Show the dropdown with suggestions
+    } else {
+      setFilteredEntries(entries); // Show all entries if input is cleared
+      setShowDropdown(false); // Hide the dropdown when input is cleared
+    }
+  };
+
+  // Handle selection of a dropdown option
+  const onSelectSuggestion = (suggestion) => {
+    setValue(suggestion.entry); // Set input value to selected suggestion
+    setFilteredEntries([suggestion]); // Filter to the selected suggestion
+    setShowDropdown(false); // Hide the dropdown after selection
+  };
+
+  // Share entry content with date, title, and category
+  const shareEntry = (entryDate, title, category, entryContent) => {
+    const contentToShare = `Category: ${category}\nTitle: ${title}\nDate: ${entryDate}\n\n${entryContent}`; // Combine date, title, category, and entry content
+
+    if (navigator.share) {
+      // If Web Share API is supported
+      navigator.share({
+        title: 'Journal Entry',
+        text: contentToShare,
+      })
+      .then(() => console.log('Entry shared successfully!'))
+      .catch((error) => console.error('Error sharing entry:', error));
+    } else {
+      // Fallback: Copy to clipboard
+      navigator.clipboard.writeText(contentToShare)
+        .then(() => alert('Entry copied to clipboard!'))
+        .catch((error) => console.error('Error copying to clipboard:', error));
+    }
+  };
+
   return (
     <div className={styles.background}>
       <div className={styles["past-entries-container"]}>
-        {" "}
-        {/* Main container for the past entries */}
-        <h1>Past Entries</h1> {/* Header for the past entries page */}
+        <h1>Past Entries</h1>
         <div className={styles["display-container"]}>
-          {" "}
-          {/* Container for displaying the list of entries */}
-          {entries.map(
-            (
-              entry // Map over each entry to display it
-            ) => (
-              <div key={entry.id} className={styles["entry-item"]}>
-                {" "}
-                {/* Key is set to the unique entry ID */}
-                <p>
-                  Date: {entry.day} {entry.month}, {entry.year}
-                </p>{" "}
-                {/* Display the date of the entry */}
-                {entry.isEditing ? ( // Check if the entry is in editing mode
-                  <textarea
-                    value={entry.entry}
-                    onChange={(e) => updateEntry(entry.id, e.target.value)} // Update the entry content on change
-                  />
-                ) : (
-                  <p>{entry.entry}</p> // Display the entry content if not in editing mode
-                )}
-                <button
-                  className={styles.button}
-                  onClick={() => toggleEdit(entry.id)}
+          {/* Input field for search */}
+          <div className={styles["search-container"]}>
+            <div className={styles["search-container-withoutInput"]}>
+              <input
+                type="text"
+                value={value}
+                onChange={onChange}
+                placeholder="Search entries..."
+                className={styles.searchInput}
+              />
+              <button onClick={() => setShowDropdown(false)} className={styles.searchButton}>
+                Search
+              </button>
+            </div>
+            {/* Dropdown for search suggestions */}
+          {showDropdown && filteredEntries.length > 0 && (
+            <div className={styles.dropdown}>
+              {filteredEntries.map((entry) => (
+                <div
+                  key={entry.id}
+                  onClick={() => onSelectSuggestion(entry)} // Handle selection from dropdown
+                  className={styles.dropdownItem}
                 >
-                  {entry.isEditing ? "Save" : "Edit"}
-                </button>{" "}
-                {/* Button to toggle edit/save */}
-                <button
-                  className={styles.button}
-                  onClick={() => deleteEntry(entry.id)}
-                >
-                  Delete
-                </button>{" "}
-                {/* Button to delete the entry */}
-              </div>
-            )
+                  {entry.title}
+                </div>
+              ))}
+            </div>
           )}
+          </div>
+
+          {/* Displaying the list of filtered entries */}
+          {filteredEntries.map((entry) => (
+          <div key={entry.id} className={styles["entry-item"]}>
+            {/* Display Title */}
+            <h3>{entry.title || "Untitled Entry"}</h3>
+            <div className={styles.dateNTags}>
+              {/* Display Date */}
+              <p>
+                  Date: {entry.day} {entry.month}, {entry.year}
+                </p>
+              {/* Display Tags */}
+                <div className={styles.tags}>
+                  {entry.category ? (
+                    <span className={styles.tag}>#{entry.category}</span> // Use the entry's category as the tag
+                  ) : (
+                    <span className={styles.tag}>#NoCategory</span> // Default tag if no category is provided
+                  )}
+                </div>
+            </div>
+            {/* Action Buttons */}
+            <div className={styles["button-group"]}>
+              <button
+                className={styles.button}
+                onClick={() => toggleEdit(entry.id)}
+              >
+                {entry.isEditing ? "Save" : "Edit"}
+              </button>
+              <button
+                className={styles.button}
+                onClick={() => deleteEntry(entry.id)}
+              >
+                Delete
+              </button>
+              <button
+                className={styles.button}
+                onClick={() =>
+                  shareEntry(
+                    `${entry.day} ${entry.month}, ${entry.year}`,
+                    entry.title || "Untitled Entry",
+                    entry.tags ? entry.tags.join(", ") : "No Tags",
+                    entry.entry
+                  )
+                } // Share entry logic
+              >
+                Share
+              </button>
+            </div>
+          </div>
+        ))}
         </div>
-        <a href="/journal">
-          {" "}
-          {/* Link back to the Journal page */}
+        <Link href="/journalWelcome">
           <button className={styles.button}>Back to Journal</button>
-        </a>
+        </Link>
       </div>
     </div>
   );
 };
 
-export default PastEntries; // Export the PastEntries component as the default export
+export default PastEntries;

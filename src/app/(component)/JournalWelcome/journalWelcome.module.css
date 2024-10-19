@@ -1,0 +1,128 @@
+/* Grid layout with two sections: 2fr for the journal content and 1fr for the buttons */
+.journal-grid {
+  display: grid;
+  display: flex;
+  grid-template-rows: 2fr 1fr; /* Two rows: journal and buttons */
+  grid-template-areas:
+    "journal"
+    "buttons"; /* Defining the two areas: 'journal' and 'buttons' */
+  align-items: center;
+  height: 60vh; /* Take full viewport height */
+  gap: 20px;
+  background-color: var(--background-color); /* Optional background color */
+}
+
+/* Main container for the journal content */
+.journalWelcome-container {
+  grid-area: journal; /* Assign to the 'journal' area */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  background-color: var(--white);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 5vh;
+}
+
+/* Header for the journal */
+.journal-header {
+  font-size: 2rem; /* Reduced font size */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 5vh;
+}
+
+/* Content grid for text and image */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 20px;
+  width: 100%; /* Take full width of the container */
+  align-items: center;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.content-grid h2{
+  font-size: 20px;
+  padding-bottom: 14px;
+}
+
+.content-grid p{
+  font-size: 10px;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+/* Text container */
+.text-container {
+  font-size: 1rem; /* Reduced font size */
+  line-height: 1.5;
+  color: #555;
+  text-align: left;
+  padding: 15px;
+}
+
+/* Image container */
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Styling for the image itself */
+.image-container img {
+  width: 100%; /* Make the image responsive to its container */
+  max-width: 400px; /* Set a maximum width for the image */
+  border-radius: 40px 0 40px 0; /* Add rounded corners */
+  box-shadow: 0 4px 15px rgba(48, 47, 47, 0.1);
+}
+
+/* Button container with flex direction row */
+.button-container {
+  display: flex;
+  flex-direction: row; /* Horizontal layout for the buttons */
+  justify-content: flex-start; 
+  align-items: center; 
+  gap: 15px; 
+  margin-top: 15px;
+}
+
+
+/* New Entry Button Container */
+.new-entry-container {
+  flex: 1;
+}
+
+/* Styling for both the Past Entries and Plus Button */
+.button,
+.plus-icon {
+  width: 90px; /* Fixed width for both buttons */
+  height: 30px; /* Fixed height for both buttons */
+  background-color: var(--coffeebrown);
+  color: white;
+  font-size: 0.7rem; /* Smaller font size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 5px; /* Less rounded corners for rectangular shape */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover,
+.plus-icon:hover {
+  background-color: #d2691e; /* Darker shade on hover */
+}
+
+/* Link styles */
+.link {
+  text-decoration: none;
+  color: inherit;
+}

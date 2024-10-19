@@ -3,142 +3,164 @@
 import styles from "@/app/(component)/Login/login.module.css";
 import React, { useState } from "react";
 import {
-	doSignInWithEmailAndPassword,
-	doSignInWithGoogle,
+    doSignInWithEmailAndPassword,
+    doSignInWithGoogle
 } from "@/app/(component)/Firebase/auth";
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/(context)/auth";
+import Link from "next/link";
 
 const Login = () => {
-	const { userLoggedIn } = useAuth();
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [isSigningIn, setIsSigningIn] = useState(false);
-	const [errorMessage, setErrorMessage] = useState("");
-	const router = useRouter();
+    // Set up state variables for email, password, sign-in status, and error messages
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isSigningIn, setIsSigningIn] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-	const onSubmit = async (e) => {
-		e.preventDefault();
+    // Function to handle form submission for email and password login
+    const onSubmit = async e => {
+        e.preventDefault();
 
-		if (!isSigningIn) {
-			setIsSigningIn(true);
-			try {
-				await doSignInWithEmailAndPassword(email, password);
-			} catch (error) {
-				setErrorMessage(
-					"Incorrect email or password. Please try again!"
-				);
-				setIsSigningIn(false);
-			}
-		}
-	};
+        if (!isSigningIn) {
+            // Prevent multiple login attempts
+            setIsSigningIn(true);
+            try {
+                // Sign in using email and password
+                await doSignInWithEmailAndPassword(email, password);
+            } catch (error) {
+                // Display error message on failure
+                setErrorMessage(
+                    "Incorrect email or password. Please try again!"
+                );
+                setIsSigningIn(false); // Reset signing-in state
+            }
+        }
+    };
 
-	const onGoogleSignIn = async (e) => {
-		e.preventDefault();
+    // Function to handle sign-in with Google
+    const onGoogleSignIn = async e => {
+        e.preventDefault();
 
-		if (!isSigningIn) {
-			setIsSigningIn(true);
-			try {
-				await doSignInWithGoogle();
-			} catch (error) {
-				setErrorMessage(
-					"Failed to sign in with Google. Please try again."
-				); // Display error to the user
-				setIsSigningIn(false);
-			}
-		}
-	};
+        if (!isSigningIn) {
+            // Prevent multiple sign-in attempts
+            setIsSigningIn(true);
+            try {
+                // Sign in using Google
+                await doSignInWithGoogle();
+            } catch (error) {
+                // Display error message on failure
+                setErrorMessage(
+                    "Failed to sign in with Google. Please try again."
+                );
+                setIsSigningIn(false); // Reset signing-in state
+            }
+        }
+    };
 
-	return (
-		<div className={styles.background}>
-			{userLoggedIn && router.push("/home")}
-			<div className={styles.SignupContainer}>
-				<div className={styles.textContainer}>
-					<h1 className={styles.title}>Welcome to Blank Web</h1>
-					<p className={styles.desc}>
-						Our app combines journaling and games to help you unwind.
-					</p>
-					<p className={styles.desc}>
-						Find calm and balance in one place.
-					</p>
-					<div className={styles.socialIcons}>
-						{/* Add social media icons here */}
-					</div>
-				</div>
-				<div className={styles.FormContainer}>
-					<div>
-						<h3 className={styles.heading}>Login</h3>
-					</div>
+    return (
+        <div className={styles.background}>
+            <div className={styles.SignupContainer}>
+                <div className={styles.textContainer}>
+                    <h1 className={styles.title}>Welcome to Blank Web</h1>
+                    <p className={styles.desc}>
+                        Our app combines journaling and games to help you
+                        unwind.
+                    </p>
+                    <p className={styles.desc}>
+                        Find calm and balance in one place.
+                    </p>
+                    <div className={styles.socialIcons}>
+                        {/* Add social media icons here */}
+                    </div>
+                </div>
+                <div className={styles.FormContainer}>
+                    <div>
+                        <h3 className={styles.heading}>Login</h3>
+                    </div>
 
-					{/* Error Message Display */}
-					{errorMessage && (
-						<div className={styles["error-message"]}>
-							{errorMessage}
-						</div>
-					)}
+                    {/* Display error message if there's any */}
+                    {errorMessage && (
+                        <div className={styles["error-message"]}>
+                            {errorMessage}
+                        </div>
+                    )}
 
-					<div className={styles["label-input-container"]}>
-						<label className={styles.text}>Email</label>
-						<input
-							className={styles.inputs}
-							type="email"
-							placeholder="Email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-						/>
-					</div>
+                    <div className={styles["form-container"]}>
+                        <form onSubmit={onSubmit}>
+                            {/* Email Input */}
+                            <div className={styles["label-input-container"]}>
+                                <p className={styles.text}>Email</p>
+                                <input
+                                    className={styles.inputs}
+                                    type="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)} // Updates email state
+                                />
+                            </div>
 
-					<div className={styles["label-input-container"]}>
-						<div className={styles.text}>Password</div>
-						<input
-							className={styles.inputs}
-							type="password"
-							placeholder="Password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-						/>
-					</div>
+                            {/* Password Input */}
+                            <div className={styles["label-input-container"]}>
+                                <p className={styles.text}>Password</p>
+                                <input
+                                    className={styles.inputs}
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)} // Updates password state
+                                />
+                            </div>
 
-					<div className={styles["label-input-container"]}>
-						<div className={styles.text}>Sign In With Google</div>
-						<button
-							className={styles.inputs}
-							onClick={onGoogleSignIn}
-						>
-							<img
-								src="google.svg"
-								alt="Google"
-								className={styles.googleicon}
-							/>
-							Sign In With Google
-						</button>
-					</div>
+                            <button
+                                type="submit"
+                                style={{ display: "none" }}
+                            ></button>
+                        </form>
+                    </div>
 
-					<button
-						className={styles.SignupButton}
-						onClick={onSubmit}
-						disabled={isSigningIn}
-					>
-						Login
-					</button>
+                    {/* Sign In with Google Button */}
+                    <div className={styles["label-input-container"]}>
+                        <p className={styles.text}>Sign In With Google</p>
+                        <button
+                            className={styles["GoogleSignIn"]}
+                            onClick={onGoogleSignIn} // Handles Google sign-in
+                        >
+                            <img
+                                src="google.svg"
+                                alt="Google"
+                                className={styles.googleicon}
+                            />
+                            Sign In With Google
+                        </button>
+                    </div>
 
-					<div className={styles.links}>
-						<a
-							href="/resetpass"
-							className={styles["forgot-password"]}
-						>
-							Forgot password?
-						</a>
-						<br></br>
-						<a href="/sign-up" className={styles.signup}>
-							Can't login? Sign up 
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+                    {/* Login Button */}
+                    <button
+                        className={styles.SignupButton}
+                        onClick={onSubmit}
+                        disabled={isSigningIn}
+                    >
+                        Login
+                    </button>
+
+                    {/* Links for password reset and signup */}
+                    <div className={styles.links}>
+                        <Link
+                            href="/resetpass"
+                            className={styles["forgot-password"]}
+                        >
+                            Forgot password?
+                        </Link>
+                        <br></br>
+                        <Link href="/signup" className={styles.signup}>
+                            Can't login? Sign up
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Login;
