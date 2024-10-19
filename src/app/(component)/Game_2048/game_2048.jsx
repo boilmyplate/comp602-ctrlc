@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { db, auth } from '../Firebase/firebase';
+import { auth } from '../Firebase/firebase';
 import { fetchHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
-import { doc, getDoc } from 'firebase/firestore';
 import styles from './game_2048.module.css';
 
 const initialGrid = () => {
@@ -88,6 +87,7 @@ const Alphabet2048 = () => {
     const [bestScore, setBestScore] = useState(0);
     const [isMoving, setIsMoving] = useState(false);
     const [gameOver, setGameOver] = useState(false);
+    const user = auth.currentUser?.uid;
     const router = useRouter();
 
     const resetGame = useCallback(() => {
@@ -99,7 +99,6 @@ const Alphabet2048 = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const user = auth.currentUser.uid;
             const highScore = await fetchHighScore(user, "2048");
             setBestScore(highScore);
         };
@@ -109,7 +108,6 @@ const Alphabet2048 = () => {
 
     useEffect(() => {
         const saveBestScore = async () => {
-            const user = auth.currentUser;
             if (gameOver && score > bestScore) {
                 setBestScore(score);
                 await saveHighScore(user.uid, "2048", score, user.displayName);
