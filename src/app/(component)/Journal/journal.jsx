@@ -1,6 +1,5 @@
 "use client"; // This directive is specific to Next.js and enables client-side rendering for this component.
 
-
 import { db } from "../Firebase/firebase"; // Import Firebase configuration
 import React, { useRef } from "react"; // Import React hooks
 import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions for interacting with the database
