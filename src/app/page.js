@@ -3,7 +3,7 @@
 import React from "react";
 import Login from "./(component)/Login/login";
 import Navbar from "./(component)/NavBar/navbar";
-import HomePage from "./(component)/Home/home";
+import HomePage from "./(component)/Home/Home";
 import Chat from "./(component)/Chatbot/chatbot";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./(component)/Firebase/firebase";

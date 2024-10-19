@@ -1,50 +1,108 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/app/(component)/Calendar/calendar.module.css";
-import { ScheduleXCalendar, useCalendarApp } from "@schedule-x/react";
-import { createViewWeek, createViewMonthGrid } from "@schedule-x/calendar";
-import "@schedule-x/theme-default/dist/calendar.css";
-import { createEventModalPlugin } from "@schedule-x/event-modal";
-import { createDragAndDropPlugin } from "@schedule-x/drag-and-drop";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import { auth } from "../Firebase/firebase";
+import { addEvent, fetchEvents } from "../Firebase/firestore/calendarDB";
 
 const Calendar = () => {
-  // Initialize events as an empty array
-  const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState([]); // Initialize events state
+    const [eventTitle, setEventTitle] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [selectedDate, setSelectedDate] = useState(null);
+    const eventsRef = useRef(null);
+    const user = auth.currentUser.uid;
 
-  const calendar = useCalendarApp({
-    views: [createViewMonthGrid(), createViewWeek()],
-    events: events,
-    selectedDate: "2025-01-01",
-    plugins: [createEventModalPlugin(), createDragAndDropPlugin()],
-  });
+    useEffect(() => {
+        const fetchData = async () => {
+            eventsRef.current = await fetchEvents(user);
+            setEvents(eventsRef.current);
+        };
 
-  // Function to handle adding a new event
-  const addEvent = (e) => {
-    e.preventDefault();
-    const newEvent = {
-      id: events.length + 1, // Use length of the current events array to assign a new id
-      title: e.target.title.value,
-      start: e.target.start.value,
-      end: e.target.end.value,
+        fetchData();
+    }, [user]);
+
+    // adding an event
+    const handleDateClick = arg => {
+        setSelectedDate(arg.dateStr); // Set the selected date
+        setStartTime(arg.dateStr); // Pre-fill start time with selected date
+        setEndTime(arg.dateStr); // Pre-fill end time with selected date
     };
-    setEvents([...events, newEvent]); // Update the state with the new event
-    console.log("Error")
-  };
 
-  return (
-    <div className={styles.eventForm}>
-      {/* Event Input Form */}
-      <form onSubmit={addEvent}>
-        <input type="text" name="title" placeholder="Event Title" required />
-        <input type="datetime-local" name="start" placeholder="Start Time" required />
-        <input type="datetime-local" name="end" placeholder="End Time" required />
-        <button type="submit">Add Event</button>
-      </form>
+    const handleSubmit = async e => {
+        e.preventDefault(); // Prevent default form submission
+        if (eventTitle && startTime && endTime && user) {
+            eventsRef.current = await addEvent(
+                user,
+                eventTitle,
+                startTime,
+                endTime
+            );
+            setEvents(eventsRef.current);
 
-      {/* Calendar Component */}
-      <ScheduleXCalendar calendarApp={calendar} />
-    </div>
-  );
+            setEventTitle(""); // Clear the input fields
+            setStartTime(""); // Clear the start time
+            setEndTime(""); // Clear the end time
+            setSelectedDate(null); // Clear the selected date
+        }
+    };
+
+    // const [removeEvent, setRemoveEvent] = useState([]);
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.wrapper}>
+                <div className={styles.form}>
+                    {/* Form for Adding New Events */}
+                    <form onSubmit={handleSubmit} className={styles.eventForm}>
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Event Title"
+                            value={eventTitle}
+                            onChange={e => setEventTitle(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="datetime-local"
+                            name="start"
+                            placeholder="Start Time"
+                            value={startTime}
+                            onChange={e => setStartTime(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="datetime-local"
+                            name="end"
+                            placeholder="End Time"
+                            value={endTime}
+                            onChange={e => setEndTime(e.target.value)}
+                            required
+                        />
+                        <button type="submit">Add Event</button>
+                    </form>
+                </div>
+
+                <FullCalendar
+                    key={events.length}
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    initialView={"dayGridMonth"}
+                    headerToolbar={{
+                        start: "today prev,next",
+                        center: "title",
+                        end: "dayGridMonth,timeGridWeek,timeGridDay"
+                    }}
+                    height={"70vh"}
+                    events={events} // Use the events state
+                    dateClick={handleDateClick} // Handle date click
+                />
+            </div>
+        </div>
+    );
 };
 
 export default Calendar;
