@@ -1,4 +1,4 @@
-import { render, fireEvent, screen, act } from "@testing-library/react"; // Add act here
+import { render, fireEvent, screen, act } from "@testing-library/react"; 
 import Alphabet2048 from "../../src/app/(component)/Game_2048/game_2048";
 
 // Mock Firebase and Next.js Router
@@ -69,6 +69,16 @@ it('should reset the grid to the initial state when the restart button is clicke
     const tiles = screen.getAllByText("A");
     expect(tiles.length).toBe(2);  // Expect exactly 2 'A' tiles after reset
   });
+
+  //test case 3
+  it('should display the correct game title when the game starts', () => {
+    // Render the 2048 game component
+    render(<Alphabet2048 />);
+
+    // Check if the correct game title is displayed
+    const titleElement = screen.getByText(/Alphabet 2048/i); 
+    expect(titleElement).toBeInTheDocument();
+});
 
 
 
