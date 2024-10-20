@@ -3,12 +3,7 @@ import { db } from "../firebase";
 
 // Function to save score to Firestore only if it's higher than the existing score
 export const saveHighScore = async (uid, gameType, newScore, displayName) => {
-    if (!uid) {
-        console.error("No user ID provided, cannot save score.");
-        return;
-    }
-
-    try {
+   try {
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
 
@@ -20,12 +15,10 @@ export const saveHighScore = async (uid, gameType, newScore, displayName) => {
             if (newScore > currentScore) {
                 await setDoc(
                     docRef,
-                    { [gameType]: newScore, displayname: displayName },
+                    { [gameType]: newScore, displayName: displayName },
                     { merge: true }
                 );
-                console.log(
-                    `Score updated successfully in game ${gameType}`
-                );
+                console.log(`Score updated successfully in game ${gameType}`);
             } else {
                 console.log(
                     `No update needed. Current score: ${currentScore} is higher or equal to new score: ${newScore}`
@@ -36,12 +29,10 @@ export const saveHighScore = async (uid, gameType, newScore, displayName) => {
             console.log("No existing score found, setting initial score.");
             await setDoc(
                 docRef,
-                { [gameType]: newScore, displayname: displayName },
+                { [gameType]: newScore, displayName: displayName },
                 { merge: true }
             );
-            console.log(
-                `Score set for the first time for ${gameType}`
-            );
+            console.log(`Score set for the first time for ${gameType}`);
         }
     } catch (error) {
         console.error("Error saving score:", error);
@@ -54,7 +45,17 @@ export const fetchHighScore = async (uid, gameType) => {
         const docSnap = await getDoc(docRef);
         const bestScore = parseInt(docSnap.data()[gameType], 10) || 0;
         return bestScore;
-    } catch (error) {}
-        console.error("Error fetching highscore: ", error)
+    } catch (error) {
+        console.error("Error fetching highscore: ", error);
+    }
+    
     return 0;
+};
+
+export const saveGlobalHighScore = async (uid, gameType) => {
+    return null;
+};
+
+export const fetchGlobalHighScore = async () => {
+    return null;
 };

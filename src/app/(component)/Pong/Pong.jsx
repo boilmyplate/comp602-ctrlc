@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import styles from "@/app/(component)/Pong/pong.module.css";
+import styles from "@/app/(component)/Pong/Pong.module.css";
 import Link from "next/link";
 
 // Pong component

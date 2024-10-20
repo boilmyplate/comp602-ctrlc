@@ -3,7 +3,7 @@
 import React from "react";
 import ChatBot from "react-simple-chatbot";
 import { ThemeProvider } from "styled-components";
-import styles from "@/app/(component)/Chatbot/chatbot.module.css";
+import styles from "@/app/(component)/Chatbot/Chatbot.module.css";
 
 const theme = {
     background: "white",

@@ -1,7 +1,7 @@
 import React from "react";
-import NavBar from "../(component)/NavBar/navbar";
-import GameLibrary from "../(component)/GameLibrary/games";
-import Chatbot from "../(component)/Chatbot/chatbot";
+import NavBar from "../(component)/NavBar/Navbar";
+import GameLibrary from "../(component)/GameLibrary/Games";
+import Chatbot from "../(component)/Chatbot/Chatbot";
 
 export default function Page() {
 	return (

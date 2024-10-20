@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "@/app/(component)/Signup/signup.module.css";
+import styles from "@/app/(component)/Signup/Signup.module.css";
 import { useAuth } from "@/app/(context)/auth";
 import { useRouter } from "next/navigation";
 import { doCreateUserWithEmailAndPassword } from "../Firebase/auth";

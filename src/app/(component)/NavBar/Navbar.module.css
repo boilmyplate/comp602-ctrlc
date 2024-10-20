@@ -12,9 +12,9 @@
 
 .logo{
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: bolder;
     color: var(--text); 
-    font-family: 'Rubik Bubbles', sans-serif;
+    font-family: "Comfortaa", sans-serif;
 }
 .links{
     display: flex;

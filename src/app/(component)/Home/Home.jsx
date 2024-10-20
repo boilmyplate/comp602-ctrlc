@@ -13,7 +13,7 @@ import {
     YAxis,
     Legend
 } from "recharts";
-import styles from "@/app/(component)/Home/home.module.css";
+import styles from "@/app/(component)/Home/Home.module.css";
 import { useRouter } from "next/navigation";
 import { db, auth } from "../Firebase/firebase";
 import {
@@ -56,16 +56,10 @@ export default function Home() {
     // Fetch high scores for the authenticated user
     useEffect(() => {
         const fetchData = async () => {
-            const penguinScoreRef = await fetchHighScore(user, "penguinscore");
-            const alphabet2048ScoreRef = await fetchHighScore(user, "2048");
-            setPenguinScore(
-                penguinScoreRef.exists() ? penguinScoreRef : "No score yet"
-            );
-            setAlphabet2048Score(
-                alphabet2048ScoreRef.exists()
-                    ? alphabet2048ScoreRef
-                    : "No score yet"
-            );
+            const penguinScoreRef = await fetchHighScore(user, "penguinScore");
+            const alphabet2048ScoreRef = await fetchHighScore(user, "2048Score");
+            setPenguinScore(penguinScoreRef);
+            setAlphabet2048Score(alphabet2048ScoreRef);
         };
 
         fetchData();
@@ -78,42 +72,42 @@ export default function Home() {
                 const leaderboardData = [];
                 const leaderboardQuery = query(
                     collection(db, "users"),
-                    orderBy("score", "desc"),
+                    orderBy("penguinscore", "desc"),
                     limit(10)
                 );
                 const leaderboardSnapshot = await getDocs(leaderboardQuery);
-        
+
                 leaderboardSnapshot.forEach(scoreDoc => {
-                    const { displayName, gameType, score } = scoreDoc.data(); 
+                    const { displayName, gameType, score } = scoreDoc.data();
                     leaderboardData.push({ displayName, gameType, score });
                 });
-        
+
                 setLeaderboard(leaderboardData);
             } catch (error) {
                 console.error("Error fetching leaderboard:", error);
             }
         };
-        
 
         fetchLeaderboard();
     }, []);
 
     // Sort leaderboard based on selected criteria (either by score or game type)
-useEffect(() => {
-    if (leaderboardSortBy === "score") {
-        // Sort by score in descending order
-        setLeaderboard(prevLeaderboard =>
-            [...prevLeaderboard].sort((a, b) => b.score - a.score)
-        );
-    } else if (leaderboardSortBy === "gameType") {
-        // Sort by gameType alphabetically and then by score within each game type
-        setLeaderboard(prevLeaderboard =>
-            [...prevLeaderboard]
-                .sort((a, b) => a.gameType.localeCompare(b.gameType))
-                .sort((a, b) => b.score - a.score)  // Keep high scores on top within each game type
-        );
-    }
-}, [leaderboardSortBy]);
+    useEffect(() => {
+        if (leaderboardSortBy === "score") {
+            // Sort by score in descending order
+            setLeaderboard(prevLeaderboard =>
+                [...prevLeaderboard].sort((a, b) => b.score - a.score)
+            );
+        } else if (leaderboardSortBy === "gameType") {
+            // Sort by gameType alphabetically and then by score within each game type
+            setLeaderboard(
+                prevLeaderboard =>
+                    [...prevLeaderboard]
+                        .sort((a, b) => a.gameType.localeCompare(b.gameType))
+                        .sort((a, b) => b.score - a.score) // Keep high scores on top within each game type
+            );
+        }
+    }, [leaderboardSortBy]);
 
     // Fetch mood history and messages from Firestore
     useEffect(() => {
@@ -178,34 +172,51 @@ useEffect(() => {
 
     // Frequency calculation for the Bar chart
     useEffect(() => {
-        const fetchJournalCount = async () => {
-            const messageQuery = query(
-                collection(db, "messages"),
-                where("uid", "==", user.uid)
-            );
-            const messageData = await getDocs(messageQuery);
+        const fetchJournalCounts = async () => {
+            try {
+                // Reference to the user's document
+                const docRef = doc(db, "users", user);
+                const docSnap = await getDoc(docRef);
 
-            setMessages(
-                messageData.docs.map(doc => ({ ...doc.data(), id: doc.id }))
-            );
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+
+                    // Extract category counts from the user document
+                    const categoryCountsData = [
+                        {
+                            category: "Shopping List",
+                            count: userData.journalShoppingListCount || 0
+                        },
+                        {
+                            category: "Spending Log",
+                            count: userData.journalSpendingLogCount || 0
+                        },
+                        {
+                            category: "Emotion",
+                            count: userData.journalEmotionCount || 0
+                        },
+                        {
+                            category: "To-Do List",
+                            count: userData.journalToDoListCount || 0
+                        },
+                        {
+                            category: "Other",
+                            count: userData.journalOtherCount || 0
+                        }
+                    ];
+
+                    setCategoryCounts(categoryCountsData);
+                } else {
+                    console.log("No user document found!");
+                    setCategoryCounts([]); // Set to empty if no data found
+                }
+            } catch (error) {
+                console.error("Error fetching journal category counts:", error);
+            }
         };
 
-        fetchJournalCount();
-
-        if (messages.length === 0) return;
-
-        const counts = messages.reduce((acc, { category }) => {
-            acc[category] = (acc[category] || 0) + 1;
-            return acc;
-        }, {});
-
-        const categoryData = Object.keys(counts).map(category => ({
-            category,
-            count: counts[category]
-        }));
-
-        setCategoryCounts(categoryData);
-    }, [messages]);
+        fetchJournalCounts();
+    }, [user, db]);
 
     return (
         <div className={styles.container}>
@@ -240,7 +251,6 @@ useEffect(() => {
                                 <span className={styles.scoreValue}>
                                     {penguinScore}
                                 </span>
-                                
                             </li>
                             <li className={styles.scoreItem}>
                                 <span className={styles.gameTitle}>
@@ -249,7 +259,6 @@ useEffect(() => {
                                 <span className={styles.scoreValue}>
                                     {alphabet2048Score}
                                 </span>
-                                
                             </li>
                         </ul>
                     </div>
@@ -271,21 +280,26 @@ useEffect(() => {
                             </select>
                         </div>
                         <ul className={styles.leaderboardList}>
-                   {leaderboard.map((entry, index) => (
-                   <li key={index} className={styles.leaderboardItem}>
-                   <span className={styles.leaderboardRank}>{index + 1}.</span>
-                   <span className={styles.leaderboardUser}>
-                  {entry.displayName ? entry.displayName : 'Unknown User'} {/* Display username */}
-                 </span>
-                 <span className={styles.leaderboardScore}>
-                {entry.gameType}: {entry.score}
-                 </span>
-            </li>
-    ))}
-</ul>
-
-
-
+                            {leaderboard.map((entry, index) => (
+                                <li
+                                    key={index}
+                                    className={styles.leaderboardItem}
+                                >
+                                    <span className={styles.leaderboardRank}>
+                                        {index + 1}.
+                                    </span>
+                                    <span className={styles.leaderboardUser}>
+                                        {entry.displayName
+                                            ? entry.displayName
+                                            : "Unknown User"}{" "}
+                                        {/* Display username */}
+                                    </span>
+                                    <span className={styles.leaderboardScore}>
+                                        {entry.gameType}: {entry.score}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 
@@ -353,13 +367,14 @@ useEffect(() => {
 
                     <div className={styles.barChartContainer}>
                         <h4>Journal Entry</h4>
-                        <ResponsiveContainer width="70%" height={400}>
+                        <ResponsiveContainer width="100%" height={400}>
                             <BarChart
                                 data={
                                     categoryCounts.length
                                         ? categoryCounts
                                         : [{ category: "No data", count: 0 }]
-                                }>
+                                }
+                            >
                                 <XAxis dataKey="category" />
                                 <YAxis />
                                 <Tooltip />

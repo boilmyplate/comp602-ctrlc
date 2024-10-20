@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './penguin.module.css';
-import { db, auth } from '../Firebase/firebase'; // Import db, and auth
+import styles from './Penguin.module.css';
+import { auth } from '../Firebase/firebase'; // Import db, and auth
 import { fetchHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from 'firebase/firestore';
 import penguinImage from '/public/penguin/penguin.png';
 import fishImage from '/public/penguin/fish.png';
 import backgroundImage from '/public/penguin/background.png';
@@ -36,7 +34,7 @@ export default function PenguinGame() {
   // Fetch the best score for the authenticated user
   useEffect(() => {
     const fetchData = async () => {
-        const highScore = await fetchHighScore(user.uid, "penguinscore");
+        const highScore = await fetchHighScore(user.uid, "penguinScore");
         setBestScore(highScore);
     };
 
@@ -112,7 +110,7 @@ export default function PenguinGame() {
     setGameOver(true);
     if (score > bestScore) { 
       try {
-        await saveHighScore(user.uid, "penguinscore", score, user.displayName);
+        await saveHighScore(user.uid, "penguinScore", score, user.displayName);
         setBestScore(score); // Update bestScore locally only if Firebase update is successful
         console.log("Score successfully saved to Firebase:", score);
       } catch (error) {

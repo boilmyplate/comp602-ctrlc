@@ -1,7 +1,7 @@
 "use client"; // Add this at the top of the file
 
 import React, { useState, useEffect, useRef } from 'react';
-import styles from "@/app/(component)/Breath/breath.module.css";
+import styles from "@/app/(component)/Breath/Breath.module.css";
 
 const Breath = () => {
   const [seconds, setSeconds] = useState(4);

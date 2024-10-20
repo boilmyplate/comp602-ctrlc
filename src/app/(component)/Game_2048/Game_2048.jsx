@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '../Firebase/firebase';
-import { fetchHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
-import styles from './game_2048.module.css';
+import { fetchHighScore, saveGlobalHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
+import styles from './Game_2048.module.css';
 
 const initialGrid = () => {
     const grid = Array(4).fill(null).map(() => Array(4).fill({ value: null, moved: false }));
@@ -87,7 +87,7 @@ const Alphabet2048 = () => {
     const [bestScore, setBestScore] = useState(0);
     const [isMoving, setIsMoving] = useState(false);
     const [gameOver, setGameOver] = useState(false);
-    const user = auth.currentUser?.uid;
+    const user = auth.currentUser;
     const router = useRouter();
 
     const resetGame = useCallback(() => {
@@ -99,18 +99,20 @@ const Alphabet2048 = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const highScore = await fetchHighScore(user, "2048");
+            const highScore = await fetchHighScore(user.uid, "2048Score");
+            // console.log("FETCHED HIGHSCORE: ", highScore);
             setBestScore(highScore);
         };
 
         fetchData();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         const saveBestScore = async () => {
             if (gameOver && score > bestScore) {
                 setBestScore(score);
-                await saveHighScore(user.uid, "2048", score, user.displayName);
+                await saveHighScore(user.uid, "2048Score", score, user.displayName);
+                // await saveGlobalHighScore()
                 console.log("High score saved successfully");
             }
         };

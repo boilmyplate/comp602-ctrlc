@@ -1,33 +1,10 @@
 "use client";
 
-import { auth, db } from "../Firebase/firebase"; // Import Firebase configuration
+import { auth } from "../Firebase/firebase"; // Import Firebase configuration
 import React, { useState, useRef } from "react";
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions for interacting with the database.
-import NavBar from "../NavBar/navbar"; // Import NavBar component
-import "./newEntry.css"; // Import CSS styles specific to the New Entry component
-
-// Function to add data to Firestore database
-async function addDataToFireStore(category, title, day, month, year, entry) {
-    const currentUser = auth.currentUser?.uid;
-
-    try {
-        // Add a new document to the "messages" collection in Firestore
-        const docRef = await addDoc(collection(db, "messages"), {
-            category: category, // Store the category
-            title: title, // Store the title of the entry
-            day: day, // Store day value
-            month: month, // Store month value
-            year: year, // Store year value
-            entry: entry, // Store the journal entry text
-            uid: currentUser
-        });
-        console.log("Document written with ID: ", docRef.id);
-        return true; // Return true if document addition was successful
-    } catch (error) {
-        console.error("Error adding document: ", error);
-        return false; // Return false if there was an error
-    }
-}
+import NavBar from "../NavBar/Navbar"; // Import NavBar component
+import "./NewEntry.css"; // Import CSS styles specific to the New Entry component
+import { addJournalEntry } from "../Firebase/firestore/journalDB";
 
 // Categories for the carousel
 const categories = [
@@ -48,6 +25,7 @@ const NewEntry = () => {
 
     const [selectedCategory, setSelectedCategory] = useState(""); // Track selected category
     const [showForm, setShowForm] = useState(false); // Track whether to show the form
+    const user = auth.currentUser?.uid;
 
     // Handle category selection and show the form
     const handleCategorySelect = category => {
@@ -73,7 +51,8 @@ const NewEntry = () => {
         }
 
         // Call function to save entry to Firestore
-        const success = await addDataToFireStore(
+        const success = await addJournalEntry(
+            user,
             selectedCategory,
             title,
             day,

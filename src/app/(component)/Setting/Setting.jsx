@@ -2,7 +2,7 @@
 import React, { useState, createContext } from "react";
 import Link from "next/link";
 import ReactSwitch from "react-switch";
-import styles from "@/app/(component)/Setting/setting.module.css";
+import styles from "@/app/(component)/Setting/Setting.module.css";
 import { auth } from "../Firebase/firebase";
 import {
     doPasswordChange,

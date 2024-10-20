@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "../(component)/NavBar/navbar";
-import Breath from "../(component)/Breath/breath";
+import NavBar from "../(component)/NavBar/Navbar";
+import Breath from "../(component)/Breath/Breath";
 
 
 

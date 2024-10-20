@@ -1,14 +1,11 @@
 "use client";
 
-import styles from "@/app/(component)/Login/login.module.css";
+import styles from "@/app/(component)/Login/Login.module.css";
 import React, { useState } from "react";
 import {
     doSignInWithEmailAndPassword,
     doSignInWithGoogle
 } from "@/app/(component)/Firebase/auth";
-
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/(context)/auth";
 import Link from "next/link";
 
 const Login = () => {

@@ -3,7 +3,7 @@ import {
     fetchHighScore,
     saveHighScore
 } from "@/app/(component)/Firebase/firestore/gameDB";
-import PenguinGame from "@/app/(component)/Penguin/penguin";
+import PenguinGame from "@/app/(component)/Penguin/Penguin";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 vi.mock("@/app/(component)/Firebase/firebase", () => ({

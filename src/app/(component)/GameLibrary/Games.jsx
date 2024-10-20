@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/app/(component)/GameLibrary/games.module.css";
+import styles from "@/app/(component)/GameLibrary/Games.module.css";
 import Link from "next/link";
 
 export default function GameLibrary() {
@@ -30,9 +30,11 @@ export default function GameLibrary() {
                         <div alt="Game 1" className={styles.gameImage} />
                         {/* Hover Effect with Play Button */}
                         <div className={styles.hoverOverlay}>
-                            <button className={styles.playButton}>
-                                Play Now
-                            </button>
+                            <Link href="/penguin">
+                                <button className={styles.playButton}>
+                                    Play Now
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

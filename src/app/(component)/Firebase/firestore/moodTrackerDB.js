@@ -61,34 +61,3 @@ export const exportToCSV = moodHistory => {
     link.click();
 };
 
-// Filter mood history by selected time frame
-export const filterMoodHistory = (moodHistory) => {
-    const now = new Date();
-    return moodHistory.filter(entry => {
-        const entryDate = new Date(entry.timestamp);
-        return timeFrame === "Today"
-            ? entryDate.toDateString() === now.toDateString()
-            : timeFrame === "Last 7 Days"
-            ? now - entryDate <= 7 * 24 * 60 * 60 * 1000
-            : timeFrame === "Last 30 Days"
-            ? now - entryDate <= 30 * 24 * 60 * 60 * 1000
-            : true;
-    });
-};
-
-export const calculateInsights = (moodHistory) => {
-    const filteredHistory = filterMoodHistory(moodHistory);
-    const moodCount = filteredHistory.reduce(
-        (acc, { mood }) => ({ ...acc, [mood]: (acc[mood] || 0) + 1 }),
-        {}
-    );
-    const mostFrequentMood = Object.keys(moodCount).reduce(
-        (a, b) => (moodCount[a] > moodCount[b] ? a : b),
-        ""
-    );
-    return {
-        totalEntries: filteredHistory.length,
-        mostFrequentMood,
-        filteredHistory
-    };
-};

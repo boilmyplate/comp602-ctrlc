@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "@/app/(component)/ResetPass/resetpass.module.css";
+import styles from "@/app/(component)/ResetPass/ResetPass.module.css";
 import { doPasswordReset } from "@/app/(component)/Firebase/auth";
 import Link from "next/link";
 

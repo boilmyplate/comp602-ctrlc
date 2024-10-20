@@ -7,12 +7,10 @@ import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBars,
-    faUser,
     faCog,
     faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
-import styles from "@/app/(component)/NavBar/navbar.module.css";
-import { useAuth } from "@/app/(context)/auth";
+import styles from "@/app/(component)/NavBar/Navbar.module.css";
 import { auth } from "../Firebase/firebase";
 import { doSignOut } from "../Firebase/auth";
 
@@ -20,7 +18,7 @@ import { doSignOut } from "../Firebase/auth";
 const links = [
     { title: "Homepage", path: "/" },
     { title: "Game", path: "/gamelibrary" },
-    { title: "Journal", path: "/journalWelcome" },
+    { title: "Journal", path: "/journal" },
     { title: "Breathing Exercise", path: "/breath" },
     { title: "Calendar", path: "/calendar" }
 ];

@@ -3,7 +3,7 @@
 // Import the Firestore configuration from the firebaseConfig file.
 import { auth, db } from "../Firebase/firebase";
 // Import CSS styles specific to the PastEntries component.
-import styles from "@/app/(component)/PastEntries/past-entries.module.css";
+import styles from "@/app/(component)/PastEntries/PastEntries.module.css";
 // Import Firestore functions to interact with the database.
 import {
   collection,
@@ -17,34 +17,24 @@ import {
 // Import React and hooks for state management and side effects.
 import React, { useState, useEffect } from "react";
 import Link from 'next/link';
+import { deleteJournalEntry, fetchJournalEntries } from "../Firebase/firestore/journalDB";
 
 const PastEntries = () => {
   const [entries, setEntries] = useState([]); // State to hold the list of journal entries.
   const [filteredEntries, setFilteredEntries] = useState([]); // State to hold filtered search results
   const [value, setValue] = useState(''); // State for input value
   const [showDropdown, setShowDropdown] = useState(false); // State to track dropdown visibility
-  const currentUser = auth.currentUser?.uid;
+  const user = auth.currentUser?.uid;
 
   // Fetch entries from Firestore when the component mounts
   useEffect(() => {
-    const fetchEntries = async () => {
-      try {
-        // Fetch all documents from the "messages" collection in Firestore
-        const q = query(collection(db, "messages"), where("uid", "==", currentUser))
-        const snapshot = await getDocs(q);
-        // Map over the documents to extract data and add document IDs to each entry
-        const entriesList = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setEntries(entriesList); // Update the state with the list of entries
-        setFilteredEntries(entriesList); // Initially, display all entries
-      } catch (error) {
-        console.error("Error fetching entries:", error); // Log any errors that occur during the fetch
-      }
+    const fetchData = async () => {
+        const fetchedJournalEntries = await fetchJournalEntries(user);
+        setEntries(fetchedJournalEntries); // Update the state with the list of entries
+        setFilteredEntries(fetchedJournalEntries); // Initially, display all entries
     };
 
-    fetchEntries(); // Call the fetch function when the component loads
+    fetchData(); // Call the fetch function when the component loads
   }, []); // Empty dependency array ensures this runs only once on mount
 
   // Toggle edit mode for a specific entry
@@ -75,19 +65,10 @@ const PastEntries = () => {
   };
 
   // Delete an entry from state and Firestore
-  const deleteEntry = async (id) => {
-    // Confirm the deletion with the user
-    if (!window.confirm("Are you sure you want to delete this entry?")) return;
-
-    // Remove the entry from the state
-    setEntries(entries.filter((entry) => entry.id !== id)); // Filter out the deleted entry
-
-    // Delete the entry from Firestore
-    try {
-      await deleteDoc(doc(db, "messages", id)); // Delete the document from Firestore
-    } catch (error) {
-      console.error("Error deleting entry:", error); // Log any errors that occur during deletion
-    }
+  const deleteEntry = async (uid, docid) => {
+    if (!window.confirm("Are you sure you want to delete this entry?")) return; // Confirm the deletion with the user
+    setFilteredEntries(filteredEntries.filter((entry) => entry.id !== docid)); // Filter out the deleted entry
+    await deleteJournalEntry(uid, docid); // Delete the document from Firestore
   };
 
   // Handle the search input changes and filter dynamically
@@ -198,7 +179,7 @@ const PastEntries = () => {
               </button>
               <button
                 className={styles.button}
-                onClick={() => deleteEntry(entry.id)}
+                onClick={() => deleteEntry(user, entry.id)}
               >
                 Delete
               </button>
@@ -219,7 +200,7 @@ const PastEntries = () => {
           </div>
         ))}
         </div>
-        <Link href="/journalWelcome">
+        <Link href="/journal">
           <button className={styles.button}>Back to Journal</button>
         </Link>
       </div>

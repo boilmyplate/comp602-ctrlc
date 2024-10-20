@@ -1,5 +1,6 @@
 /* Main container */
 .container {
+  font-family: "Comfortaa", sans-serif;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -10,6 +11,10 @@
   overflow-x: hidden;
 }
 
+.container button, .container select {
+  font-family: inherit;
+}
+
 /* Wrapper for content */
 .contentWrapper {
   display: flex;
@@ -17,14 +22,14 @@
   width: 100%;
   max-width: 1400px;
   padding: 0 20px;
-  gap: 15px;
+  gap: 20px;
 }
 
 /* Top row container for Happy Streak and Scoreboard */
 .topRowContainer {
   display: flex;
   width: 100%;
-  gap: 15px; /* Updated gap for balanced spacing */
+  gap: 20px; /* Updated gap for balanced spacing */
   justify-content: space-between;
 }
 
@@ -61,7 +66,7 @@
 /* Flex container for charts */
 .chartFlexContainer {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   width: 100%;
 }
 
@@ -82,6 +87,7 @@
   background-color: #b0f3b0;
   width: 100%;
   display: flex;
+  flex-direction: column;
 }
 
 .moodTrackerButton {
@@ -107,8 +113,7 @@
 
 .scoreItem {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-around;
   padding: 5px 0;
   border-bottom: 1px solid #e0e0e0;
 }
