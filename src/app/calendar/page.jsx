@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "../(component)/NavBar/navbar";
-import Calendar from "../(component)/Calendar/calendar";
+import NavBar from "../(component)/NavBar/Navbar";
+import Calendar from "../(component)/Calendar/Calendar";
 
 
 

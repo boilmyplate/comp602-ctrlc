@@ -1,0 +1,207 @@
+.background {
+  background-color: #f0f4f8;
+  height: 100vh;
+}
+
+.moodTrackerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 20px;
+  font-family: "Comfortaa", sans-serif;
+  height: 70vh;
+  position: relative;
+}
+
+.moodTrackerContainer button {
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.moodTrackerContainer button,
+.moodTrackerContainer textarea,
+.moodTrackerContainer input {
+  font-family: inherit;
+}
+
+.moodGrid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.moodOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.moodOption:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.moodImage {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.selected {
+  border: 3px solid #785d3a;
+  border-radius: 50%;
+}
+
+.selectedMood {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #785d3a;
+}
+
+.timeFrameContainer {
+  margin-bottom: 20px;
+}
+
+.timeFrameContainer label {
+  margin-right: 10px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Add spacing between all buttons */
+  margin-top: 30px;
+}
+
+.icon {
+  text-align: center;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.insightsContainer {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+  z-index: 10;
+}
+
+.insightsContainer h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.closeButton {
+  background-color: #b0b0b0;
+  color: white;
+  border: none;
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+}
+
+.closeButton:hover {
+  background-color: #818181;
+}
+
+.insightsButton:hover,
+.homeButton:hover,
+.backButton:hover {
+  background-color: #a68d6c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+}
+
+.insightsButton,
+.homeButton,
+.backButton,
+.deleteButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+}
+
+.insightsButton,
+.homeButton,
+.backButton {
+  background-color: #da9c61;
+  color: white;
+}
+
+.insightsButton:hover,
+.homeButton:hover,
+.backButton:hover {
+  background-color: #b98452; /* Slightly darker shade on hover */
+}
+
+.deleteButton {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.insights {
+  margin-top: 50px;
+}
+
+.moodTimestamps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f7f9fc;
+  border: 1px solid #e0e6eb;
+  border-radius: 8px;
+  padding: 15px 30px;
+  width: 600px;
+  margin-bottom: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /*animation*/
+  z-index: 0;
+}
+
+.moodTimestamps:hover {
+  transform: translateY(-5px); /* hovering over animation */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.moodTimestamps p {
+  margin: 5px 0;
+  font-size: 0.8rem;
+}
+
+.moodTimestamps input {
+  cursor: pointer;
+}
+
+.moodListContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  max-height: 60vh;
+  padding: 10px;
+}
+
+.descriptors {
+  margin: 10px;
+}
+
+.descriptors p {
+  margin: 10px;
+}
