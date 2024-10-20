@@ -23,9 +23,10 @@
 }
 
 body.dark {
-  --background-color: #4e4e94;
-  --text: #93b2ce;
+  --background-color: #202020;
+  --text: white;
   --logoColor: #93b2ce;
+  --container: #2e2e2e;
 }
 
 * {

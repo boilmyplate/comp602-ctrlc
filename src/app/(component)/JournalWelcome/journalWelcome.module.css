@@ -20,7 +20,7 @@
   justify-content: flex-start;
   align-items: center;
   position: relative;
-  background-color: var(--white);
+  background-color: var(--container);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -33,7 +33,7 @@
 .journal-header {
   font-size: 2rem; /* Reduced font size */
   font-weight: bold;
-  color: #333;
+  color: var(--text);
   margin-bottom: 10px;
   text-align: center;
   margin-bottom: 5vh;
@@ -50,11 +50,13 @@
 }
 
 .content-grid h2{
+  color: var(--text);
   font-size: 20px;
   padding-bottom: 14px;
 }
 
 .content-grid p{
+  color: var(--text);
   font-size: 10px;
   font-family: 'Comfortaa', sans-serif;
 }

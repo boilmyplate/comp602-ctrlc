@@ -26,11 +26,14 @@
   width: 90vw;
 }
 
-
 /* Assuming this is added to your calendar.module.css */
 
 /* Container for the edit form */
 .editForm {
+  position: fixed;
+  left: 40vw;
+  top: 40vh;
+  z-index: 1;
   background-color: #f9f9f9; /* Light background */
   padding: 20px;
   margin-top: 20px;
@@ -81,4 +84,9 @@
 
 .editForm button[type="button"]:hover {
   background-color: #c82333; /* Darker red on hover */
+}
+
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
 }

@@ -168,56 +168,58 @@ const Calendar = () => {
                     </form>
                 </div>
 
-                <FullCalendar
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                    initialView={"dayGridMonth"}
-                    headerToolbar={{
-                        start: "today prev,next",
-                        center: "title",
-                        end: "dayGridMonth,timeGridWeek,timeGridDay"
-                    }}
-                    height={"70vh"}
-                    events={events} // Use the events state
-                    dateClick={handleDateClick} // Handle date click
-                    eventClick={handleClickEvent} // Handle event click
-                />
+                <div className={styles["calendarContainer"]}>
+                    <FullCalendar
+                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                        initialView={"dayGridMonth"}
+                        headerToolbar={{
+                            start: "today prev,next",
+                            center: "title",
+                            end: "dayGridMonth,timeGridWeek,timeGridDay"
+                        }}
+                        height={"70vh"}
+                        events={events} // Use the events state
+                        dateClick={handleDateClick} // Handle date click
+                        eventClick={handleClickEvent} // Handle event click
+                    />
 
-                {/* Show the edit/delete form when an event is clicked */}
-                {clickEvent && (
-                    <div className={styles.editForm}>
-                        <h3>Edit Event: {clickEvent.title}</h3>
-                        <form onSubmit={handleEditEvent}>
-                            <input
-                                type="text"
-                                placeholder="New Event Title"
-                                value={eventTitle}
-                                onChange={e => setEventTitle(e.target.value)}
-                                required
-                            />
-                            <input
-                                type="datetime-local"
-                                placeholder="New Start Time"
-                                value={startTime}
-                                onChange={e => setStartTime(e.target.value)}
-                                required
-                            />
-                            <input
-                                type="datetime-local"
-                                placeholder="New End Time"
-                                value={endTime}
-                                onChange={e => setEndTime(e.target.value)}
-                                required
-                            />
-                            <button type="submit">Save Changes</button>
-                            <button type="button" onClick={handleDeleteEvent}>
-                                Delete Event
-                            </button>
-                            <button type="button" onClick={handleCancelEdit}>
-                                Cancel
-                            </button>
-                        </form>
-                    </div>
-                )}
+                    {/* Show the edit/delete form when an event is clicked */}
+                    {clickEvent && (
+                        <div className={styles.editForm}>
+                            <h3>Edit Event: {clickEvent.title}</h3>
+                            <form onSubmit={handleEditEvent}>
+                                <input
+                                    type="text"
+                                    placeholder="New Event Title"
+                                    value={eventTitle}
+                                    onChange={e => setEventTitle(e.target.value)}
+                                    required
+                                />
+                                <input
+                                    type="datetime-local"
+                                    placeholder="New Start Time"
+                                    value={startTime}
+                                    onChange={e => setStartTime(e.target.value)}
+                                    required
+                                />
+                                <input
+                                    type="datetime-local"
+                                    placeholder="New End Time"
+                                    value={endTime}
+                                    onChange={e => setEndTime(e.target.value)}
+                                    required
+                                />
+                                <button type="submit">Save Changes</button>
+                                <button type="button" onClick={handleDeleteEvent}>
+                                    Delete Event
+                                </button>
+                                <button type="button" onClick={handleCancelEdit}>
+                                    Cancel
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
