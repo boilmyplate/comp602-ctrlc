@@ -1,0 +1,142 @@
+/* Game container with the background image */
+.bodyWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Slight transparency */
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Grid for the game */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(15, 30px);
+  grid-template-rows: repeat(15, 30px);
+  gap: 2px;
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.1); /* Subtle dark background */
+  border-radius: 10px;
+  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.6); /* Border for modern touch */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  position: relative; /* Allow absolute positioning of game over message */
+  justify-self: center; /* Center the grid horizontally */
+}
+
+/* Each cell in the grid */
+.cell {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.6); /* Softer color for cells */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 5px;
+}
+
+/* Penguin and fish images */
+.penguin, .fish {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Slight bounce effect on hover */
+.penguin:hover, .fish:hover {
+  transform: scale(1.1);
+}
+
+/* Score styling */
+.score {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Buttons: revert to green color with modern style */
+.startButton {
+  padding: 14px 28px;
+  margin: 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 50px; /* Rounded, modern buttons */
+  background: linear-gradient(145deg, #4caf50, #81c784); /* Green gradient */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Button shadow */
+}
+
+.startButton:hover {
+  background: linear-gradient(145deg, #388e3c, #66bb6a); /* Darker on hover */
+  transform: scale(1.05);
+}
+
+.startButton:active {
+  transform: scale(0.95);
+}
+
+/* Centered Game Over message within the grid */
+.gameOverMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Exactly center in the grid */
+  background: rgba(128, 128, 128, 0.2); /* Transparent grey background */
+  padding: 20px 40px;
+  border-radius: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  color: black; /* Text color set to black */
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  opacity: 0;
+  visibility: hidden;
+  z-index: 999; /* Ensures this message pops in front of the game grid */
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Fallback for Safari/iOS with -webkit-backdrop-filter */
+@supports ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+  .gameOverMessage {
+      -webkit-backdrop-filter: blur(10px); /* Safari/iOS fallback */
+      backdrop-filter: blur(10px); /* Default for modern browsers */
+  }
+}
+
+.gameOverMessage.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%); /* Pop-up animation, stay centered */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .grid {
+      grid-template-columns: repeat(10, 30px); /* Smaller grid for mobile */
+      grid-template-rows: repeat(10, 30px);
+  }
+  .startButton {
+      font-size: 16px;
+      padding: 10px 20px;
+  }
+  .score {
+      font-size: 24px;
+  }
+}

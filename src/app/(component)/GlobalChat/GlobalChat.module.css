@@ -82,7 +82,7 @@
 .form button {
   border-bottom-right-radius: 10px;
   width: 20%;
-  background-color: #4a4a4a;
+  background-color: #4b3621;
   border: none;
   color: white;
   padding: 17px;
@@ -161,7 +161,7 @@
 }
 
 .btnlabel {
-  position: absolute;
+  position: fixed;
   left: 30px;
   bottom: 20px;
   height: 55px;

@@ -27,7 +27,7 @@ const JournalWelcome = () => {
                             {/* Past Entries Button */}
                             <div className={styles["past-entry-container"]}>
                                 <Link
-                                    href="/past-entries"
+                                    href="/pastentries"
                                     className={styles.link}
                                 >
                                     <button className={styles.button}>
@@ -39,7 +39,7 @@ const JournalWelcome = () => {
                             {/* New Entry Button (Plus Icon) */}
                             <div className={styles["new-entry-container"]}>
                                 <Link
-                                    href="/newEntry"
+                                    href="/newentry"
                                     className={styles["plus-link"]}
                                 >
                                     <div className={styles["plus-icon"]}>+</div>
@@ -55,6 +55,7 @@ const JournalWelcome = () => {
                             alt="Journal Image"
                             width={400}
                             height={300}
+                            priority={true}
                         />
                     </div>
                 </div>
