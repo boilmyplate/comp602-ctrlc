@@ -7,6 +7,7 @@ import {
     doSignInWithGoogle
 } from "@/app/(component)/Firebase/auth";
 import Link from "next/link";
+import Image from "next/image";
 
 const Login = () => {
     // Set up state variables for email, password, sign-in status, and error messages
@@ -123,9 +124,11 @@ const Login = () => {
                             className={styles["GoogleSignIn"]}
                             onClick={onGoogleSignIn} // Handles Google sign-in
                         >
-                            <img
+                            <Image
                                 src="google.svg"
                                 alt="Google"
+                                width={20}
+                                height={20}
                                 className={styles.googleicon}
                             />
                             Sign In With Google
@@ -151,7 +154,7 @@ const Login = () => {
                         </Link>
                         <br></br>
                         <Link href="/signup" className={styles.signup}>
-                            Can't login? Sign up
+                            Can&apos;t login? Sign up
                         </Link>
                     </div>
                 </div>

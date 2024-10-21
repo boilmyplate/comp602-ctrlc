@@ -48,7 +48,7 @@ const Reset = () => {
             <div className={styles.ResetPassContainer}>
                 <h1 className={styles.title}>Reset Password</h1>
                 <p className={styles.para}>
-                    Please enter your email address and we'll send you
+                    Please enter your email address and we&apos;ll send you
                     instructions to reset your password.
                 </p>
 

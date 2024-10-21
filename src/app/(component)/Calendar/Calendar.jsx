@@ -29,7 +29,7 @@ const Calendar = () => {
             eventsRef.current = await fetchEvents(user);
             setEvents(eventsRef.current);
         };
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,7 +38,7 @@ const Calendar = () => {
         };
 
         fetchData();
-    }, [eventTitle]);
+    }, [user, eventTitle]);
 
     // adding an event
     const handleDateClick = arg => {

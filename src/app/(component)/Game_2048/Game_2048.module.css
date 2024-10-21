@@ -6,6 +6,7 @@
     justify-content: center;
     height: 100vh;
     font-family: Arial, sans-serif;
+    gap: 20px;
 }
 
 /* Header section styling, aligning items to the center and setting font size */

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useContext, useEffect } from 'react';
-import { ThemeContext } from './themeProvider'; 
+import { useContext, useEffect } from "react";
+import { ThemeContext } from "./themeProvider";
 
 const BodyClassManager = () => {
-  const { theme } = useContext(ThemeContext);
+    const { theme } = useContext(ThemeContext);
 
-  useEffect(() => {
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(theme);
-  }, [theme]);
+    useEffect(() => {
+        document.body.classList.remove("light", "dark");
+        document.body.classList.add(theme);
+    }, [theme]);
 
-  return null;
+    return null;
 };
 
 export default BodyClassManager;

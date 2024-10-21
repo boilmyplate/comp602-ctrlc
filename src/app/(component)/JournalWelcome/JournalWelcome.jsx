@@ -20,7 +20,7 @@ const JournalWelcome = () => {
                             successes, or simply jot down the little things that
                             bring you joy.
                         </h2>
-                        <p>Click "+" for new entry</p>
+                        <p>Click &quot;+&quot; for new entry</p>
 
                         {/* New container for buttons */}
                         <div className={styles["button-container"]}>

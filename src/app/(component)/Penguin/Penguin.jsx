@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './Penguin.module.css';
 import { auth } from '../Firebase/firebase'; // Import db, and auth
@@ -8,6 +8,7 @@ import { fetchHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
 import penguinImage from '/public/penguin/penguin.png';
 import fishImage from '/public/penguin/fish.png';
 import backgroundImage from '/public/penguin/background.png';
+import Image from 'next/image';
 
 const GRID_SIZE = 15;
 const INITIAL_PENGUIN = [{ x: 7, y: 7 }];
@@ -48,11 +49,42 @@ export default function PenguinGame() {
     };
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     const newDirection = DIRECTIONS[e.key];
     if (newDirection && (newDirection.x !== -direction.x || newDirection.y !== -direction.y)) {
       setDirection(newDirection);
     }
+  }, [direction]);
+
+  const startGame = () => {
+    setPenguin(INITIAL_PENGUIN);
+    setFish(generateFish());
+    setDirection(DIRECTIONS.ArrowRight);
+    setScore(0);
+    setGameOver(false);
+    setGameStarted(true);
+    setIsPaused(false);
+  };
+
+  const endGame = useCallback(async () => {
+    setGameOver(true);
+    if (score > bestScore) { 
+      try {
+        await saveHighScore(user.uid, "penguinScore", score, user.displayName);
+        setBestScore(score); // Update bestScore locally only if Firebase update is successful
+        console.log("Score successfully saved to Firebase:", score);
+      } catch (error) {
+        console.error("Error saving score to Firebase:", error);
+      }
+    }
+  }, [user, score, bestScore]);
+
+  const exitGame = () => {
+    router.push('/gamelibrary');
+  };
+
+  const togglePause = () => {
+    setIsPaused((prev) => !prev);
   };
 
   useEffect(() => {
@@ -89,42 +121,15 @@ export default function PenguinGame() {
     }, 200);
 
     return () => clearInterval(movePenguin);
-  }, [gameStarted, direction, fish, gameOver, isPaused]);
+  }, [gameStarted, direction, fish, gameOver, isPaused, endGame]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [direction]);
+  }, [direction, handleKeyDown]);
 
-  const startGame = () => {
-    setPenguin(INITIAL_PENGUIN);
-    setFish(generateFish());
-    setDirection(DIRECTIONS.ArrowRight);
-    setScore(0);
-    setGameOver(false);
-    setGameStarted(true);
-    setIsPaused(false);
-  };
-
-  const endGame = async () => {
-    setGameOver(true);
-    if (score > bestScore) { 
-      try {
-        await saveHighScore(user.uid, "penguinScore", score, user.displayName);
-        setBestScore(score); // Update bestScore locally only if Firebase update is successful
-        console.log("Score successfully saved to Firebase:", score);
-      } catch (error) {
-        console.error("Error saving score to Firebase:", error);
-      }
-    }
-  };
-
-  const exitGame = () => {
-    router.push('/gamelibrary');
-  };
-
-  const togglePause = () => {
-    setIsPaused((prev) => !prev);
+  const imageStyle = {
+    position: ""
   };
 
   return (
@@ -178,8 +183,8 @@ export default function PenguinGame() {
           const isFish = fish.x === x && fish.y === y;
           return (
             <div key={i} className={styles.cell}>
-              {isPenguin && <img src={penguinImage.src} alt="Penguin" className={styles.penguin} />}
-              {isFish && <img src={fishImage.src} alt="Fish" className={styles.fish} />}
+              {isPenguin && <Image src={penguinImage.src} alt="Penguin" className={styles.penguin} fill={true} style={imageStyle} />}
+              {isFish && <Image src={fishImage.src} alt="Fish" className={styles.fish} fill={true} style={imageStyle} />}
             </div>
           );
         })}
