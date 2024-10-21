@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./GlobalChat.module.css";
 import { db, auth } from "../Firebase/firebase";
 import { getDocs } from "firebase/firestore";
@@ -68,7 +68,7 @@ function ChatRoom() {
     );
 
     // READ: fetch messages
-    const fetchMessages = async () => {
+    const fetchMessages = useCallback(async () => {
 
         try {
             const snapshot = await getDocs(messagesQuery);
@@ -80,7 +80,7 @@ function ChatRoom() {
             console.error("Error fetching messages:", error);
         }
         console.log("FETHCING MESSGAESG")
-    };
+    }, [messagesQuery]);
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
@@ -108,7 +108,7 @@ function ChatRoom() {
     // READ: fetch messages when the chat room opens
     useEffect(() => {
         fetchMessages();
-    }, []);
+    }, [fetchMessages]);
 
     return (
         <>
