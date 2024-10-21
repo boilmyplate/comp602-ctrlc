@@ -115,11 +115,11 @@ const Signup = () => {
                         </div>
                         {/* Password Input Field */}
                         <div className={styles["label-input-container"]}>
-                            <label>password</label>
+                            <label>Password</label>
                             <input
                                 className={styles.inputs}
                                 type="password"
-                                placeholder="Password"
+                                placeholder="password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                             />
