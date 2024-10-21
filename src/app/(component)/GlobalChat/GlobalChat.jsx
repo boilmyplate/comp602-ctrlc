@@ -2,16 +2,7 @@
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./GlobalChat.module.css";
-import { db, auth } from "../Firebase/firebase";
-import { getDocs } from "firebase/firestore";
-import {
-    collection,
-    orderBy,
-    limit,
-    query,
-    serverTimestamp,
-    addDoc
-} from "firebase/firestore";
+import { auth } from "../Firebase/firebase";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,6 +11,7 @@ import {
     faPaperPlane
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import { addChatMessage, fetchChats } from "../Firebase/firestore/globalChatDB";
 
 const GlobalChat = () => {
     return (
@@ -60,27 +52,13 @@ function ChatRoom() {
     const [formValue, setFormValue] = useState("");
     const [lastFetchedTime, setLastFetchedTime] = useState(null); // track the time of the last fetch
 
-    const messagesRef = collection(db, "chats");
-    const messagesQuery = query(
-        messagesRef,
-        orderBy("createdAt", "desc"),
-        limit(20)
-    );
-
     // READ: fetch messages
     const fetchMessages = useCallback(async () => {
-
-        try {
-            const snapshot = await getDocs(messagesQuery);
-            const docs = snapshot.docs;
-
-            setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
-            setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
-        } catch (error) {
-            console.error("Error fetching messages:", error);
-        }
-        console.log("FETHCING MESSGAESG")
-    }, [messagesQuery]);
+        const docs = await fetchChats();
+        setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
+        setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
+        console.log("FETCHED MESSAGES: ", docs);
+    }, []);
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
@@ -91,18 +69,12 @@ function ChatRoom() {
             return;
         }
 
-        const { uid, photoURL, displayName } = auth.currentUser;
-
-        await addDoc(messagesRef, {
-            text: formValue,
-            createdAt: serverTimestamp(),
-            uid,
-            displayName,
-            photoURL
-        });
+        await addChatMessage(formValue);
 
         setFormValue("");
         dummy.current.scrollIntoView({ behavior: "smooth" });
+
+        fetchMessages();
     };
 
     // READ: fetch messages when the chat room opens
@@ -121,8 +93,12 @@ function ChatRoom() {
                 <div className={styles["fetch-button-container"]}>
                     {lastFetchedTime && (
                         <>
-                            <p className={styles["last-fetched"]}>Last fetched at: {lastFetchedTime}</p>
-                            <p className={styles["fetch-info"]}>Click send button to fetch new messages</p>
+                            <p className={styles["last-fetched"]}>
+                                Last fetched at: {lastFetchedTime}
+                            </p>
+                            <p className={styles["fetch-info"]}>
+                                Click send button to fetch new messages
+                            </p>
                         </>
                     )}
                 </div>
@@ -138,11 +114,7 @@ function ChatRoom() {
                     placeholder="Message Global Chat"
                 />
 
-                <button
-                    className={styles["send-button"]}
-                    type="submit"
-                    onClick={fetchMessages}
-                >
+                <button className={styles["send-button"]} type="submit">
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
             </form>
@@ -162,7 +134,7 @@ function ChatMessage(props) {
                 ref={messageRef}
                 className={`${styles.message} ${styles[messageClass]}`}
             >
-                <Image 
+                <Image
                     alt="User Photo"
                     src={photoURL || "/profile.png"}
                     width={50}
