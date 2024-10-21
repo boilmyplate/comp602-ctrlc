@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./GlobalChat.module.css";
 import { db, auth } from "../Firebase/firebase";
-import { onSnapshot } from "firebase/firestore";
+import { getDocs } from "firebase/firestore";
 import {
     collection,
     orderBy,
@@ -22,9 +22,6 @@ import {
 import Image from "next/image";
 
 const GlobalChat = () => {
-    const [isChatOpen, setIsChatOpen] = useState(false);
-    const handleChatOpen = () => setIsChatOpen(!isChatOpen);
-
     return (
         <>
             <div className="background">
@@ -33,7 +30,6 @@ const GlobalChat = () => {
                     name="click"
                     className={styles.click}
                     id="click"
-                    onChange={handleChatOpen}
                 />
                 <label className={styles.btnlabel} htmlFor="click">
                     <i className={styles.fac}>
@@ -47,10 +43,10 @@ const GlobalChat = () => {
                     <section>
                         <div className={styles["chatbox-header"]}>
                             <h2 className={styles["chatbox-header-title"]}>
-                                Global Chat Room
+                                Global Chat Room (๑&gt;◡&lt;๑)
                             </h2>
                         </div>
-                        {isChatOpen && <ChatRoom />}
+                        <ChatRoom />
                     </section>
                 </div>
             </div>
@@ -62,6 +58,7 @@ function ChatRoom() {
     const dummy = useRef();
     const [messages, setMessages] = useState([]);
     const [formValue, setFormValue] = useState("");
+    const [lastFetchedTime, setLastFetchedTime] = useState(null); // track the time of the last fetch
 
     const messagesRef = collection(db, "chats");
     const messagesQuery = query(
@@ -70,30 +67,29 @@ function ChatRoom() {
         limit(20)
     );
 
-    // READ: useEffect to ensure read requests are sent only when the chat is open
-    useEffect(() => {
-        const unsubscribe = onSnapshot(messagesQuery, snapshot => {
-            console.log(
-                "Received new data from Firestore:",
-                snapshot.docs.length,
-                "documents."
-            );
-            setMessages(
-                snapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .reverse()
-            );
-        });
+    // READ: fetch messages
+    const fetchMessages = async () => {
 
-        return () => {
-            console.log("Cleaning up Firestore listener...");
-            unsubscribe();
-        };
-    }, [messagesQuery]);
+        try {
+            const snapshot = await getDocs(messagesQuery);
+            const docs = snapshot.docs;
+
+            setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
+            setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+        }
+        console.log("FETHCING MESSGAESG")
+    };
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
         e.preventDefault();
+
+        // prevent sending a blank message
+        if (formValue.trim() === "") {
+            return;
+        }
 
         const { uid, photoURL, displayName } = auth.currentUser;
 
@@ -109,6 +105,11 @@ function ChatRoom() {
         dummy.current.scrollIntoView({ behavior: "smooth" });
     };
 
+    // READ: fetch messages when the chat room opens
+    useEffect(() => {
+        fetchMessages();
+    }, []);
+
     return (
         <>
             <main>
@@ -116,6 +117,15 @@ function ChatRoom() {
                     messages.map(message => (
                         <ChatMessage key={message.id} message={message} />
                     ))}
+
+                <div className={styles["fetch-button-container"]}>
+                    {lastFetchedTime && (
+                        <>
+                            <p className={styles["last-fetched"]}>Last fetched at: {lastFetchedTime}</p>
+                            <p className={styles["fetch-info"]}>Click send button to fetch new messages</p>
+                        </>
+                    )}
+                </div>
 
                 <span ref={dummy}></span>
             </main>
@@ -131,7 +141,7 @@ function ChatRoom() {
                 <button
                     className={styles["send-button"]}
                     type="submit"
-                    disabled={!formValue}
+                    onClick={fetchMessages}
                 >
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
@@ -152,10 +162,11 @@ function ChatMessage(props) {
                 ref={messageRef}
                 className={`${styles.message} ${styles[messageClass]}`}
             >
-                <Image
+                <Image 
                     alt="User Photo"
-                    className={styles["user-photo"]}
                     src={photoURL || "/profile.png"}
+                    width={50}
+                    height={50}
                 />
                 <div className={styles["msg-container"]}>
                     <p className={styles.displayname}>{displayName}</p>
