@@ -5,7 +5,8 @@ import {
     doc,
     getDoc,
     getDocs,
-    setDoc
+    setDoc,
+    updateDoc
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -123,5 +124,16 @@ const updateJournalCounts = async (uid, docid, change) => {
         console.log(`Journal total count updated to: ${newJournalTotalCount}`);
     } catch (error) {
         console.error("Error updating journal total: ", error);
+    }
+};
+
+export const updateJournalEntry = async (uid, docid, change) => {
+    try {
+        const docRef = doc(db, "users", uid, "journal", docid);
+        await updateDoc(docRef, { entry: change})
+        return true;
+    } catch (error) {
+        console.error("Error updating journal entry: ", error);
+        return false;
     }
 };

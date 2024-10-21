@@ -5,6 +5,7 @@ import React, { useState, useRef } from "react";
 import NavBar from "../NavBar/Navbar"; // Import NavBar component
 import "./NewEntry.css"; // Import CSS styles specific to the New Entry component
 import { addJournalEntry } from "../Firebase/firestore/journalDB";
+import Image from "next/image";
 
 // Categories for the carousel
 const categories = [
@@ -80,6 +81,10 @@ const NewEntry = () => {
         );
     };
 
+    const imageStyle = {
+        position: ""
+    };
+
     return (
         <>
             <NavBar /> {/* Include the NavBar */}
@@ -125,9 +130,11 @@ const NewEntry = () => {
                                             }
                                         >
                                             {category.imgSrc && (
-                                                <img
+                                                <Image
                                                     src={category.imgSrc}
                                                     alt={category.label}
+                                                    fill={true}
+                                                    style={imageStyle}
                                                 />
                                             )}
                                             <div className="content">

@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "@/app/(component)/Pong/Pong.module.css";
 import Link from "next/link";
+import Image from "next/image";
 
 // Pong component
 const Pong = () => {
@@ -170,7 +171,7 @@ const Pong = () => {
     ]);
 
     // Function to handle key press for player paddle movement
-    const handleKeyDown = e => {
+    const handleKeyDown = useCallback(e => {
         if (e.key === "ArrowUp" && playerY > 0) {
             setPlayerY(Math.max(playerY - 20, 0)); // Move paddle up
         } else if (
@@ -181,10 +182,10 @@ const Pong = () => {
                 Math.min(playerY + 20, canvasRef.current.height - paddleHeight)
             ); // Move paddle down
         }
-    };
+    }, [paddleHeight, playerY]);
 
     // Function to handle mouse movement for player paddle
-    const handleMouseMove = e => {
+    const handleMouseMove = useCallback(e => {
         const canvas = canvasRef.current;
         const mouseY = e.clientY - canvas.getBoundingClientRect().top;
         setPlayerY(
@@ -193,7 +194,7 @@ const Pong = () => {
                 canvas.height - paddleHeight
             )
         );
-    };
+    }, [paddleHeight]);
 
     // Add event listeners for key and mouse input
     useEffect(() => {
@@ -206,7 +207,7 @@ const Pong = () => {
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("mousemove", handleMouseMove);
         };
-    }, [playerY, isGameRunning, isGamePaused]);
+    }, [playerY, isGameRunning, isGamePaused, handleKeyDown, handleMouseMove]);
 
     // Function to start the game
     const startGame = () => {
@@ -271,9 +272,9 @@ const Pong = () => {
                         Use the arrow keys or your mouse to control the paddle.
                     </p>
                     <p className={styles["welcome-text"]}>
-                        Press 'Start Game' to begin!
+                        Press &apos;Start Game&apos; to begin!
                     </p>
-                    <img src="game.png" width="270" alt="Journal Image" />
+                    <Image src="/game.png" width={512} height={512} alt="Journal Image" />
                 </div>
             )}
 

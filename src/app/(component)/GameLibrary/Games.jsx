@@ -19,7 +19,7 @@ export default function GameLibrary() {
                     <p>
                         Pong Classic is a retro-style table tennis game where
                         players control paddles to hit a ball back and forth,
-                        aiming to score points by passing the opponent's paddle.
+                        aiming to score points by passing the opponent&apos;s paddle.
                         It offers both solo and multiplayer modes with simple
                         yet challenging gameplay.
                     </p>

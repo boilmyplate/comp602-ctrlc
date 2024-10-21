@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from '../Firebase/firebase';
 import { fetchHighScore, saveGlobalHighScore, saveHighScore } from '../Firebase/firestore/gameDB';
 import styles from './Game_2048.module.css';
+import Image from 'next/image';
 
 const initialGrid = () => {
     const grid = Array(4).fill(null).map(() => Array(4).fill({ value: null, moved: false }));
@@ -118,7 +119,22 @@ const Alphabet2048 = () => {
         };
         
         saveBestScore();
-    }, [gameOver, score, bestScore]);
+    }, [gameOver, score, bestScore, user]);
+
+    const checkGameOver = useCallback(() => {
+        let noMovesLeft = true;
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 4; col++) {
+                if (grid[row][col].value === null || 
+                    (row < 3 && grid[row][col].value === grid[row + 1][col].value) || 
+                    (col < 3 && grid[row][col].value === grid[row][col + 1].value)) {
+                    noMovesLeft = false;
+                    break;
+                }
+            }
+        }
+        setGameOver(noMovesLeft);
+    }, [grid, setGameOver]);
 
     const handleKeyDown = useCallback((e) => {
         if (isMoving || gameOver) return;
@@ -141,27 +157,36 @@ const Alphabet2048 = () => {
                 checkGameOver();
             }, 50);
         }
-    }, [grid, isMoving, gameOver]);
-
-    const checkGameOver = () => {
-        let noMovesLeft = true;
-        for (let row = 0; row < 4; row++) {
-            for (let col = 0; col < 4; col++) {
-                if (grid[row][col].value === null || 
-                    (row < 3 && grid[row][col].value === grid[row + 1][col].value) || 
-                    (col < 3 && grid[row][col].value === grid[row][col + 1].value)) {
-                    noMovesLeft = false;
-                    break;
-                }
-            }
-        }
-        setGameOver(noMovesLeft);
-    };
+    }, [grid, isMoving, gameOver, checkGameOver]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
+
+    const ScoreBoard = ({ score, bestScore }) => (
+        <div className={styles.scoreBoard}>
+            <div className={styles.titleContainer}>
+                <p className={styles.blockTitle}>2048 Alphabet</p>
+            </div>
+            <div>Current Score: {score}</div>
+            <div>Best Score: {bestScore}</div>
+        </div>
+    );
+    
+    const Grid = ({ grid }) => (
+        <div className={styles.gridContainer}>
+            {grid.map((row, rowIndex) => row.map((tile, colIndex) => 
+                <Tile key={`${rowIndex}-${colIndex}`} value={tile.value} moved={tile.moved} />
+            ))}
+        </div>
+    );
+    
+    const Tile = ({ value, moved }) => (
+        <div className={`${styles.tile} ${moved ? styles.slide : ''}`} data-value={value}>
+            {value || ''}
+        </div>
+    );
 
     return isGameStarted ? (
         <div className={styles.gameContainer}>
@@ -192,35 +217,11 @@ const Alphabet2048 = () => {
     ) : (
         <div className={styles.homeContainer}>
             <h1>Welcome to Alphabet 2048</h1>
-            <img src="/puzzle.png" alt="Puzzle" className={styles.puzzleImage} />
+            <Image src="/puzzle.png" alt="Puzzle" width={250} height={250} />
             <button onClick={() => { setIsGameStarted(true); resetGame(); }} className={styles.start}>Start Game</button>
             <button onClick={() => router.push("/gamelibrary")} className={styles.start}>Back to library</button>
         </div>
     );
 };
-
-const ScoreBoard = ({ score, bestScore }) => (
-    <div className={styles.scoreBoard}>
-        <div className={styles.titleContainer}>
-            <p className={styles.blockTitle}>2048 Alphabet</p>
-        </div>
-        <div>Current Score: {score}</div>
-        <div>Best Score: {bestScore}</div>
-    </div>
-);
-
-const Grid = ({ grid }) => (
-    <div className={styles.gridContainer}>
-        {grid.map((row, rowIndex) => row.map((tile, colIndex) => 
-            <Tile key={`${rowIndex}-${colIndex}`} value={tile.value} moved={tile.moved} />
-        ))}
-    </div>
-);
-
-const Tile = ({ value, moved }) => (
-    <div className={`${styles.tile} ${moved ? styles.slide : ''}`} data-value={value}>
-        {value || ''}
-    </div>
-);
 
 export default Alphabet2048;

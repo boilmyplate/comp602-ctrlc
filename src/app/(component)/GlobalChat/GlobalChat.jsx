@@ -19,6 +19,7 @@ import {
     faXmark,
     faPaperPlane
 } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 const GlobalChat = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -88,7 +89,7 @@ function ChatRoom() {
             console.log("Cleaning up Firestore listener...");
             unsubscribe();
         };
-    }, []);
+    }, [messagesQuery]);
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
@@ -151,7 +152,8 @@ function ChatMessage(props) {
                 ref={messageRef}
                 className={`${styles.message} ${styles[messageClass]}`}
             >
-                <img
+                <Image
+                    alt="User Photo"
                     className={styles["user-photo"]}
                     src={photoURL || "/profile.png"}
                 />

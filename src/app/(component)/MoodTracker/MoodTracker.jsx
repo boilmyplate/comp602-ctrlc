@@ -12,14 +12,15 @@ import {
 } from "../Firebase/firestore/moodTrackerDB";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faDownload } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 const moodOptions = [
-    { name: "Happy", img: "./mood_images/happy.png" },
-    { name: "Great", img: "./mood_images/great.png" },
-    { name: "Neutral", img: "./mood_images/neutral.png" },
-    { name: "Sad", img: "./mood_images/sad.png" },
-    { name: "Angry", img: "./mood_images/angry.png" },
-    { name: "Worried", img: "./mood_images/worried.png" }
+    { name: "Happy", img: "/mood_images/happy.png" },
+    { name: "Great", img: "/mood_images/great.png" },
+    { name: "Neutral", img: "/mood_images/neutral.png" },
+    { name: "Sad", img: "/mood_images/sad.png" },
+    { name: "Angry", img: "/mood_images/angry.png" },
+    { name: "Worried", img: "/mood_images/worried.png" }
 ];
 
 const formatTimestamp = timestamp => new Date(timestamp).toLocaleString();
@@ -41,7 +42,7 @@ const MoodTracker = () => {
         };
 
         fetchData();
-        console.log("FETCHING DATA: ", moodHistory);
+        // console.log("FETCHING DATA: ", moodHistory);
     }, [user]);
 
     // Save selected mood to Firestore for the specific user
@@ -118,10 +119,12 @@ const MoodTracker = () => {
                             className={styles.moodOption}
                             onClick={() => handleMoodSelect(mood.name)}
                         >
-                            <img
+                            <Image
                                 src={mood.img}
                                 alt={mood.name}
                                 className={styles.moodImage}
+                                width={512} // Adjust the width as needed
+                                height={512} // Adjust the height as needed
                             />
                             <p>{mood.name}</p>
                         </div>

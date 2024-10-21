@@ -216,7 +216,7 @@ export default function Home() {
         };
 
         fetchJournalCounts();
-    }, [user, db]);
+    }, [user]);
 
     return (
         <div className={styles.container}>
