@@ -13,7 +13,7 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const [isRegistering, setIsRegistering] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    
     const { userLoggedIn } = useAuth();
     const router = useRouter();
 
