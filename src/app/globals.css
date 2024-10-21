@@ -15,6 +15,8 @@
   --brown: #D4A373;
   /*beige*/
   --beige: #FAEDCD;
+  /*grey*/
+  --grey: #283618;
   /*buttons*/
   --buttons: #D4A373;
   --button2: #CCD5AE;
@@ -50,7 +52,6 @@
 body.dark {
   --background-color: #283618;
   --text: white;
-  --logoColor: #93b2ce;
   --container: #2e2e2e;
   --title: white;
   /*containers*/
