@@ -8,6 +8,7 @@
   position: relative;
   box-sizing: border-box;
   margin-bottom: 5vh;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .logo {
@@ -38,10 +39,9 @@
   font-size: 0.9em;
   color: var(--buttonText);
   text-decoration: none;
-  padding: 4px 8px;
+  padding: 6px 8px;
   border: 2px solid var(--buttons);
-  border-radius: 12px;
-  background-color: var(--buttonBackground);
+  background-color: var(--background-color);
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
   font-family: "Comfortaa", sans-serif;
   cursor: pointer;
@@ -68,7 +68,7 @@
 .active {
   background-color: var(--buttons);
   color: var(--buttonActive);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
   border: 2px solid var(--buttons);
 }
 
@@ -109,6 +109,7 @@
   display: inline-block;
 }
 
+
 .menuTrigger {
   cursor: pointer;
 }
@@ -135,6 +136,7 @@
   width: 200px;
   z-index: 1000;
   text-align: center;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .dropdownMenu h3 {
@@ -163,6 +165,7 @@
   padding: 10px 5px;
   font-size: 14px;
   transition: background-color 0.3s;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .dropdownItem:hover {
@@ -213,6 +216,8 @@
   height: 100%;
   width: 100%;
   border: none;
+  font-family: "Comfortaa", sans-serif;
+  font-weight: 100;
 }
 
 .sublink:hover {
