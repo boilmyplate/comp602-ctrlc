@@ -46,7 +46,7 @@
 /* Left card styling - slightly smaller card */
 .left-card {
     width: 35vw;
-    height: 55vh;
+    height: 56vh;
     z-index: 1;
     top: 30%;
     left: 50%;
@@ -85,7 +85,7 @@
 /* Image inside the card */
 .category-card img {
     width: 100%;
-    height: 100%;
+    height: 90%;
     object-fit: cover;
     object-position: center; 
 }
@@ -93,11 +93,11 @@
 /* Text inside the card */
 .category-card .content {
     display: flex;
-    padding: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     background-color: var(--white);
-
+    text-align: center;
 }
 
 .category-card .title {
