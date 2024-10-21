@@ -14,13 +14,13 @@
 
 /* Main container for the journal content */
 .journalWelcome-container {
-  grid-area: journal; /* Assign to the 'journal' area */
+  grid-area: journal; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   position: relative;
-  background-color: var(--container);
+  background-color: var(--brown);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;

@@ -60,6 +60,7 @@
   position: relative;
   z-index: 2;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: black;
 }
 
 /* Google button styling */
@@ -69,6 +70,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .googleicon {
@@ -85,7 +87,7 @@
   justify-content: center;
   align-items: flex-start;
   gap: 20px;
-  color: white;
+  color: black;
   padding-right: 50px;
   height: 100%;
   width: 100%;
@@ -159,6 +161,7 @@
   margin-top: 10px;
   cursor: pointer;
   box-sizing: border-box;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .inputs:focus {
@@ -316,3 +319,4 @@
   margin-bottom: 10px;
   font-size: 14px;
 }
+

@@ -8,31 +8,40 @@
   position: relative;
   box-sizing: border-box;
   margin-bottom: 5vh;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .logo {
   font-size: 1.5em;
   font-weight: bolder;
-  color: var(--text);
   font-family: "Comfortaa", sans-serif;
 }
+
+.logoBlank {
+  color: var(--logoColor);
+}
+
+.logoWeb {
+  color: var(--titleSecondColor);
+}
+
 .links {
   display: flex;
   gap: 24px;
   align-items: center;
 }
+
 /* Link button styling */
 .link {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   font-size: 0.9em;
-  color: var(--text);
+  color: var(--buttonText);
   text-decoration: none;
-  padding: 4px 8px;
-  border: 2px solid var(--text);
-  border-radius: 12px;
-  background-color: var(--SoftLemonYellow);
+  padding: 6px 8px;
+  border: 2px solid var(--buttons);
+  background-color: var(--background-color);
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
   font-family: "Comfortaa", sans-serif;
   cursor: pointer;
@@ -42,25 +51,40 @@
 /* Hover effect for button links */
 .link:hover {
   margin-top: 3px;
-  background-color: var(--white);
-  color: var(--text);
+  background-color: var(--buttons);
+  color: var(--white);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
 .link:active {
   transform: scale(0.98);
-  background-color: var(--white);
+  background-color: var(--buttonBackground);
   box-shadow: 0 8px 15px rgba(255, 255, 255, 0.7);
   padding-top: 10px;
   padding-bottom: 6px;
 }
 
-/*when link is active*/
+/* When link is active */
 .active {
-  background-color: var(--white);
-  color: var(--text);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-  border: 2px solid var(--text);
+  background-color: var(--buttons);
+  color: var(--buttonActive);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  border: 2px solid var(--buttons);
+}
+
+.featuresButton {
+  border-radius: 0;
+  border: none;
+  background-color: var(--button5);
+  color: var(--button2Text);
+  padding: 9px;
+  font-size: 13px;
+  font-weight: 900;
+  width: 100px;
+}
+.featuresButton:hover {
+  background-color: var(--hoverButton);
+  color: var(--button2TextHover);
 }
 
 .logout {
@@ -85,6 +109,7 @@
   display: inline-block;
 }
 
+
 .menuTrigger {
   cursor: pointer;
 }
@@ -104,12 +129,14 @@
   top: 60px;
   right: 0;
   background-color: #fff;
+  color: black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 10px;
   width: 200px;
   z-index: 1000;
   text-align: center;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .dropdownMenu h3 {
@@ -138,6 +165,7 @@
   padding: 10px 5px;
   font-size: 14px;
   transition: background-color 0.3s;
+  font-family: "Comfortaa", sans-serif;
 }
 
 .dropdownItem:hover {
@@ -153,6 +181,53 @@
 
 .dropdownItem svg {
   color: #555;
+}
+
+/* Navbar item with submenu */
+.navItem {
+  position: relative;
+}
+
+/* Submenu styles */
+.submenu {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--button2); 
+  border: 1px solid var(--button2);
+  border-radius: 0;
+  width: 100%; 
+  z-index: 1000;
+  flex-direction: column;
+}
+
+/* Submenu link styles */
+.sublink {
+  padding: 9px; 
+  text-align: center;
+  background-color: var(--button5); 
+  color: var(--button2Text); 
+  font-size: 13px;
+  font-weight: 900; 
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  border: none;
+  font-family: "Comfortaa", sans-serif;
+  font-weight: 100;
+}
+
+.sublink:hover {
+  background-color: var(--hoverButton); 
+  color: var(--button2TextHover); 
+}
+
+.sublink.active {
+  background-color: var(--hoverButton); 
+  color: var(--button2TextHover); 
 }
 
 /* Media Queries for mobile view */
@@ -173,15 +248,34 @@
     right: 0;
     width: 50%;
     height: calc(100vh - 100px);
-    background-color: var(--lightBlue);
+    background-color: var(--buttonBackground);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
     border-left: 2px solid black;
-    overflow: hidden;
+    overflow: auto;
     transition: height 0.8s ease-in-out;
+    padding-top: 20px;
+    z-index: 10;
+  }
+
+  /* Mobile navigation item */
+  .mobileNavItem {
+    width: 100%;
+  }
+
+  /* Mobile submenu styles */
+  .mobileSubmenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mobileSubmenu .link {
+    width: 100%;
+    text-align: center;
   }
 }
 

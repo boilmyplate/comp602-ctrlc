@@ -20,7 +20,7 @@ const Signup = () => {
     // Function to check for invalid words in the username
     const containsInvalidWords = username => {
         // List of inappropriate words that should not be included in the username
-        const invalidWords = ["fuck", "dick", "bastard", "bitch"];
+        const invalidWords = ["fuck", "dick", "bastard", "bitch", "nigga", "pekpek"];
         return invalidWords.some(word => username.toLowerCase().includes(word));
     };
 
@@ -55,7 +55,7 @@ const Signup = () => {
         // Validate password strength
         if (!isValidPassword(password)) {
             setErrorMessage(
-                "Password must be at least 6 characters long and contain both letters and numbers."
+                "password must be at least 6 characters long and contain both letters and numbers."
             );
             return;
         }
@@ -119,7 +119,7 @@ const Signup = () => {
                             <input
                                 className={styles.inputs}
                                 type="password"
-                                placeholder="Password"
+                                placeholder="password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                             />

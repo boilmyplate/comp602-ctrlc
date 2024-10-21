@@ -1,32 +1,65 @@
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap");
 
 :root {
-  --text: #333333;
   /*background color*/
-  --PalePeach: #ffd1c1;
-  /*icons, buttons, or headers*/
-  --PastelPink: #ffceda;
-  /*Highlight*/
-  --background-color: #fff5b7;
-  /*secondary background or cards*/
-  --SkyBlue: #c7e5ff;
-  /*buttons*/
-  --PastelMint: #c6f6d5;
+  --background-color: #fbf7f7;
   /*white*/
   --white: white;
-  /*light brown*/
-  --lightbrown: #d2b48c;
   /*coffebrown*/
   --coffeebrown: #4b3621;
   /*logoColor*/
   --logoColor: #333333;
+  /*light beige*/
+  --lightbeight: #FEFAE0;
+  /*brown*/
+  --brown: #D4A373;
+  /*beige*/
+  --beige: #FAEDCD;
+  /*grey*/
+  --grey: #283618;
+  /*buttons*/
+  --buttons: #D4A373;
+  --button2: #CCD5AE;
+  --hoverButton: #CCD5AE;
+  --buttonText: #D4A373;
+  --button2Text: #333333;
+  --buttonText3: #FFFFFF;   
+  --button2TextHover: white;
+  --button2TextHoverBackground:#606C38; 
+  --button4: #4b3621;
+  --button4Text: #4b3621;
+  --button4TextHover: #d2691e;
+  --button5: #CCD5AE;
+  --buttonActive: #FEFAE0;
+  --buttonBackground: white;
+  /*containers*/
+  --container1: #606C38;
+  --container2: #FEFAE0;
+  --container3: #283618;
+  --container4: #DDA15E;
+  --container5: #BC6C25;
+  /*typography*/
+  --title: #333333;
+  --titleSecondColor: #D4A373;
+  --p: #333333;
+  --containertext: white;
+  --container4text: black;
+  /*bargraph*/
+  --bar-hover-color: #FF5733;
+  --tooltip-bg-color: #333;
 }
 
 body.dark {
-  --background-color: #202020;
+  --background-color: #283618;
   --text: white;
-  --logoColor: #93b2ce;
   --container: #2e2e2e;
+  --title: white;
+  /*containers*/
+  --container3: #CCD5AE;
+  /*button*/
+  --button2: #283618;
+  /*logo*/
+  --logoColor: #ffffff;
 }
 
 * {
