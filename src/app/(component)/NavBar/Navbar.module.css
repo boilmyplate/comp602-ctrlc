@@ -41,6 +41,7 @@
   text-decoration: none;
   padding: 6px 8px;
   border: 2px solid var(--buttons);
+  border-radius: 8px;
   background-color: var(--background-color);
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
   font-family: "Comfortaa", sans-serif;
@@ -75,6 +76,7 @@
 .featuresButton {
   border-radius: 0;
   border: none;
+  border-radius: 8px 8px 0 0;
   background-color: var(--button5);
   color: var(--button2Text);
   padding: 9px;
@@ -198,7 +200,6 @@
   left: 0;
   background-color: var(--button2); 
   border: 1px solid var(--button2);
-  border-radius: 0;
   width: 100%; 
   z-index: 1000;
   flex-direction: column;
