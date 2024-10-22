@@ -1,3 +1,4 @@
+/* Navbar Styles */
 .container {
   display: flex;
   align-items: center;
@@ -12,8 +13,8 @@
 }
 
 .logo {
-  font-size: 1.5em;
-  font-weight: bolder;
+  font-size: 30px;
+  font-weight: bold;
   font-family: "Comfortaa", sans-serif;
 }
 
@@ -39,7 +40,7 @@
   font-size: 0.9em;
   color: var(--buttonText);
   text-decoration: none;
-  padding: 6px 8px;
+  padding: 10px 15px; 
   border: 2px solid var(--buttons);
   border-radius: 8px;
   background-color: var(--background-color);
@@ -73,34 +74,39 @@
   border: 2px solid var(--buttons);
 }
 
+/* Features Button */
 .featuresButton {
-  border-radius: 0;
+  border-radius: 8px;
   border: none;
-  border-radius: 8px 8px 0 0;
   background-color: var(--button5);
   color: var(--button2Text);
-  padding: 9px;
-  font-size: 13px;
+  padding: 12px;
+  font-size: 14px;
   font-weight: 900;
-  width: 100px;
+  width: 120px; 
+  margin-bottom: 2px;
 }
+
 .featuresButton:hover {
   background-color: var(--hoverButton);
   color: var(--button2TextHover);
 }
 
+/* Logout button */
 .logout {
   padding: 8px;
   cursor: pointer;
   font-weight: bold;
 }
 
+/* Menu Icon for mobile */
 .menuIcon {
   display: none;
   font-size: 24px;
   cursor: pointer;
 }
 
+/* Mobile Links */
 .mobileLinks {
   display: none;
 }
@@ -110,7 +116,6 @@
   position: relative;
   display: inline-block;
 }
-
 
 .menuTrigger {
   cursor: pointer;
@@ -134,8 +139,8 @@
   color: black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  padding: 10px;
-  width: 200px;
+  padding: 15px;
+  width: 250px;
   z-index: 1000;
   text-align: center;
   font-family: "Comfortaa", sans-serif;
@@ -192,43 +197,47 @@
 
 /* Submenu styles */
 .submenu {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: var(--button2); 
-  border: 1px solid var(--button2);
-  width: 100%; 
+  background-color: #f3eded;
+  color: #000;
+  width: 120px;
+  padding: 10px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  flex-direction: column;
+  margin-top: 2px;
+
+}
+
+.submenuContainer {
+  margin: 8px 0;
 }
 
 /* Submenu link styles */
 .sublink {
-  padding: 9px; 
-  text-align: center;
-  background-color: var(--button5); 
-  color: var(--button2Text); 
-  font-size: 13px;
-  font-weight: 900; 
-  cursor: pointer;
-  height: 100%;
+  display: block;
   width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: transparent;
   border: none;
-  font-family: "Comfortaa", sans-serif;
-  font-weight: 100;
+  outline: none;
 }
 
 .sublink:hover {
-  background-color: var(--hoverButton); 
-  color: var(--button2TextHover); 
+  background-color: #8f8989;
 }
 
 .sublink.active {
-  background-color: var(--hoverButton); 
-  color: var(--button2TextHover); 
+  background-color: #8f8989;
 }
 
 /* Media Queries for mobile view */
@@ -278,9 +287,4 @@
     width: 100%;
     text-align: center;
   }
-}
-
-.logo {
-  font-size: 30px;
-  font-weight: bold;
 }

@@ -1,85 +1,137 @@
+/* General form styling */
 .form {
   margin-bottom: 10px;
   font-family: 'Comfortaa', sans-serif;
 }
 
+/* Flex container for form elements */
 .eventForm {
-  font-family: "Comfortaa", sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 40%;
 }
 
+/* Input field styling */
 .eventForm input {
-  margin-right: 5px;
   font-family: "Comfortaa", sans-serif;
+  font-size: 14px;
+  padding: 8px;
+  width: 30%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Focus effect for input fields */
+.eventForm input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button styling with smaller size */
 .eventForm button {
   font-family: "Comfortaa", sans-serif;
+  font-size: 12px; /* Smaller font size */
+  padding: 6px 12px; /* Smaller padding for compact look */
+  background-color: #002855; /* Navy blue background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Button hover effect */
+.eventForm button:hover {
+  background-color: #001f44;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Select dropdown styling */
+.eventForm select {
+  font-family: "Comfortaa", sans-serif;
+  font-size: 12px; /* Smaller font size */
+  padding: 6px; /* Smaller padding */
+  width: 30%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Select dropdown hover and focus effect */
+.eventForm select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling for the container */
 .container {
-    font-family: 'Comfortaa', sans-serif;
+  font-family: 'Comfortaa', sans-serif;
   max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* Wrapper for form layout */
 .wrapper {
   width: 90vw;
 }
 
-/* Assuming this is added to your calendar.module.css */
-
-/* Container for the edit form */
+/* Form for event editing */
 .editForm {
   position: fixed;
   left: 40vw;
   top: 40vh;
   z-index: 1;
-  background-color: #f9f9f9; /* Light background */
+  background-color: #f9f9f9;
   padding: 20px;
   margin-top: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Light shadow for some depth */
-  max-width: 400px; /* Limiting the width */
-  margin: 0 auto; /* Center the form */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-/* Header for the form */
+/* Header styling for edit form */
 .editForm h3 {
   font-size: 18px;
   margin-bottom: 15px;
-  color: #333; /* Darker text */
+  color: #333;
 }
 
-/* Form fields */
+/* Full-width input fields in edit form */
 .editForm input {
-  width: 100%; /* Full width input fields */
+  width: 100%; 
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 4px; /* Rounded corners */
-  font-size: 16px;
 }
 
-/* Buttons */
+/* Smaller buttons in edit form */
 .editForm button {
-  background-color: #007bff; /* Primary blue color */
+  font-size: 12px; /* Smaller font size */
+  padding: 6px 12px; /* Smaller padding */
+  background-color: #007bff;
   color: white;
-  padding: 10px 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px; /* Space between buttons */
-  font-size: 14px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Hover effect for smaller buttons */
 .editForm button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Delete button styling */
+/* Delete button with smaller size */
 .editForm button[type="button"] {
   background-color: #dc3545; /* Red for delete button */
 }
@@ -88,7 +140,3 @@
   background-color: #c82333; /* Darker red on hover */
 }
 
-.calendarContainer {
-  display: flex;
-  flex-direction: column;
-}
