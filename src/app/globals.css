@@ -5,6 +5,7 @@
   --background-color: #FFF0D1;
   /*white*/
   --white: white;
+  --white2: white;
   --white3: white;
   /*cream*/
   --cream: #FFF3E0;
@@ -61,12 +62,13 @@
   --chatroomColor2:rgba(97, 96, 96, 0.8);
   --chatroomColor3: #ffffff;
   /* Light Mode Colors */
-  --clr-background-light: #FFF4E6;       /* Soft Cream background */
-  --clr-text-dark: #3D3D3D;              /* Dark brown for text */
-  --clr-entry-bg-light: #FFFFFF;         /* White for entry background */
-  --clr-button-bg-light: #5C4033;        /* Coffee brown for button background */
-  --clr-button-text-light: #FFFFFF;      /* White text for buttons */
-  --clr-shadow-light: rgba(0, 0, 0, 0.1);/* Light shadow for containers */
+  --clr-background-white: white;
+  --clr-background-light: #dfd4c6;       
+  --clr-text-dark: #3D3D3D;              
+  --clr-entry-bg-light: #FFFFFF;         
+  --clr-button-bg-light: #5C4033;        
+  --clr-button-text-light: #FFFFFF;      
+  --clr-shadow-light: rgba(0, 0, 0, 0.1);
 }
 
 body.dark {
@@ -87,6 +89,7 @@ body.dark {
   --chatroomColor2:rgba(97, 96, 96, 0.8);
   --chatroomColor3: #ffffff;
   /* Dark Mode Colors */
+  --clr-background-white: #1A1A1A;
   --clr-background-light: #1A1A1A;        
   --clr-text-dark: #EAEAEA;             
   --clr-entry-bg-light: #333333;          

@@ -20,6 +20,16 @@ const links = [
     submenu: [
       { title: "Breathing Exercise", path: "/breath" },
       { title: "Calendar", path: "/calendar" },
+      {
+        title: (
+          <>
+            Mood
+            <br />
+            Tracker
+          </>
+        ),
+        path: "/moodTracker",
+      },
     ],
   },
 ];
@@ -27,31 +37,54 @@ const links = [
 const NavLink = ({ item }) => {
   const pathName = usePathname();
   const [submenuOpen, setSubmenuOpen] = useState(false);
+  const submenuRef = useRef(null);
+
+  const handleClick = () => {
+    setSubmenuOpen((prev) => !prev);
+  };
+
+  // Close submenu if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        submenuRef.current &&
+        !submenuRef.current.contains(event.target)
+      ) {
+        setSubmenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (item.submenu) {
     return (
-      <div
-        className={styles.navItem}
-        onMouseLeave={() => setSubmenuOpen(false)}
-      >
+      <div className={styles.navItem} ref={submenuRef}>
         <button
           className={`${styles.link} ${styles.featuresButton}`}
-          onClick={() => setSubmenuOpen(!submenuOpen)}
+          onClick={handleClick}
         >
           {item.title}
         </button>
+
         {submenuOpen && (
           <div className={styles.submenu}>
             {item.submenu.map((subitem) => (
-              <Link href={subitem.path} key={subitem.title} passHref>
-                <button
-                  className={`${styles.sublink} ${
-                    pathName === subitem.path ? styles.active : ""
-                  }`}
-                >
-                  {subitem.title}
-                </button>
-              </Link>
+              <div className={styles.submenuContainer} key={subitem.title}>
+                <Link href={subitem.path} passHref>
+                  <button
+                    className={`${styles.sublink} ${
+                      pathName === subitem.path ? styles.active : ""
+                    }`}
+                    onClick={() => setSubmenuOpen(false)} // Close submenu on link click
+                  >
+                    {subitem.title}
+                  </button>
+                </Link>
+              </div>
             ))}
           </div>
         )}
@@ -78,7 +111,7 @@ const Navbar = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const menuRef = useRef();
   const user = auth.currentUser;
-  const pathName = usePathname(); // Added this line
+  const pathName = usePathname();
 
   // Close profile dropdown if clicked outside
   useEffect(() => {
