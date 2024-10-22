@@ -2,25 +2,25 @@
 .journal-grid {
   display: grid;
   display: flex;
-  grid-template-rows: 2fr 1fr; /* Two rows: journal and buttons */
+  grid-template-rows: 2fr 1fr; 
   grid-template-areas:
     "journal"
-    "buttons"; /* Defining the two areas: 'journal' and 'buttons' */
+    "buttons"; 
   align-items: center;
-  height: 60vh; /* Take full viewport height */
+  height: 60vh; 
   gap: 20px;
-  background-color: var(--background-color); /* Optional background color */
+  background-color: var(--background-color); 
 }
 
 /* Main container for the journal content */
 .journalWelcome-container {
-  grid-area: journal; /* Assign to the 'journal' area */
+  grid-area: journal; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   position: relative;
-  background-color: var(--white);
+  background-color: var(--brown);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -31,37 +31,41 @@
 
 /* Header for the journal */
 .journal-header {
-  font-size: 2rem; /* Reduced font size */
+  font-size: 2rem; 
   font-weight: bold;
-  color: #333;
+  color: var(--text);
   margin-bottom: 10px;
   text-align: center;
   margin-bottom: 5vh;
+  font-family: 'Comfortaa', sans-serif;
 }
 
 /* Content grid for text and image */
 .content-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  grid-template-columns: 1fr 1fr; 
   gap: 20px;
-  width: 100%; /* Take full width of the container */
+  width: 100%; 
   align-items: center;
   font-family: 'Comfortaa', sans-serif;
 }
 
 .content-grid h2{
+  color: var(--text);
   font-size: 20px;
   padding-bottom: 14px;
+  font-family: 'Comfortaa', sans-serif;
 }
 
 .content-grid p{
+  color: var(--text);
   font-size: 10px;
   font-family: 'Comfortaa', sans-serif;
 }
 
 /* Text container */
 .text-container {
-  font-size: 1rem; /* Reduced font size */
+  font-size: 1rem; 
   line-height: 1.5;
   color: #555;
   text-align: left;
@@ -77,16 +81,16 @@
 
 /* Styling for the image itself */
 .image-container img {
-  width: 100%; /* Make the image responsive to its container */
-  max-width: 400px; /* Set a maximum width for the image */
-  border-radius: 40px 0 40px 0; /* Add rounded corners */
+  width: 100%; 
+  max-width: 400px; 
+  border-radius: 40px 0 40px 0; 
   box-shadow: 0 4px 15px rgba(48, 47, 47, 0.1);
 }
 
 /* Button container with flex direction row */
 .button-container {
   display: flex;
-  flex-direction: row; /* Horizontal layout for the buttons */
+  flex-direction: row; 
   justify-content: flex-start; 
   align-items: center; 
   gap: 15px; 
@@ -102,23 +106,23 @@
 /* Styling for both the Past Entries and Plus Button */
 .button,
 .plus-icon {
-  width: 90px; /* Fixed width for both buttons */
-  height: 30px; /* Fixed height for both buttons */
+  width: 90px; 
+  height: 30px; 
   background-color: var(--coffeebrown);
   color: white;
-  font-size: 0.7rem; /* Smaller font size */
+  font-size: 0.7rem; 
   display: flex;
   justify-content: center;
   align-items: center;
   border: none;
-  border-radius: 5px; /* Less rounded corners for rectangular shape */
+  border-radius: 5px; 
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .button:hover,
 .plus-icon:hover {
-  background-color: #d2691e; /* Darker shade on hover */
+  background-color: #d2691e; 
 }
 
 /* Link styles */

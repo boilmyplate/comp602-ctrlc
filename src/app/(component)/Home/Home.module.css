@@ -1,0 +1,245 @@
+/* Main container */
+.container {
+  font-family: "Comfortaa", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.container button,
+.container select {
+  font-family: inherit;
+}
+
+/* Wrapper for content */
+.contentWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 20px;
+  gap: 20px;
+}
+
+/* Top row container for Happy Streak and Scoreboard */
+.rightContainer {
+  display: flex;
+  width: 30%;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.streakContainer,
+.scoreboardContainer {
+  margin: 0;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Happy Streak container */
+.streakContainer {
+  background-color: var(--container1);
+  color: var(--containertext);
+  display: flex;
+  text-align: center;
+  overflow: hidden;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scoreboard container */
+.scoreboardContainer {
+  background-color: var(--container2);
+  width: 100%; /* Adjusted width to fit without the map */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow: visible;
+  color: var(--container4text);
+}
+
+/* Flex container for charts */
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.topContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.topRightContainer {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  gap: 20px;
+}
+
+/* Container for Pie and Bar charts */
+.pieChartContainer,
+.barChartContainer {
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pieChartContainer {
+  background-color: var(--container3);
+  width: 60%;
+  color: white;
+}
+
+.pieChartHeading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.barChartContainer {
+  color: var(--containertext);
+  background-color: var(--container4);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.barChartContainer h4 {
+  padding-bottom: 10px;
+}
+
+.moodTrackerButton {
+  margin-bottom: 13px;
+  padding: 10px 20px;
+  background-color: var(--button2);
+  border-radius: 5px;
+  font-weight: bold;
+  color: var(--buttonText2);
+  cursor: pointer;
+}
+
+.moodTrackerButton:hover {
+  background-color: #397b7b;
+}
+
+.sortContainer {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  /* padding-top: 8px; */
+}
+
+.container select {
+  padding: 5px 10px;
+  background-color: var(--button2);
+  border-radius: 5px;
+  font-weight: bold;
+  color: var(--buttonText2);
+  cursor: pointer;
+}
+
+/* Scoreboard List and Items */
+.scoreList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.scoreItem {
+  display: flex;
+  justify-content: space-around;
+  padding: 5px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.scoreItem:last-child {
+  border-bottom: none;
+}
+
+.gameTitle {
+  font-weight: bold;
+  color: #4a90e2;
+  font-size: 1.1rem;
+}
+
+.scoreValue {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ff8042;
+}
+
+/* Game Leaderboard Container */
+.leaderboardContainer {
+  background-color: #e8f5e9;
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: var(--button4Text);
+}
+
+.leaderboardContainer select {
+  color: var(--logoColor);
+}
+
+/* Leaderboard title */
+.leaderboardContainer h4 {
+  font-size: 1.2rem;
+  color: #388e3c;
+  margin-bottom: 10px;
+}
+
+/* Leaderboard List and Items */
+.leaderboardList {
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboardItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #618262;
+}
+
+.leaderboardItem:last-child {
+  border-bottom: none;
+}
+
+.leaderboardRank,
+.leaderboardUser,
+.leaderboardScore {
+  font-size: 1rem;
+}
+
+.leaderboardRank {
+  color: #388e3c;
+}
+
+.leaderboardUser {
+  color: #4a4a4a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboardScore {
+  color: #ff8a65;
+  font-weight: bold;
+}

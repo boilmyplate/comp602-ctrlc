@@ -1,17 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./GlobalChat.module.css";
-import { db, auth } from "../Firebase/firebase";
-import { onSnapshot } from "firebase/firestore";
-import {
-    collection,
-    orderBy,
-    limit,
-    query,
-    serverTimestamp,
-    addDoc
-} from "firebase/firestore";
+import { auth } from "../Firebase/firebase";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,10 +10,25 @@ import {
     faXmark,
     faPaperPlane
 } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import { addChatMessage, fetchChats } from "../Firebase/firestore/globalChatDB";
 
 const GlobalChat = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const handleChatOpen = () => setIsChatOpen(!isChatOpen);
+    const [messages, setMessages] = useState([]);
+    const [lastFetchedTime, setLastFetchedTime] = useState(null); // track the time of the last fetch
+
+    // READ: fetch messages on mount
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const docs = await fetchChats();
+            setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
+            setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
+            console.log("FETCHED MESSAGES: ", docs);
+        };
+
+        fetchMessages();
+    }, []);
 
     return (
         <>
@@ -32,7 +38,7 @@ const GlobalChat = () => {
                     name="click"
                     className={styles.click}
                     id="click"
-                    onChange={handleChatOpen}
+                    onChange={() => setIsChatOpen(!isChatOpen)}
                 />
                 <label className={styles.btnlabel} htmlFor="click">
                     <i className={styles.fac}>
@@ -42,70 +48,56 @@ const GlobalChat = () => {
                         <FontAwesomeIcon icon={faXmark} />
                     </i>
                 </label>
-                <div className={styles["wrapper"]}>
-                    <section>
-                        <div className={styles["chatbox-header"]}>
-                            <h2 className={styles["chatbox-header-title"]}>
-                                Global Chat Room
-                            </h2>
-                        </div>
-                        {isChatOpen && <ChatRoom />}
-                    </section>
-                </div>
+                
+                {isChatOpen && (
+                    <div className={styles["wrapper"]}>
+                        <section>
+                            <div className={styles["chatbox-header"]}>
+                                <h2 className={styles["chatbox-header-title"]}>
+                                    Global Chat Room (๑&gt;◡&lt;๑)
+                                </h2>
+                            </div>
+                            <ChatRoom 
+                                messages={messages} 
+                                setMessages={setMessages}
+                                lastFetchedTime={lastFetchedTime} 
+                                setLastFetchedTime={setLastFetchedTime}
+                            />
+                        </section>
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
-function ChatRoom() {
+function ChatRoom({ messages, setMessages, lastFetchedTime, setLastFetchedTime }) {
     const dummy = useRef();
-    const [messages, setMessages] = useState([]);
     const [formValue, setFormValue] = useState("");
 
-    const messagesRef = collection(db, "chats");
-    const messagesQuery = query(
-        messagesRef,
-        orderBy("createdAt", "desc"),
-        limit(20)
-    );
-
-    // READ: useEffect to ensure read requests are sent only when the chat is open
-    useEffect(() => {
-        const unsubscribe = onSnapshot(messagesQuery, snapshot => {
-            console.log(
-                "Received new data from Firestore:",
-                snapshot.docs.length,
-                "documents."
-            );
-            setMessages(
-                snapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .reverse()
-            );
-        });
-
-        return () => {
-            console.log("Cleaning up Firestore listener...");
-            unsubscribe();
-        };
-    }, []);
+    // READ: fetch messages when called
+    const fetchMessages = useCallback(async () => {
+        const docs = await fetchChats();
+        setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
+        setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
+        console.log("FETCHED MESSAGES: ", docs);
+    }, [setMessages, setLastFetchedTime]);
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
         e.preventDefault();
 
-        const { uid, photoURL, displayName } = auth.currentUser;
+        // prevent sending a blank message
+        if (formValue.trim() === "") {
+            return;
+        }
 
-        await addDoc(messagesRef, {
-            text: formValue,
-            createdAt: serverTimestamp(),
-            uid,
-            displayName,
-            photoURL
-        });
+        await addChatMessage(formValue);
 
         setFormValue("");
         dummy.current.scrollIntoView({ behavior: "smooth" });
+
+        fetchMessages();
     };
 
     return (
@@ -115,6 +107,19 @@ function ChatRoom() {
                     messages.map(message => (
                         <ChatMessage key={message.id} message={message} />
                     ))}
+
+                <div className={styles["fetch-button-container"]}>
+                    {lastFetchedTime && (
+                        <>
+                            <p className={styles["last-fetched"]}>
+                                Last fetched at: {lastFetchedTime}
+                            </p>
+                            <p className={styles["fetch-info"]}>
+                                Click send button to fetch new messages
+                            </p>
+                        </>
+                    )}
+                </div>
 
                 <span ref={dummy}></span>
             </main>
@@ -127,11 +132,7 @@ function ChatRoom() {
                     placeholder="Message Global Chat"
                 />
 
-                <button
-                    className={styles["send-button"]}
-                    type="submit"
-                    disabled={!formValue}
-                >
+                <button className={styles["send-button"]} type="submit">
                     <FontAwesomeIcon icon={faPaperPlane} />
                 </button>
             </form>
@@ -151,9 +152,11 @@ function ChatMessage(props) {
                 ref={messageRef}
                 className={`${styles.message} ${styles[messageClass]}`}
             >
-                <img
-                    className={styles["user-photo"]}
+                <Image
+                    alt="User Photo"
                     src={photoURL || "/profile.png"}
+                    width={50}
+                    height={50}
                 />
                 <div className={styles["msg-container"]}>
                     <p className={styles.displayname}>{displayName}</p>

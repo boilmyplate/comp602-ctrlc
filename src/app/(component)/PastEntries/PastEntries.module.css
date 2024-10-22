@@ -1,0 +1,279 @@
+.background {
+  background-color: var(--clr-background-white); 
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: "Comfortaa", sans-serif;
+}
+
+.background button, .background input, .background textarea {
+  font-family: "Comfortaa", sans-serif;
+}
+
+.background button {
+  font-weight: 1000;
+}
+
+/* Main container for past entries */
+.past-entries-container {
+  background-color: var(--clr-background-light); /* Light mode container background */
+  box-shadow: 0 4px 10px var(--clr-shadow-light); 
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 800px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header styling */
+.past-entries-container h1 {
+  text-align: center;
+  color: var(--clr-text-dark); /* Dark text color */
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Container for displaying entries */
+.display-container {
+  margin-bottom: 20px;
+  max-height: 60vh;
+  overflow-y: auto; 
+  padding-right: 10px;
+}
+
+/* Individual entry item */
+.entry-item {
+  position: sticky;
+  background-color: var(--clr-entry-bg-light); /* Light entry background */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 0;
+}
+
+/* Hover effect for entry items */
+.entry-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px var(--clr-shadow-light);
+  cursor: pointer;
+}
+
+/* Entry date text */
+.entry-item p {
+  color: var(--clr-text-dark); 
+  margin: 5px 0;
+  font-size: 0.8rem;
+}
+
+/* Entry text area when editing */
+.entry-item textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: "Comfortaa", sans-serif;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.entry-item.viewing {
+  pointer-events: none;
+}
+
+/* Button styling */
+.button {
+  background-color: var(--clr-button-bg-light); /* Button background color */
+  color: var(--clr-button-text-light); /* White text */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Updated hover button background color */
+.button:hover {
+  background-color: #8b5708;
+}
+
+/* "Back to Journal" button */
+.past-entries-container a {
+  text-decoration: none;
+}
+
+.past-entries-container a .button {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Search bar styling */
+.searchInput {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px var(--clr-shadow-light);
+  font-size: 16px;
+}
+
+.search-container-withoutInput {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+/* Dropdown styling */
+.dropdown {
+  position: absolute;
+  z-index: 100;
+  max-height: 30vh;
+  overflow-y: auto;
+  background-color: var(--clr-entry-bg-light); 
+  color: var(--clr-text-dark); 
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--clr-shadow-light);
+  margin-top: 50px;
+  width: 50%;
+}
+
+.dropdownItem {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdownItem:hover {
+  background-color: #dd881a; 
+}
+
+/* Wrapper for search input and button */
+.search-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Search input field */
+.searchInput {
+  flex: 1;
+  border-radius: 8px 0 0 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px var(--clr-shadow-light);
+  font-size: 16px;
+  outline: none;
+}
+
+/* Search button */
+.searchButton {
+  background-color: var(--clr-button-bg-light); 
+  color: var(--clr-button-text-light);
+  padding: 13px 20px 12px 20px;
+  margin-bottom: 16px;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  box-shadow: 0 2px 4px var(--clr-shadow-light);
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+.searchButton:hover {
+  background-color: #8b5708;
+}
+
+.dateNTags {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+h3 .title {
+  font-size: 2rem;
+}
+
+.tags {
+  font-size: 0.8rem;
+  margin: 5px 0;
+}
+
+.viewing-entry-container {
+  background: var(--clr-entry-bg-light);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 20vh;
+  left: 25vw;
+  width: 100%;
+  max-width: 50vw;
+  height: 100%;
+  max-height: 60vh;
+  padding: 30px;
+  cursor: auto;
+  z-index: 100;
+}
+
+.viewing-entry-wrapper p {
+  color: var(--clr-text-dark);
+}
+
+.viewing-entry-container textarea {
+  width: 100%;
+  height: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: "Comfortaa", sans-serif;
+  font-size: 16px;
+  resize: none;
+  padding-bottom: 50px;
+}
+
+.viewing-entry-closebtn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--clr-text-dark);
+}
+
+.viewing-entry-wrapper {
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.viewing-entry-buttons {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+}
+
+/* Hide dropdown on small screens */
+@media (max-width: 768px) {
+  .past-entries-container {
+    padding: 20px;
+  }
+
+  .dropdown {
+    max-height: 100px;
+  }
+}

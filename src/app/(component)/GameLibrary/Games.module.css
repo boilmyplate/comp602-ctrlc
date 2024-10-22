@@ -1,0 +1,158 @@
+/* Game Library CSS */
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 32px;
+  grid-template-areas: 
+    "main main"
+    "left right";
+  margin: 0 auto;
+  width: 70vw;
+  grid-auto-flow: row;
+  margin-bottom: 20vh;
+}
+
+.mainContainer {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 400px;
+  position: relative;
+  border-radius: 15px;
+  background-image: url('/pongGame.jpg'); 
+  background-size: cover;
+  background-position: center;
+  padding: 25px; 
+  border: 5px solid black;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.mainContainer h1, 
+.mainContainer p {
+  margin: 0;
+  color: var(--white); 
+  background: rgba(0, 0, 0, 0.5); 
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 700px; 
+  word-wrap: break-word; 
+}
+
+.mainContainer h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+.mainContainer p {
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.8em;
+  line-height: 25px;
+}
+
+.leftContainer, .rightContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  position: relative; 
+  border-radius: 15px;
+  border: 5px solid black;
+}
+
+.leftContainer {
+  background-image: url('/ppGame.png'); 
+  background-size: cover;
+  background-position: center;
+}
+
+.rightContainer {
+  background-image: url('/lettergame.png'); 
+  background-size: cover;
+  background-position: center;
+}
+
+.gameCard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+.gameImage {
+  width: 100%;
+  height: 100%;
+}
+
+.hoverOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none; 
+  align-items: center;
+  justify-content: center;
+}
+
+.mainContainer:hover .hoverOverlay,
+.gameCard:hover .hoverOverlay {
+  display: flex; 
+}
+
+.playButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3em;
+  color: var(--buttonText3);            
+  text-decoration: none;
+  padding: 8px 16px;                       
+  border-radius: 12px;
+  background-color: var(--buttons); 
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  font-family: 'Comfortaa', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.playButton:hover {
+  background-color: var(--white);
+  color: var(--p);
+}
+
+.playButton:active {
+  background-color: var(--buttonActive);
+}
+
+@media (max-width: 968px) {
+  .gridContainer {
+    grid-template-columns: 1fr; 
+    grid-template-areas: 
+      "main"
+      "left"
+      "right";
+    width: 90vw; 
+  }
+
+  .mainContainer, .leftContainer, .rightContainer {
+    height: 200px;
+  }
+
+  .mainContainer h1 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .mainContainer p {
+    font-size: 0.9em;
+    line-height: 1.2em;
+  }
+
+  .playButton {
+    font-size: 0.9em;
+  }
+}
