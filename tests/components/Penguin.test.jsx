@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import PenguinGame from "@/app/(component)/Penguin/penguin";
+import PenguinGame from "@/app/(component)/Penguin/Penguin";
 
 vi.mock("@/app/(component)/Firebase/firebase", () => ({
     auth: { currentUser: { uid: "0123", displayName: "TestUser" } },

@@ -1,5 +1,5 @@
-import { render } from "@testing-library/react";
-import Chat from "@/app/(component)/Chatbot/chatbot";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import Chat from "@/app/(component)/Chatbot/Chatbot";
 
 // Mock Firebase if necessary
 vi.mock("@/app/(component)/Firebase/firebase", () => ({

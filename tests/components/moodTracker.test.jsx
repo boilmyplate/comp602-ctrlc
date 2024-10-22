@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import MoodTracker from "../../src/app/(component)/MoodTracker/moodTracker";
+import MoodTracker from "../../src/app/(component)/MoodTracker/MoodTracker";
 
 // Mock Firebase and Firestore
 vi.mock('@/app/(component)/Firebase/firebase', () => ({

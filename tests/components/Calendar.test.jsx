@@ -1,6 +1,6 @@
 import { it, expect, describe, vi } from "vitest"; 
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import Calendar from "@/app/(component)/Calendar/calendar";
+import Calendar from "@/app/(component)/Calendar/Calendar";
 import { deleteEvent, editEvent } from "@/app/(component)/Firebase/firestore/calendarDB"; 
 
 // Mock Firebase and Firestore functions

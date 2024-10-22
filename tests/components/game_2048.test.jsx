@@ -1,5 +1,5 @@
 import { render, fireEvent, screen, act } from "@testing-library/react"; 
-import Alphabet2048 from "../../src/app/(component)/Game_2048/game_2048";
+import Alphabet2048 from "../../src/app/(component)/Game_2048/Game_2048";
 
 // Mock Firebase and Next.js Router
 vi.mock("@/app/(component)/Firebase/firebase", () => ({
