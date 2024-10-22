@@ -55,7 +55,7 @@ const PastEntries = () => {
             )
         );
 
-        const success = updateJournalEntry(user, docid, change);
+        const success = await updateJournalEntry(user, docid, change);
         if (success) {
             alert("Successfully updated entry!");
         } else if (!success) {
