@@ -1,5 +1,6 @@
 .form {
   margin-bottom: 10px;
+  font-family: 'Comfortaa', sans-serif;
 }
 
 .eventForm {
@@ -16,6 +17,7 @@
 }
 
 .container {
+    font-family: 'Comfortaa', sans-serif;
   max-width: 100%;
   display: flex;
   flex-direction: column;
