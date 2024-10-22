@@ -28,7 +28,7 @@ const Signup = () => {
     const isValidEmail = email => {
         console.log("in isValid email" + email); // For debugging
         // regex for validating email format
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return emailRegex.test(email);
     };
 
@@ -42,6 +42,7 @@ const Signup = () => {
     const onSubmit = async e => {
         e.preventDefault(); // Prevents page refresh on form submission
         setErrorMessage(""); // Clear previous error messages
+        setIsRegistering(true);
         console.log(email);
 
         // Validate email format
@@ -49,14 +50,16 @@ const Signup = () => {
             setErrorMessage(
                 "Invalid email format. Please enter a valid email."
             );
+            setIsRegistering(false);
             return;
         }
 
         // Validate password strength
         if (!isValidPassword(password)) {
             setErrorMessage(
-                "password must be at least 6 characters long and contain both letters and numbers."
+                "Password must be at least 6 characters long and contain both letters and numbers."
             );
+            setIsRegistering(false);
             return;
         }
 
@@ -65,6 +68,7 @@ const Signup = () => {
             setErrorMessage(
                 "Username contains inappropriate words. Please try another."
             );
+            setIsRegistering(false);
             return;
         }
 
@@ -99,7 +103,7 @@ const Signup = () => {
                                 type="text"
                                 placeholder="username"
                                 value={username}
-                                onChange={e => setUsername(e.target.value)}
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
                         {/* Email Input Field */}
@@ -110,7 +114,7 @@ const Signup = () => {
                                 type="email"
                                 placeholder="name@example.com"
                                 value={email}
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         {/* Password Input Field */}
@@ -121,7 +125,7 @@ const Signup = () => {
                                 type="password"
                                 placeholder="password"
                                 value={password}
-                                onChange={e => setPassword(e.target.value)}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
                         {/* Submit Button */}
