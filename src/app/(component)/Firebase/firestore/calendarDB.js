@@ -8,13 +8,12 @@ import {
     deleteDoc,
     updateDoc
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 
 export const fetchEvents = async uid => {
-    const eventsRef = collection(db, "calendar"); // Reference to the user's events collection
-    const q = query(eventsRef, where("user", "==", uid)); // Create a query to filter events by user ID
+    const eventsRef = collection(db, "users", uid, "calendar"); // Reference to the user's events collection
     try {
-        const snapshot = await getDocs(q); // Fetch documents matching the query
+        const snapshot = await getDocs(eventsRef); // Fetch documents matching the query
         const events = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
@@ -27,10 +26,9 @@ export const fetchEvents = async uid => {
 };
 
 export const addEvent = async (uid, eventTitle, startTime, endTime) => {
-    const eventsRef = collection(db, "calendar"); // Reference to user's events collection
+    const eventsRef = collection(db, "users", uid, "calendar"); // Reference to user's events collection
     try {
         await addDoc(eventsRef, {
-            user: uid, // Include user ID in the event
             title: eventTitle,
             start: startTime,
             end: endTime
@@ -43,7 +41,8 @@ export const addEvent = async (uid, eventTitle, startTime, endTime) => {
 };
 
 export const deleteEvent = async eventId => {
-    const eventsRef = doc(db, "calendar", eventId);
+    const user = auth.currentUser.uid;
+    const eventsRef = doc(db, "users", user, "calendar", eventId);
     try {
         await deleteDoc(eventsRef);
         console.log("Successfully deleted event");
@@ -55,10 +54,11 @@ export const deleteEvent = async eventId => {
 
 
 export const editEvent = async (eventId, updateData) => {
-    const eventsRef = doc(db, "calendar", eventId);
+    const user = auth.currentUser.uid;
+    const eventsRef = doc(db, "users", user, "calendar", eventId);
     try {
         await updateDoc(eventsRef, updateData);
-    } catch {
-        return false
+    } catch (error) {
+        console.error("Error editing event: ", error);
     }
 }
