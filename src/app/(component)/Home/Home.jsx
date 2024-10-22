@@ -240,39 +240,124 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.contentWrapper}>
-        {/* Top Row: Happy Streak and Game Scoreboard */}
-        <div className={styles.topRowContainer}>
-          <div className={styles.streakContainer}>
-            <Image
-              src="/mood_images/fire.png"
-              alt="Fire Icon"
-              width={30}
-              height={30}
-              className={styles.fireIcon}
-            />
-            <h4>
-              Happy Streak:{" "}
-              {happyStreak === 0
-                ? "0 days happy streak"
-                : happyStreak === 1
-                ? "1 day happy streak"
-                : `${happyStreak} days happy streak`}
-            </h4>
-          </div>
+        <div className={styles.leftContainer}>
+          <div className={styles.topContainer}>
+          <div className={styles.pieChartContainer}>
+              <div className={styles.pieChartHeading}>
+                <h4>Mood Tracker</h4>
+                <div className={styles.sortContainer}>
+                  <label htmlFor="sortBy">Sort By: </label>
+                  <select
+                    id="sortBy"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className={styles.sortSelect}
+                  >
+                    <option value="mood">Mood Name</option>
+                    <option value="frequency">Mood Frequency</option>
+                  </select>
+                </div>
+              </div>
+              
 
-          <div className={styles.scoreboardContainer}>
-            <h4>Current Game High Score</h4>
-            <ul className={styles.scoreList}>
-              <li className={styles.scoreItem}>
-                <span className={styles.gameTitle}>Penguin Game:</span>
-                <span className={styles.scoreValue}>{penguinScore}</span>
-              </li>
-              <li className={styles.scoreItem}>
-                <span className={styles.gameTitle}>2048 Alphabet:</span>
-                <span className={styles.scoreValue}>{alphabet2048Score}</span>
-              </li>
-            </ul>
+              <ResponsiveContainer width="100%" height={150}>
+                <PieChart>
+                  <Pie
+                    data={
+                      sortedMoodData.length
+                        ? sortedMoodData
+                        : [{ name: "No data", value: 1 }]
+                    }
+                    cx="50%"
+                    cy="60%"
+                    outerRadius={60}
+                    dataKey="value"
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
+                  >
+                    {sortedMoodData.length ? (
+                      sortedMoodData.map((entry, index) => (
+                        <Cell
+                          key={index}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))
+                    ) : (
+                      <Cell fill="#cccccc" />
+                    )}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className={styles.topRightContainer}>
+              <div className={styles.scoreboardContainer}>
+                <h4>Current Game High Score</h4>
+                <ul className={styles.scoreList}>
+                  <li className={styles.scoreItem}>
+                    <span className={styles.gameTitle}>Penguin Game:</span>
+                    <span className={styles.scoreValue}>{penguinScore}</span>
+                  </li>
+                  <li className={styles.scoreItem}>
+                    <span className={styles.gameTitle}>2048 Alphabet:</span>
+                    <span className={styles.scoreValue}>{alphabet2048Score}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className={styles.streakContainer}>
+                  <Image
+                    src="/mood_images/fire.png"
+                    alt="Fire Icon"
+                    width={30}
+                    height={30}
+                    className={styles.fireIcon}
+                  />
+                  <h4>
+                    Happy Streak:{" "}
+                    {happyStreak === 0
+                      ? "0 days happy streak"
+                      : happyStreak === 1
+                      ? "1 day happy streak"
+                      : `${happyStreak} days happy streak`}
+                  </h4>
+                </div>
+            </div>
+
+            
+
+            
+            </div>
+
+          
+
+          <div className={styles.barChartContainer}>
+            <h4>Journal Entry</h4>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={
+                  categoryCounts.length
+                    ? categoryCounts
+                    : [{ category: "No data", count: 0 }]
+                }
+              >
+                <XAxis dataKey="category" />
+                <YAxis />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend />
+                <Bar dataKey="count" fill="#FEFAE0" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
+        </div>
+
+        {/* Top Row: Happy Streak and Game Scoreboard */}
+        <div className={styles.rightContainer}>
+          
+
+          
 
           <div className={styles.leaderboardContainer}>
             <h4>Game Leaderboard</h4>
@@ -301,80 +386,6 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-
-        <div className={styles.chartFlexContainer}>
-          <div className={styles.pieChartContainer}>
-            <h4>Mood Tracker</h4>
-            <div className={styles.sortContainer}>
-              <label htmlFor="sortBy">Sort By: </label>
-              <select
-                id="sortBy"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className={styles.sortSelect}
-              >
-                <option value="mood">Mood Name</option>
-                <option value="frequency">Mood Frequency</option>
-              </select>
-            </div>
-
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={
-                    sortedMoodData.length
-                      ? sortedMoodData
-                      : [{ name: "No data", value: 1 }]
-                  }
-                  cx="50%"
-                  cy="60%"
-                  outerRadius={90}
-                  dataKey="value"
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                >
-                  {sortedMoodData.length ? (
-                    sortedMoodData.map((entry, index) => (
-                      <Cell
-                        key={index}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))
-                  ) : (
-                    <Cell fill="#cccccc" />
-                  )}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-            <button
-              onClick={() => router.push("/moodTracker")}
-              className={styles.moodTrackerButton}
-            >
-              Go to Mood Tracker
-            </button>
-          </div>
-
-          <div className={styles.barChartContainer}>
-            <h4>Journal Entry</h4>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart
-                data={
-                  categoryCounts.length
-                    ? categoryCounts
-                    : [{ category: "No data", count: 0 }]
-                }
-              >
-                <XAxis dataKey="category" />
-                <YAxis />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend />
-                <Bar dataKey="count" fill="#FEFAE0" />
-              </BarChart>
-            </ResponsiveContainer>
           </div>
         </div>
       </div>

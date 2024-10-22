@@ -9,17 +9,17 @@
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  height: 100vh;
 }
 
-.container button, .container select {
+.container button,
+.container select {
   font-family: inherit;
 }
 
 /* Wrapper for content */
 .contentWrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
   max-width: 1400px;
   padding: 0 20px;
@@ -27,13 +27,11 @@
 }
 
 /* Top row container for Happy Streak and Scoreboard */
-.topRowContainer {
+.rightContainer {
   display: flex;
-  width: 100%;
-  gap: 20px; 
+  width: 30%;
+  gap: 20px;
   justify-content: space-between;
-  flex-grow: 1;
-  height: 100%;
 }
 
 .streakContainer,
@@ -48,23 +46,20 @@
 
 /* Happy Streak container */
 .streakContainer {
-  display: flex;
   background-color: var(--container1);
   color: var(--containertext);
-  width: 40%; /* Adjusted width to fit without the map */
   display: flex;
-  align-items: center;
-  justify-content: center;
   text-align: center;
-  flex-grow: 1; 
   overflow: hidden;
   gap: 8px;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Scoreboard container */
 .scoreboardContainer {
   background-color: var(--container2);
-  width: 55%; /* Adjusted width to fit without the map */
+  width: 100%; /* Adjusted width to fit without the map */
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -74,10 +69,25 @@
 }
 
 /* Flex container for charts */
-.chartFlexContainer {
+.leftContainer {
   display: flex;
+  flex-direction: column;
   gap: 20px;
   width: 100%;
+}
+
+.topContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.topRightContainer {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  gap: 20px;
 }
 
 /* Container for Pie and Bar charts */
@@ -94,6 +104,13 @@
   color: white;
 }
 
+.pieChartHeading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
 .barChartContainer {
   color: var(--containertext);
   background-color: var(--container4);
@@ -102,8 +119,8 @@
   flex-direction: column;
 }
 
-.barChartContainer h4{
-	padding-bottom: 10px;
+.barChartContainer h4 {
+  padding-bottom: 10px;
 }
 
 .moodTrackerButton {
@@ -120,20 +137,20 @@
   background-color: #397b7b;
 }
 
-.sortContainer{
-	display: flex;
-	gap: 4px;
-	align-items: center;
-	padding-top: 8px;
+.sortContainer {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  /* padding-top: 8px; */
 }
 
-.container select{
-	padding: 5px 10px;
-	background-color: var(--button2);
-	border-radius: 5px;
-	font-weight: bold;
-	color: var(--buttonText2);
-	cursor: pointer;
+.container select {
+  padding: 5px 10px;
+  background-color: var(--button2);
+  border-radius: 5px;
+  font-weight: bold;
+  color: var(--buttonText2);
+  cursor: pointer;
 }
 
 /* Scoreboard List and Items */
@@ -169,7 +186,7 @@
 /* Game Leaderboard Container */
 .leaderboardContainer {
   background-color: #e8f5e9;
-  width: 40%;
+  width: 100%;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -178,9 +195,8 @@
 }
 
 .leaderboardContainer select {
-	color: var(--logoColor);
-  }
-  
+  color: var(--logoColor);
+}
 
 /* Leaderboard title */
 .leaderboardContainer h4 {
