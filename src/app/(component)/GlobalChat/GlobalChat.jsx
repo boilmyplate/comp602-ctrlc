@@ -81,7 +81,7 @@ function ChatRoom({ messages, setMessages, lastFetchedTime, setLastFetchedTime }
         setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
         setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
         console.log("FETCHED MESSAGES: ", docs);
-    }, []);
+    }, [setMessages, setLastFetchedTime]);
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
