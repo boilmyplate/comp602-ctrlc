@@ -21,15 +21,8 @@ const Calendar = () => {
     const [endTime, setEndTime] = useState("");
     const [selectedDate, setSelectedDate] = useState(null);
     const [clickEvent, setClickEvent] = useState(null);
-    const eventsRef = useRef(null);
-    const [user] = auth.currentUser.uid;
-
-    useEffect(() => {
-        const fetchEvents = async () => {
-            eventsRef.current = await fetchEvents(user);
-            setEvents(eventsRef.current);
-        };
-    }, [user]);
+    const eventsRef = useRef();
+    const user = auth.currentUser?.uid;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,45 +30,46 @@ const Calendar = () => {
             setEvents(eventsRef.current);
         };
 
-        fetchData();
-    }, [user, eventTitle]);
+        if (user) {
+            fetchData();
+        }
+    }, [user, eventsRef]);
 
-    // adding an event
+    // Add new event
     const handleDateClick = arg => {
         setSelectedDate(arg.dateStr); // Set the selected date
         setStartTime(arg.dateStr); // Pre-fill start time with selected date
         setEndTime(arg.dateStr); // Pre-fill end time with selected date
     };
 
-    // handle the submit button
+    // Submit new event
     const handleSubmit = async e => {
         e.preventDefault(); // Prevent default form submission
         if (eventTitle && startTime && endTime && user) {
-            eventsRef.current = await addEvent(
-                user,
-                eventTitle,
-                startTime,
-                endTime
-            );
-            setEvents(eventsRef.current);
-
-            setEventTitle(""); // Clear the input fields
-            setStartTime(""); // Clear the start time
-            setEndTime(""); // Clear the end time
-            setSelectedDate(null); // Clear the selected date
+            await addEvent(user, eventTitle, startTime, endTime); // Add the event to Firestore
+    
+            // Fetch the updated events after adding the new one
+            eventsRef.current = await fetchEvents(user);
+            setEvents(eventsRef.current); // Update the state with the correct events array
+    
+            // Clear the form fields after submission
+            setEventTitle(""); 
+            setStartTime(""); 
+            setEndTime(""); 
+            setSelectedDate(null);
         }
     };
-
-    // handle the click event
+    
+    // Handle event click (for editing)
     const handleClickEvent = ({ event }) => {
         setClickEvent(event);
-        setEventTitle(event.title); // Set the title to the clicked event's title
-        setStartTime(event.start); // Set the start time to the clicked event's start time
-        setEndTime(event.end);
-        console.log("clicked");
+        setEventTitle(event.title); // Pre-fill form with the clicked event's title
+        setStartTime(event.startStr); // Pre-fill form with event's start time
+        setEndTime(event.endStr); // Pre-fill form with event's end time
+        console.log("clicked" + event);
     };
 
-    // handle the delete event
+    // Delete event
     const handleDeleteEvent = async () => {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this event?"
@@ -87,7 +81,7 @@ const Calendar = () => {
                     e => e.id !== clickEvent.id
                 ); // Remove from local state
                 setEvents(updatedEvents); // Update the state with the remaining events
-                setClickEvent(null); // Clear the clicked event after deletion
+                setClickEvent(""); // Clear the clicked event after deletion
     
             } catch (error) {
                 console.error("Error deleting event: ", error);
@@ -95,9 +89,10 @@ const Calendar = () => {
         }
     };
 
-    // handle the edit event
-    const handleEditEvent = async () => {
-        if (eventTitle && startTime && endTime && clickEvent) {
+    // Edit event
+    const handleEditEvent = async (e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+        if (eventTitle && startTime && endTime && clickEvent && clickEvent.id) {
             const updateData = {
                 title: eventTitle,
                 start: startTime,
@@ -105,34 +100,35 @@ const Calendar = () => {
             };
             try {
                 await editEvent(clickEvent.id, updateData);
-                const updatedEvents = events.map(e =>
-                    e.id === clickEvent.id
-                        ? {
-                              ...e,
-                              title: eventTitle,
-                              start: startTime,
-                              end: endTime
-                          }
-                        : e
+                setEvents(
+                    events.map(entry =>
+                        entry.id === clickEvent.id ? {
+                            ...entry,
+                            title: eventTitle,
+                            start: startTime,
+                            end: endTime
+                        } : entry // Update the entry's content with the new value
+                    )
                 );
-                setEvents(updatedEvents);
-                setClickEvent(null);
-                console.log("Event successfully edit");
+                setClickEvent(null); // Clear the clicked event
+                setEventTitle(""); // Clear the form fields
+                setStartTime(""); 
+                setEndTime("");
+                console.log("Event successfully edited");
             } catch (error) {
-                console.error("Error edit event: ", error);
+                console.error("Error editing event: ", error);
             }
         }
     };
 
 
-     // handle the cancel action
+     // Cancel editing
      const handleCancelEdit = () => {
         setClickEvent(null); // Clear the clicked event
         setEventTitle(""); // Clear the title
         setStartTime(""); // Clear the start time
         setEndTime(""); // Clear the end time
     };
-
 
     return (
         <div className={styles.container}>
