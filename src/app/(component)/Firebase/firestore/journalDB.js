@@ -63,7 +63,7 @@ export const deleteJournalEntry = async (uid, docid) => {
     try {
         await updateJournalCounts(uid, docid, -1);
         await deleteDoc(doc(db, "users", uid, "journal", docid)); // Delete the document from Firestore
-        console.log("Deleted entry: ", docid);
+        console.log("Succesfully deleted entry");
     } catch (error) {
         console.error("Error deleting entry:", error); // Log any errors that occur during deletion
     }
@@ -130,7 +130,7 @@ const updateJournalCounts = async (uid, docid, change) => {
 export const updateJournalEntry = async (uid, docid, change) => {
     try {
         const docRef = doc(db, "users", uid, "journal", docid);
-        await updateDoc(docRef, { entry: change})
+        await updateDoc(docRef, { entry: change })
         return true;
     } catch (error) {
         console.error("Error updating journal entry: ", error);

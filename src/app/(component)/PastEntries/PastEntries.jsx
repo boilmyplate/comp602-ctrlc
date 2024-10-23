@@ -1,21 +1,8 @@
-"use client"; // Enable client-side rendering for this component
+"use client";
 
-// Import the Firestore configuration from the firebaseConfig file.
-import { auth, db } from "../Firebase/firebase";
-// Import CSS styles specific to the PastEntries component.
+import { auth } from "../Firebase/firebase";
 import styles from "@/app/(component)/PastEntries/PastEntries.module.css";
-// Import Firestore functions to interact with the database.
-import {
-    collection,
-    getDocs,
-    doc,
-    updateDoc,
-    deleteDoc,
-    query,
-    where
-} from "firebase/firestore";
-// Import React and hooks for state management and side effects.
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
     deleteJournalEntry,
@@ -26,20 +13,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const PastEntries = () => {
-    const [entries, setEntries] = useState([]); // State to hold the list of journal entries.
-    const [filteredEntries, setFilteredEntries] = useState([]); // State to hold filtered search results
+    const [entries, setEntries] = useState([]); // State to hold filtered search results
     const [value, setValue] = useState(""); // State for input value
     const [showDropdown, setShowDropdown] = useState(false); // State to track dropdown visibility
     const [isViewing, setIsViewing] = useState(false);
-    const [toChange, setToChange] = useState(null);
+    const [change, setChange] = useState("");
+    const toChangeRef = useRef(null);
+    const entryRef = useRef(null);
     const user = auth.currentUser?.uid;
 
     // Fetch entries from Firestore when the component mounts
     useEffect(() => {
         const fetchData = async () => {
-            const fetchedJournalEntries = await fetchJournalEntries(user);
-            setEntries(fetchedJournalEntries); // Update the state with the list of entries
-            setFilteredEntries(fetchedJournalEntries); // Initially, display all entries
+            entryRef.current = await fetchJournalEntries(user);
+            setEntries(entryRef.current); // Update the state with the list of entries
         };
 
         fetchData(); // Call the fetch function when the component loads
@@ -47,28 +34,36 @@ const PastEntries = () => {
 
     // Update entry content in state and Firestore
     const updateEntry = async (user, docid, change) => {
-        // Update the entry's content in the state
-        setFilteredEntries(
-            filteredEntries.map(
-                entry =>
-                    entry.id === docid ? { ...entry, entry: change } : entry // Update the entry's content with the new value
-            )
+        const fallback = entryRef.current;
+        entryRef.current = entryRef.current.map(e =>
+            e.id === docid ? { ...e, entry: change } : e
         );
 
-        const success = await updateJournalEntry(user, docid, change);
-        if (success) {
-            alert("Successfully updated entry!");
-        } else if (!success) {
-            alert("Error updating entry!")
+        try {
+            setEntries([...entryRef.current]);
+            const success = await updateJournalEntry(user, docid, change);
+            if (success) alert("Successfully updated entry!");
+        } catch (error) {
+            console.error("Error updating entry: ", error);
+            alert("Error updating entry!");
+            setEntries(fallback);
+            entryRef.current = fallback;
         }
     };
 
-    // Delete an entry from state and Firestore
+    // delete entry from state and firestore
     const deleteEntry = async (uid, docid) => {
         if (!window.confirm("Are you sure you want to delete this entry?"))
-            return; // Confirm the deletion with the user
-        setFilteredEntries(filteredEntries.filter(entry => entry.id !== docid)); // Filter out the deleted entry
-        await deleteJournalEntry(uid, docid); // Delete the document from Firestore
+            return;
+
+        entryRef.current = entryRef.current.filter(e => e.id !== docid);
+
+        try {
+            await deleteJournalEntry(uid, docid);
+            setEntries(entryRef.current);
+        } catch (error) {
+            console.error("Error deleting entry", error);
+        }
     };
 
     // Handle the search input changes and filter dynamically
@@ -77,15 +72,15 @@ const PastEntries = () => {
         setValue(searchTerm); // Set the input value based on user typing
 
         if (searchTerm.trim() !== "") {
-            const filtered = entries.filter(
+            const filtered = entryRef.current.filter(
                 entry =>
                     entry.title &&
                     entry.title.toLowerCase().includes(searchTerm.toLowerCase())
             );
-            setFilteredEntries(filtered); // Update filtered entries based on user input
+            setEntries(filtered); // Update filtered entries based on user input
             setShowDropdown(true); // Show the dropdown with suggestions
         } else {
-            setFilteredEntries(entries); // Show all entries if input is cleared
+            setEntries(entryRef.current); // Show all entries if input is cleared
             setShowDropdown(false); // Hide the dropdown when input is cleared
         }
     };
@@ -93,7 +88,7 @@ const PastEntries = () => {
     // Handle selection of a dropdown option
     const onSelectSuggestion = suggestion => {
         setValue(suggestion.entry); // Set input value to selected suggestion
-        setFilteredEntries([suggestion]); // Filter to the selected suggestion
+        setEntries([suggestion]); // Filter to the selected suggestion
         setShowDropdown(false); // Hide the dropdown after selection
     };
 
@@ -121,6 +116,12 @@ const PastEntries = () => {
         }
     };
 
+    const handleClick = e => {
+        toChangeRef.current = e;
+        setChange(e.entry);
+        setIsViewing(true);
+    };
+
     return (
         <div className={styles.background}>
             <div className={styles["past-entries-container"]}>
@@ -146,9 +147,9 @@ const PastEntries = () => {
                             </button>
                         </div>
                         {/* Dropdown for search suggestions */}
-                        {showDropdown && filteredEntries.length > 0 && (
+                        {showDropdown && entries.length > 0 && (
                             <div className={styles.dropdown}>
-                                {filteredEntries.map(entry => (
+                                {entries.map(entry => (
                                     <div
                                         key={entry.id}
                                         onClick={() =>
@@ -164,9 +165,9 @@ const PastEntries = () => {
                     </div>
 
                     {/* Displaying the list of filtered entries */}
-                    {filteredEntries.map(entry => (
+                    {entries.map(entry => (
                         <>
-                            {isViewing && toChange && (
+                            {isViewing && toChangeRef.current && (
                                 <div
                                     className={
                                         styles["viewing-entry-container"]
@@ -176,7 +177,7 @@ const PastEntries = () => {
                                         className={
                                             styles["viewing-entry-closebtn"]
                                         }
-                                        onClick={() => {setIsViewing(false), setToChange(null), console.log("EDITING ENTRY SET TO: ", toChange)}}
+                                        onClick={() => setIsViewing(false)}
                                     >
                                         <FontAwesomeIcon icon={faXmark} />
                                     </i>
@@ -185,19 +186,16 @@ const PastEntries = () => {
                                             styles["viewing-entry-wrapper"]
                                         }
                                     >
-                                        <h2>{toChange.title}</h2>
+                                        <h2>{entry.title}</h2>
                                         <p>
-                                            Date: {toChange.day} {toChange.month},{" "}
-                                            {toChange.year}
+                                            Date: {entry.day} {entry.month},{" "}
+                                            {entry.year}
                                         </p>
                                         <textarea
                                             name="entry content"
-                                            value={toChange.entry}
-                                            onChange={(e) =>
-                                                setToChange({
-                                                    ...toChange,
-                                                    entry: e.target.value
-                                                })
+                                            value={change}
+                                            onChange={e =>
+                                                setChange(e.target.value)
                                             }
                                         />
                                     </div>
@@ -206,7 +204,18 @@ const PastEntries = () => {
                                             styles["viewing-entry-buttons"]
                                         }
                                     >
-                                        <button className={styles.button} onClick={() => updateEntry(user, toChange.id, toChange.entry)}>Save</button>
+                                        <button
+                                            className={styles.button}
+                                            onClick={() =>
+                                                updateEntry(
+                                                    user,
+                                                    entry.id,
+                                                    change
+                                                )
+                                            }
+                                        >
+                                            Save
+                                        </button>
                                         <button
                                             className={styles.button}
                                             onClick={() =>
@@ -239,14 +248,15 @@ const PastEntries = () => {
                                 className={`${styles["entry-item"]} ${
                                     isViewing ? styles.viewing : ""
                                 }`}
-                                onClick={() => {setIsViewing(true), setToChange(entry), console.log("EDITING ENTRY: ", entry)}}
+                                onClick={() => handleClick(entry)}
                             >
                                 {/* Display Title */}
                                 <h3>{entry.title || "Untitled Entry"}</h3>
                                 <div className={styles.dateNTags}>
                                     {/* Display Date */}
                                     <p>
-                                        Date: {entry.day} {entry.month}, {entry.year}
+                                        Date: {entry.day} {entry.month},{" "}
+                                        {entry.year}
                                     </p>
                                     {/* Display Tags */}
                                     <div className={styles.tags}>
@@ -265,15 +275,17 @@ const PastEntries = () => {
                                 <div className={styles["button-group"]}>
                                     <button
                                         className={styles.button}
-                                        onClick={() =>
-                                            deleteEntry(user, entry.id)
-                                        }
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            deleteEntry(user, entry.id);
+                                        }}
                                     >
                                         Delete
                                     </button>
                                     <button
                                         className={styles.button}
-                                        onClick={() =>
+                                        onClick={e => {
+                                            e.stopPropagation();
                                             shareEntry(
                                                 `${entry.day} ${entry.month}, ${entry.year}`,
                                                 entry.title || "Untitled Entry",
@@ -281,8 +293,8 @@ const PastEntries = () => {
                                                     ? entry.tags.join(", ")
                                                     : "No Tags",
                                                 entry.entry
-                                            )
-                                        } // Share entry logic
+                                            );
+                                        }} // Share entry logic
                                     >
                                         Share
                                     </button>

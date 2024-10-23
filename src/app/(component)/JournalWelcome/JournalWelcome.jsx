@@ -53,8 +53,8 @@ const JournalWelcome = () => {
                         <Image
                             src="/journal.jpg"
                             alt="Journal Image"
-                            width={400}
-                            height={300}
+                            width={500}
+                            height={500}
                             priority
                         />
                     </div>

@@ -51,20 +51,20 @@ const NewEntry = () => {
             return; // Exit the function if the date is invalid
         }
 
-        // Call function to save entry to Firestore
-        const success = await addJournalEntry(
-            user,
-            selectedCategory,
-            title,
-            day,
-            month,
-            year,
-            entry
-        );
-
-        if (success) {
-            alert("Entry has been saved!"); // Notify user of successful save
-        } else {
+        try {
+            // Call function to save entry to Firestore
+            const success = await addJournalEntry(
+                user,
+                selectedCategory,
+                title,
+                day,
+                month,
+                year,
+                entry
+            );
+            if (success) alert("Entry has been saved!"); // Notify user of successful save
+        } catch (error) {
+            console.error("Error adding journal entry: ", error);
             alert("Failed to save entry. Please try again."); // Notify user of a failure
         }
     };

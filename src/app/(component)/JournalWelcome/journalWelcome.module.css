@@ -2,19 +2,19 @@
 .journal-grid {
   display: grid;
   display: flex;
-  grid-template-rows: 2fr 1fr; 
+  grid-template-rows: 2fr 1fr;
   grid-template-areas:
     "journal"
-    "buttons"; 
+    "buttons";
   align-items: center;
-  height: 60vh; 
+  height: 60vh;
   gap: 20px;
-  background-color: var(--background-color); 
+  background-color: var(--background-color);
 }
 
 /* Main container for the journal content */
 .journalWelcome-container {
-  grid-area: journal; 
+  grid-area: journal;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -31,41 +31,41 @@
 
 /* Header for the journal */
 .journal-header {
-  font-size: 2rem; 
+  font-size: 2rem;
   font-weight: bold;
   color: var(--text);
   margin-bottom: 10px;
   text-align: center;
   margin-bottom: 5vh;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
 }
 
 /* Content grid for text and image */
 .content-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
-  width: 100%; 
+  width: 100%;
   align-items: center;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
 }
 
-.content-grid h2{
+.content-grid h2 {
   color: var(--text);
   font-size: 20px;
   padding-bottom: 14px;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
 }
 
-.content-grid p{
+.content-grid p {
   color: var(--text);
   font-size: 10px;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: "Comfortaa", sans-serif;
 }
 
 /* Text container */
 .text-container {
-  font-size: 1rem; 
+  font-size: 1rem;
   line-height: 1.5;
   color: #555;
   text-align: left;
@@ -81,22 +81,22 @@
 
 /* Styling for the image itself */
 .image-container img {
-  width: 100%; 
-  max-width: 400px; 
-  border-radius: 40px 0 40px 0; 
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 40px 0 40px 0;
   box-shadow: 0 4px 15px rgba(48, 47, 47, 0.1);
 }
 
 /* Button container with flex direction row */
 .button-container {
   display: flex;
-  flex-direction: row; 
-  justify-content: flex-start; 
-  align-items: center; 
-  gap: 15px; 
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
   margin-top: 15px;
 }
-
 
 /* New Entry Button Container */
 .new-entry-container {
@@ -106,23 +106,23 @@
 /* Styling for both the Past Entries and Plus Button */
 .button,
 .plus-icon {
-  width: 90px; 
-  height: 30px; 
+  width: 90px;
+  height: 30px;
   background-color: var(--coffeebrown);
   color: white;
-  font-size: 0.7rem; 
+  font-size: 0.7rem;
   display: flex;
   justify-content: center;
   align-items: center;
   border: none;
-  border-radius: 5px; 
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .button:hover,
 .plus-icon:hover {
-  background-color: #d2691e; 
+  background-color: #d2691e;
 }
 
 /* Link styles */
