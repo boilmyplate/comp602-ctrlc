@@ -81,10 +81,6 @@ const NewEntry = () => {
         );
     };
 
-    const imageStyle = {
-        position: ""
-    };
-
     return (
         <>
             <NavBar /> {/* Include the NavBar */}
@@ -133,8 +129,9 @@ const NewEntry = () => {
                                                 <Image
                                                     src={category.imgSrc}
                                                     alt={category.label}
-                                                    fill={true}
-                                                    style={imageStyle}
+                                                    height={1000}
+                                                    width={1000}
+                                                    priority
                                                 />
                                             )}
                                             <div className="content">

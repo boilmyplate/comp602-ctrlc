@@ -1,5 +1,5 @@
 .wrapper {
-  opacity: 0;
+  /* opacity: 0; */
   position: fixed;
   left: 30px;
   bottom: 50%;
@@ -11,13 +11,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: rgb(255, 255, 255);
+  background-color: var(--chatroomBackground);
   width: 350px;
 }
 
 .chatbox-header {
   height: 56px;
-  background: var(--container1);
+  background: var(--chatroomColor);
   color: white;
   border-radius: 8px 8px 0 0;
   align-items: center;
@@ -46,7 +46,7 @@
 }
 
 .wrapper main::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: var(--chatroomBackground);
 }
 
 .wrapper main::-webkit-scrollbar-thumb {
@@ -71,26 +71,34 @@
   border: 0;
   border-radius: 0;
   border-bottom-left-radius: 10px;
-  border-top: 1px solid #eee;
   box-shadow: none;
   box-sizing: border-box;
   outline: none;
   outline: none;
   padding: 16px 52px 16px 10px;
+  background-color: var(--chatroomColor);
+  color: var(--chatroomColor3);
 }
+
+.form input::placeholder {
+  color: var(--chatroomColor3); 
+  opacity: 1; 
+}
+
 
 .form button {
   border-bottom-right-radius: 7px;
   width: 20%;
-  background-color: #4b3621;
+  background-color: var(--chatroomColor);
   border: none;
   color: white;
-  padding: 17px;
+  padding: 16px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
   font-size: 1rem;
+  border-left: 1px solid var(--chatroomColor2);
 }
 
 .form button:disabled {
@@ -115,7 +123,7 @@
   padding: 10px 20px;
   border-radius: 25px;
   position: relative;
-  color: black;
+  color: var(--chatroomText);
   text-align: center;
 }
 
@@ -130,12 +138,12 @@
 
 .sent .chat-messages {
   color: white;
-  background: #0b93f6;
+  background: var(--sent);
   align-self: flex-end;
 }
 
 .received .chat-messages {
-  background: #27ba4e;
+  background: var(--receive);
   color: rgb(255, 255, 255);
 }
 
@@ -203,7 +211,7 @@
 }
 
 .click:checked ~ .wrapper {
-  opacity: 1;
+  /* opacity: 1; */
   bottom: 85px;
   pointer-events: auto;
   border-radius: 10px;
@@ -222,6 +230,6 @@
   margin: 0;
   padding: 0;
   font-size: 10px;
-  color: hsla(0, 0%, 50%, 0.8);
+  color: var(--chatroomBtn);
   font-style: italic;
 }

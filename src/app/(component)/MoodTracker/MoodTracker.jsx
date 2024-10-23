@@ -123,8 +123,8 @@ const MoodTracker = () => {
                                 src={mood.img}
                                 alt={mood.name}
                                 className={styles.moodImage}
-                                width={512} // Adjust the width as needed
-                                height={512} // Adjust the height as needed
+                                width={100} // Adjust the width as needed
+                                height={100} // Adjust the height as needed
                             />
                             <p>{mood.name}</p>
                         </div>

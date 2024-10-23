@@ -183,8 +183,8 @@ export default function PenguinGame() {
           const isFish = fish.x === x && fish.y === y;
           return (
             <div key={i} className={styles.cell}>
-              {isPenguin && <Image src={penguinImage.src} alt="Penguin" className={styles.penguin} fill={true} style={imageStyle} />}
-              {isFish && <Image src={fishImage.src} alt="Fish" className={styles.fish} fill={true} style={imageStyle} />}
+              {isPenguin && <Image src={penguinImage.src} alt="Penguin" className={styles.penguin} width={50} height={50} />}
+              {isFish && <Image src={fishImage.src} alt="Fish" className={styles.fish} width={50} height={50} />}
             </div>
           );
         })}

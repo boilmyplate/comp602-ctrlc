@@ -14,6 +14,22 @@ import Image from "next/image";
 import { addChatMessage, fetchChats } from "../Firebase/firestore/globalChatDB";
 
 const GlobalChat = () => {
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [lastFetchedTime, setLastFetchedTime] = useState(null); // track the time of the last fetch
+
+    // READ: fetch messages on mount
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const docs = await fetchChats();
+            setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
+            setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
+            console.log("FETCHED MESSAGES: ", docs);
+        };
+
+        fetchMessages();
+    }, []);
+
     return (
         <>
             <div className="background">
@@ -22,6 +38,7 @@ const GlobalChat = () => {
                     name="click"
                     className={styles.click}
                     id="click"
+                    onChange={() => setIsChatOpen(!isChatOpen)}
                 />
                 <label className={styles.btnlabel} htmlFor="click">
                     <i className={styles.fac}>
@@ -31,34 +48,40 @@ const GlobalChat = () => {
                         <FontAwesomeIcon icon={faXmark} />
                     </i>
                 </label>
-                <div className={styles["wrapper"]}>
-                    <section>
-                        <div className={styles["chatbox-header"]}>
-                            <h2 className={styles["chatbox-header-title"]}>
-                                Global Chat Room (๑&gt;◡&lt;๑)
-                            </h2>
-                        </div>
-                        <ChatRoom />
-                    </section>
-                </div>
+                
+                {isChatOpen && (
+                    <div className={styles["wrapper"]}>
+                        <section>
+                            <div className={styles["chatbox-header"]}>
+                                <h2 className={styles["chatbox-header-title"]}>
+                                    Global Chat Room (๑&gt;◡&lt;๑)
+                                </h2>
+                            </div>
+                            <ChatRoom 
+                                messages={messages} 
+                                setMessages={setMessages}
+                                lastFetchedTime={lastFetchedTime} 
+                                setLastFetchedTime={setLastFetchedTime}
+                            />
+                        </section>
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
-function ChatRoom() {
+function ChatRoom({ messages, setMessages, lastFetchedTime, setLastFetchedTime }) {
     const dummy = useRef();
-    const [messages, setMessages] = useState([]);
     const [formValue, setFormValue] = useState("");
-    const [lastFetchedTime, setLastFetchedTime] = useState(null); // track the time of the last fetch
 
-    // READ: fetch messages
+    // READ: fetch messages when called
     const fetchMessages = useCallback(async () => {
         const docs = await fetchChats();
         setMessages(docs.map(doc => ({ id: doc.id, ...doc.data() })).reverse());
         setLastFetchedTime(new Date().toLocaleTimeString()); // update the last fetch time
         console.log("FETCHED MESSAGES: ", docs);
-    }, []);
+    }, [setMessages, setLastFetchedTime]);
 
     // WRITE: sends message to firestore
     const sendMessage = async e => {
@@ -76,11 +99,6 @@ function ChatRoom() {
 
         fetchMessages();
     };
-
-    // READ: fetch messages when the chat room opens
-    useEffect(() => {
-        fetchMessages();
-    }, [fetchMessages]);
 
     return (
         <>

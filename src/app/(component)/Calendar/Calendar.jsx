@@ -30,9 +30,7 @@ const Calendar = () => {
             setEvents(eventsRef.current);
         };
 
-        if (user) {
-            fetchData();
-        }
+        fetchData();
     }, [user, eventsRef]);
 
     // Add new event
@@ -47,11 +45,11 @@ const Calendar = () => {
         e.preventDefault(); // Prevent default form submission
         if (eventTitle && startTime && endTime && user) {
             await addEvent(user, eventTitle, startTime, endTime); // Add the event to Firestore
-    
+
             // Fetch the updated events after adding the new one
             eventsRef.current = await fetchEvents(user);
             setEvents(eventsRef.current); // Update the state with the correct events array
-    
+
             // Clear the form fields after submission
             setEventTitle(""); 
             setStartTime(""); 
@@ -59,7 +57,7 @@ const Calendar = () => {
             setSelectedDate(null);
         }
     };
-    
+
     // Handle event click (for editing)
     const handleClickEvent = ({ event }) => {
         setClickEvent(event);

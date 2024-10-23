@@ -55,7 +55,7 @@ const JournalWelcome = () => {
                             alt="Journal Image"
                             width={400}
                             height={300}
-                            priority={true}
+                            priority
                         />
                     </div>
                 </div>
