@@ -2,8 +2,6 @@ import {
     addDoc,
     collection,
     getDocs,
-    query,
-    where,
     doc,
     deleteDoc,
     updateDoc
@@ -28,12 +26,19 @@ export const fetchEvents = async uid => {
 export const addEvent = async (uid, eventTitle, startTime, endTime) => {
     const eventsRef = collection(db, "users", uid, "calendar"); // Reference to user's events collection
     try {
-        await addDoc(eventsRef, {
+        const event = await addDoc(eventsRef, {
             title: eventTitle,
             start: startTime,
             end: endTime
         }); // Add new event to Firestore
         console.log("Successfully added event");
+        // Return an object with the event data and document ID
+        return {
+            id: event.id, // Document ID
+            title: eventTitle,
+            start: startTime,
+            end: endTime
+        };
     } catch (e) {
         console.error("Error adding event: ", e);
         return false; // Return false in case of error
@@ -48,7 +53,6 @@ export const deleteEvent = async eventId => {
         console.log("Successfully deleted event");
     } catch (e) {
         console.error("Error deleting event: ", e);
-        return false; // Return false in case of error
     }
 };
 
@@ -58,6 +62,7 @@ export const editEvent = async (eventId, updateData) => {
     const eventsRef = doc(db, "users", user, "calendar", eventId);
     try {
         await updateDoc(eventsRef, updateData);
+        console.log("Success updating document");
     } catch (error) {
         console.error("Error editing event: ", error);
     }

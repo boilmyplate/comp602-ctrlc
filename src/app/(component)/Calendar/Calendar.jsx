@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import styles from "@/app/(component)/Calendar/Calendar.module.css";
 import FullCalendar from "@fullcalendar/react";
@@ -31,39 +32,51 @@ const Calendar = () => {
         };
 
         fetchData();
+        console.log("COMPONENT RENDERED");
     }, [user, eventsRef]);
+
+    const formatDate = dateStr => {
+        const date = new Date(dateStr);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
 
     // Add new event
     const handleDateClick = arg => {
-        setSelectedDate(arg.dateStr); // Set the selected date
-        setStartTime(arg.dateStr); // Pre-fill start time with selected date
-        setEndTime(arg.dateStr); // Pre-fill end time with selected date
+        const date = formatDate(arg.dateStr); // Format the selected date
+        setSelectedDate(date); // Set the selected date
+        setStartTime(date); // Pre-fill start time with formatted date
+        setEndTime(date); // Pre-fill end time with formatted date
     };
 
     const handleSubmit = async e => {
-        e.preventDefault(); // Prevent default form submission
-        if (eventTitle && startTime && endTime && user) {
-            await addEvent(user, eventTitle, startTime, endTime); // Add the event to Firestore
+        e.preventDefault();
 
-            // Fetch the updated events after adding the new one
-            eventsRef.current = await fetchEvents(user);
-            setEvents(eventsRef.current); // Update the state with the correct events array
+        if (eventTitle && startTime && endTime) {
+            const added = await addEvent(user, eventTitle, startTime, endTime); // Add the event to Firestore
 
-            // Clear the form fields after submission
-            setEventTitle(""); 
-            setStartTime(""); 
-            setEndTime(""); 
-            setSelectedDate(null);
+            eventsRef.current.push(added);
+            setEvents([...eventsRef.current]);
+            console.log("Updating Events: ", eventsRef.current);
+
+            resetForm();
         }
     };
 
     // Handle event click (for editing)
     const handleClickEvent = ({ event }) => {
+        const date = formatDate(event.dateStr);
         setClickEvent(event);
         setEventTitle(event.title); // Pre-fill form with the clicked event's title
-        setStartTime(event.startStr); // Pre-fill form with event's start time
-        setEndTime(event.endStr); // Pre-fill form with event's end time
-        console.log("clicked" + event);
+        setSelectedDate(date);
+        setStartTime(date); // Pre-fill form with event's start time
+        setEndTime(date); // Pre-fill form with event's end time
+        // console.log("clicked", event);
     };
 
     // Delete event
@@ -71,15 +84,15 @@ const Calendar = () => {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this event?"
         );
+
         if (confirmDelete && clickEvent) {
             try {
                 await deleteEvent(clickEvent.id); // Delete the event from Firestore
-                const updatedEvents = events.filter(
+                eventsRef.current = eventsRef.current.filter(
                     e => e.id !== clickEvent.id
-                ); // Remove from local state
-                setEvents(updatedEvents); // Update the state with the remaining events
-                setClickEvent(""); // Clear the clicked event after deletion
-    
+                );
+                setEvents(eventsRef.current); // Update the state with the remaining events
+                setClickEvent(null); // Clear the clicked event after deletion
             } catch (error) {
                 console.error("Error deleting event: ", error);
             }
@@ -87,45 +100,39 @@ const Calendar = () => {
     };
 
     // Edit event
-    const handleEditEvent = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-        if (eventTitle && startTime && endTime && clickEvent && clickEvent.id) {
-            const updateData = {
-                title: eventTitle,
-                start: startTime,
-                end: endTime
-            };
-            try {
-                await editEvent(clickEvent.id, updateData);
-                setEvents(
-                    events.map(entry =>
-                        entry.id === clickEvent.id ? {
-                            ...entry,
-                            title: eventTitle,
-                            start: startTime,
-                            end: endTime
-                        } : entry // Update the entry's content with the new value
-                    )
-                );
-                setClickEvent(null); // Clear the clicked event
-                setEventTitle(""); // Clear the form fields
-                setStartTime(""); 
-                setEndTime("");
-                console.log("Event successfully edited");
-            } catch (error) {
-                console.error("Error editing event: ", error);
-            }
+    const handleEditEvent = async e => {
+        e.preventDefault();
+
+        const updateData = {
+            title: eventTitle,
+            start: startTime,
+            end: endTime
+        };
+
+        try {
+            await editEvent(clickEvent.id, updateData);
+            eventsRef.current = eventsRef.current.map(e =>
+                e.id === clickEvent.id
+                    ? {
+                          ...e,
+                          ...updateData
+                      }
+                    : e
+            );
+            setEvents([...eventsRef.current]);
+            resetForm();
+            console.log("Event successfully edited");
+        } catch (error) {
+            console.error("Error editing event: ", error.message);
         }
     };
 
-
-     // Cancel editing
-     const handleCancelEdit = () => {
-        setClickEvent(null); // Clear the clicked event
-        setEventTitle(""); // Clear the title
-        setStartTime(""); // Clear the start time
-        setEndTime(""); // Clear the end time
-    };
+    function resetForm() {
+        setClickEvent(null);
+        setEventTitle("");
+        setStartTime("");
+        setEndTime("");
+    }
 
     return (
         <div className={styles.container}>
@@ -163,7 +170,11 @@ const Calendar = () => {
 
                 <div className={styles["calendarContainer"]}>
                     <FullCalendar
-                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                        plugins={[
+                            dayGridPlugin,
+                            timeGridPlugin,
+                            interactionPlugin
+                        ]}
                         initialView={"dayGridMonth"}
                         headerToolbar={{
                             start: "today prev,next",
@@ -185,7 +196,9 @@ const Calendar = () => {
                                     type="text"
                                     placeholder="New Event Title"
                                     value={eventTitle}
-                                    onChange={e => setEventTitle(e.target.value)}
+                                    onChange={e =>
+                                        setEventTitle(e.target.value)
+                                    }
                                     required
                                 />
                                 <input
@@ -203,10 +216,13 @@ const Calendar = () => {
                                     required
                                 />
                                 <button type="submit">Save Changes</button>
-                                <button type="button" onClick={handleDeleteEvent}>
+                                <button
+                                    type="button"
+                                    onClick={handleDeleteEvent}
+                                >
                                     Delete Event
                                 </button>
-                                <button type="button" onClick={handleCancelEdit}>
+                                <button type="button" onClick={resetForm}>
                                     Cancel
                                 </button>
                             </form>
