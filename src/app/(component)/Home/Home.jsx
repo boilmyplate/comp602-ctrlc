@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 import Image from "next/image";
 import { fetchHighScore } from "../Firebase/firestore/gameDB";
-import { fetchMoodHistory } from "../Firebase/firestore/moodTrackerDB";
+import { fetchMoodHistory, fetchMoodHistoryLastWeek } from "../Firebase/firestore/moodTrackerDB";
 
 const COLORS = [
   "#606C38",
@@ -39,7 +39,6 @@ const COLORS = [
 ];
 
 export default function Home() {
-  const router = useRouter();
   const [moodHistory, setMoodHistory] = useState([]);
   const [happyStreak, setHappyStreak] = useState(0);
   const [sortBy, setSortBy] = useState("mood");
@@ -109,7 +108,7 @@ export default function Home() {
   // Fetch mood history from Firestore
   useEffect(() => {
     const fetchData = async () => {
-      const moodHistoryRef = await fetchMoodHistory(user);
+      const moodHistoryRef = await fetchMoodHistoryLastWeek(user);
       setMoodHistory(moodHistoryRef);
     };
 

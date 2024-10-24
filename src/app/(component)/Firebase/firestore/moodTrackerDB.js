@@ -3,7 +3,11 @@ import {
     collection,
     deleteDoc,
     doc,
-    getDocs
+    getDocs,
+    query,
+    serverTimestamp,
+    Timestamp,
+    where
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -19,12 +23,30 @@ export const fetchMoodHistory = async user => {
     }
 };
 
+export const fetchMoodHistoryLastWeek = async user => {
+    try {
+        const sevenDaysAgo = Timestamp.fromDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)); 
+
+        const moodHistoryRef = collection(db, "users", user, "moodhistory");
+
+        const moodQuery = query(moodHistoryRef, where("createdAt", ">=", sevenDaysAgo));
+        
+        const querySnapshot = await getDocs(moodQuery);
+        return querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        return null;
+    }
+};
+
 export const addMoodHistory = async (user, newMoodEntry) => {
     try {
         const userRef = collection(db, "users");
         const docRef = await addDoc(
             collection(userRef, user, "moodhistory"),
-            newMoodEntry
+            { ...newMoodEntry,
+                createdAt: serverTimestamp()
+            }
         );
         return docRef;
     } catch (error) {
