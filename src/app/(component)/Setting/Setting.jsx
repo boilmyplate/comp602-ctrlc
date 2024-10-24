@@ -3,9 +3,10 @@ import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import ReactSwitch from "react-switch";
 import styles from "./Setting.module.css";
-import { auth } from "../Firebase/firebase";
+import { auth, db } from "../Firebase/firebase";
 import { doPasswordChange, updateUsername } from "../Firebase/auth";
 import { ThemeContext } from '../ThemeProvider/themeProvider'; 
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
 const Setting = () => {
   // variables for username, password, theme, and current user
@@ -42,9 +43,13 @@ const Setting = () => {
 
     // allow user to change username
   const userSubmit = async () => {
+    const user = auth.currentUser.uid;
+    const docRef = doc(db, "users", user);
     try {
       // Call the updateProfile function with the new username
       await updateUsername(username);
+      
+      updateDoc(docRef, { displayName: username });
       // alert user when username have been updated
       alert("Username updated successfully!");
       // clear the username input
